@@ -710,13 +710,15 @@ class ApiV1:
 
     def get_variants(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> PrintProviderVariants:
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / variants.json
-        variants_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers/{print_provider_id}/variants.json'
+        variants_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/' \
+                       f'print_providers/{print_provider_id}/variants.json'
         variant_information = self.__get(variants_url)
         return self.__parse(PrintProviderVariants, variant_information)
 
     def get_shipping_info(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> ShippingInfo:
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / shipping.json
-        shipping_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers/{print_provider_id}/shipping.json'
+        shipping_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/' \
+                       f'print_providers/{print_provider_id}/shipping.json'
         shipping_information = self.__get(shipping_url)
         return self.__parse(ShippingInfo, shipping_information)
 
@@ -779,7 +781,8 @@ class ApiV1:
     def set_product_published_success(self, shop_id: Union[str, int], product_id: str,
                                       publishing_succeeded: PublishingSucceeded) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_succeeded.json
-        publishing_succeeded_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_succeeded.json'
+        publishing_succeeded_url = f'{self.__api_url}/v1/shops/{shop_id}/products/' \
+                                   f'{product_id}/publishing_succeeded.json'
         self.__post(publishing_succeeded_url, data=publishing_succeeded.to_dict())
         return True
 
