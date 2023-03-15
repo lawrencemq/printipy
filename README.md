@@ -1,6 +1,8 @@
 # PrintiPy
 The Printify API for Python
 
+Tested with Python 3.8+
+
 
 ## documentation - to do
 
