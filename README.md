@@ -1,19 +1,8 @@
+# PrintiPy
+The Printify API for Python
 
 
-
-# Card Watermark
-
-- Install Python 3.11
-- pipenv install
-- Install [KeepOnTruckin font](https://www.dafont.com/keep-on-truckin-fw.font)
-- Copy files to watermark to `card_files/`
-- run `card_watermark.py`
-
-
-# PrintiPy 
-
-- Make `.env` file
-- Add config to `.env` "API_KEY=..." with your Printify API key
+## documentation - to do
 
 ## create product
 
