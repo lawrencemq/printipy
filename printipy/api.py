@@ -772,7 +772,7 @@ class ApiV1:
         self.__delete(delete_product_url)
         return True
 
-    def publish_product(self, shop_id: Union[str, int], product_id: str, publish: Publish) -> True:
+    def publish_product(self, shop_id: Union[str, int], product_id: str, publish: Publish = Publish()) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / publish.json
         publish_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}/publish.json'
         self.__post(publish_product_url, data=publish.to_dict())

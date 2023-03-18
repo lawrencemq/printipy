@@ -1682,6 +1682,16 @@ class TestPrintiPyApiV1(TestCase):
         self.assertTrue(self.api.publish_product('12345', '54321', Publish.from_dict(data_for_url)))
 
     @responses.activate
+    def test_publish_product_with_default_publish_all(self):
+
+        self.__prepare_response(
+            responses.POST,
+            url='https://api.printify.com/v1/shops/12345/products/54321/publish.json',
+        )
+
+        self.assertTrue(self.api.publish_product('12345', '54321'))
+
+    @responses.activate
     def test_set_product_published_success(self):
         data_for_url = {
             "external": {
