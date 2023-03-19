@@ -268,6 +268,7 @@ class ProductExternal:
     id: str
     handle: str
     shipping_template_id: Optional[str] = None
+    channel: Optional[str] = None
 
 
 @dataclass_json
