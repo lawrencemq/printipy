@@ -52,7 +52,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        shops = self.api.get_shops()
+        shops = self.api.shops.get_shops()
         self.assertEqual(len(shops), 2)
         self.assertEqual(shops, [Shop.from_dict(x) for x in data_returned_from_url])
         for shop in shops:
@@ -76,7 +76,7 @@ class TestPrintiPyApiV1(TestCase):
             data={}
         )
 
-        resp = self.api.delete_shop(shop)
+        resp = self.api.shops.delete_shop(shop)
         self.assertIsNone(resp)
 
     @responses.activate
@@ -181,7 +181,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        blueprints = self.api.get_blueprints()
+        blueprints = self.api.catalog.get_blueprints()
         self.assertEqual(len(blueprints), 7)
         self.assertEqual(blueprints, [Blueprint.from_dict(x) for x in data_returned_from_url])
         for blueprint in blueprints:
@@ -214,7 +214,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        blueprint = self.api.get_blueprint(3)
+        blueprint = self.api.catalog.get_blueprint(3)
         self.assertEqual(blueprint, Blueprint.from_dict(data_returned_from_url))
         for key in ["id", "title", "description", "brand", "model"]:
             self.assertIsNotNone(blueprint.__getattribute__(key), f'{key} should not be None')
@@ -254,7 +254,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        providers = self.api.get_print_providers_for_blueprint(12345)
+        providers = self.api.catalog.get_print_providers_for_blueprint(12345)
         self.assertEqual(len(providers), 4)
         self.assertEqual(providers, [PrintProvider.from_dict(x) for x in data_returned_from_url])
         for provider in providers:
@@ -318,7 +318,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        variant_info = self.api.get_variants(12345, 5)
+        variant_info = self.api.catalog.get_variants(12345, 5)
         self.assertEqual(variant_info.id, 3)
         self.assertEqual(variant_info.title, "DJ")
         self.assertEqual(len(variant_info.variants), 2)
@@ -422,7 +422,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        shipping_info = self.api.get_shipping_info(12345, 5)
+        shipping_info = self.api.catalog.get_shipping_info(12345, 5)
         self.assertEqual(len(shipping_info.profiles), 3)
         self.assertEqual(shipping_info, ShippingInfo.from_dict(data_returned_from_url))
         self.assertEqual(shipping_info.handling_time.to_dict(), {"value": 30, "unit": "day"})
@@ -621,7 +621,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        print_provider_info = self.api.get_print_providers()
+        print_provider_info = self.api.catalog.get_print_providers()
         self.assertEqual(len(print_provider_info), 15)
         self.assertEqual(print_provider_info, [PrintProvider.from_dict(x) for x in data_returned_from_url])
 
@@ -653,7 +653,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        print_provider_info = self.api.get_print_provider(1)
+        print_provider_info = self.api.catalog.get_print_provider(1)
         self.assertEqual(print_provider_info, PrintProvider.from_dict(data_returned_from_url))
 
     @responses.activate
@@ -783,7 +783,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        product_info = self.api.get_product("shop_123", '121')
+        product_info = self.api.products.get_product("shop_123", '121')
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
 
         for key in ['id', 'title', 'description', 'created_at', 'updated_at', 'visible', 'is_locked', 'blueprint_id',
@@ -1504,7 +1504,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        product_info = self.api.create_product('shop_123', CreateProduct.from_dict(data_for_url))
+        product_info = self.api.products.create_product('shop_123', CreateProduct.from_dict(data_for_url))
 
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
 
@@ -1646,7 +1646,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        product_info = self.api.update_product('shop_123', '121', UpdateProduct.from_dict(data_for_url))
+        product_info = self.api.products.update_product('shop_123', '121', UpdateProduct.from_dict(data_for_url))
 
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
 
@@ -1660,7 +1660,7 @@ class TestPrintiPyApiV1(TestCase):
             responses.DELETE,
             url='https://api.printify.com/v1/shops/12345/products/54321.json',
         )
-        self.assertTrue(self.api.delete_product('12345', '54321'))
+        self.assertTrue(self.api.products.delete_product('12345', '54321'))
 
     @responses.activate
     def test_publish_product(self):
@@ -1679,7 +1679,7 @@ class TestPrintiPyApiV1(TestCase):
             url='https://api.printify.com/v1/shops/12345/products/54321/publish.json',
         )
 
-        self.assertTrue(self.api.publish_product('12345', '54321', Publish.from_dict(data_for_url)))
+        self.assertTrue(self.api.products.publish_product('12345', '54321', Publish.from_dict(data_for_url)))
 
     @responses.activate
     def test_publish_product_with_default_publish_all(self):
@@ -1689,7 +1689,7 @@ class TestPrintiPyApiV1(TestCase):
             url='https://api.printify.com/v1/shops/12345/products/54321/publish.json',
         )
 
-        self.assertTrue(self.api.publish_product('12345', '54321'))
+        self.assertTrue(self.api.products.publish_product('12345', '54321'))
 
     @responses.activate
     def test_set_product_published_success(self):
@@ -1706,7 +1706,8 @@ class TestPrintiPyApiV1(TestCase):
         )
 
         self.assertTrue(
-            self.api.set_product_published_success('12345', '54321', PublishingSucceeded.from_dict(data_for_url)))
+            self.api.products.set_product_published_success('12345', '54321',
+                                                            PublishingSucceeded.from_dict(data_for_url)))
 
     @responses.activate
     def test_set_product_published_failed(self):
@@ -1715,7 +1716,7 @@ class TestPrintiPyApiV1(TestCase):
             url='https://api.printify.com/v1/shops/12345/products/54321/publishing_failed.json',
         )
 
-        self.assertTrue(self.api.set_product_published_failed('12345', '54321', "just because"))
+        self.assertTrue(self.api.products.set_product_published_failed('12345', '54321', "just because"))
 
     @responses.activate
     def test_unpublish_product(self):
@@ -1724,7 +1725,7 @@ class TestPrintiPyApiV1(TestCase):
             url='https://api.printify.com/v1/shops/12345/products/54321/unpublish.json',
         )
 
-        self.assertTrue(self.api.unpublish_product('12345', '54321'))
+        self.assertTrue(self.api.products.unpublish_product('12345', '54321'))
 
     @responses.activate
     def test_get_orders(self):
@@ -1866,7 +1867,7 @@ class TestPrintiPyApiV1(TestCase):
             data=second_data_returned_from_url
         )
 
-        orders_info = self.api.get_orders('shop_123', max_pages=3)
+        orders_info = self.api.orders.get_orders('shop_123', max_pages=3)
 
         self.assertEqual(orders_info, [Order.from_dict(first_data_returned_from_url['data'][0]),
                                        Order.from_dict(second_data_returned_from_url['data'][0])])
@@ -1941,7 +1942,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_info = self.api.get_order('shop_123', "5a96f649b2439217d070f507")
+        order_info = self.api.orders.get_order('shop_123', "5a96f649b2439217d070f507")
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
 
@@ -1986,8 +1987,8 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_for_existing_product('shop_123',
-                                                              CreateOrderExistingProduct.from_dict(data_for_url))
+        order_id = self.api.orders.create_order_for_existing_product('shop_123',
+                                                                     CreateOrderExistingProduct.from_dict(data_for_url))
 
         self.assertEqual(order_id, data_returned_from_url['id'])
 
@@ -2032,9 +2033,9 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_simple_image_positioning('shop_123',
-                                                                       CreateOrderSimpleImageProcessing.from_dict(
-                                                                           data_for_url))
+        order_id = self.api.orders.create_order_with_simple_image_positioning('shop_123',
+                                                                              CreateOrderSimpleImageProcessing.from_dict(
+                                                                                  data_for_url))
 
         self.assertEqual(order_id, data_returned_from_url['id'])
 
@@ -2094,9 +2095,9 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_advanced_image_positioning('shop_123',
-                                                                         CreateOrderAdvancedImageProcessing.from_dict(
-                                                                             data_for_url))
+        order_id = self.api.orders.create_order_with_advanced_image_positioning('shop_123',
+                                                                                CreateOrderAdvancedImageProcessing.from_dict(
+                                                                                    data_for_url))
 
         self.assertEqual(order_id, data_returned_from_url['id'])
 
@@ -2144,7 +2145,8 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_print_details('shop_123', CreateOrderPrintDetails.from_dict(data_for_url))
+        order_id = self.api.orders.create_order_with_print_details('shop_123',
+                                                                   CreateOrderPrintDetails.from_dict(data_for_url))
 
         self.assertEqual(order_id, data_returned_from_url['id'])
 
@@ -2184,7 +2186,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_sku('shop_123', CreateOrderSku.from_dict(data_for_url))
+        order_id = self.api.orders.create_order_with_sku('shop_123', CreateOrderSku.from_dict(data_for_url))
 
         self.assertEqual(order_id, data_returned_from_url['id'])
 
@@ -2237,7 +2239,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_info = self.api.send_order_to_production('shop_123', "5d65c6ac01b403000a5d24d3")
+        order_info = self.api.orders.send_order_to_production('shop_123', "5d65c6ac01b403000a5d24d3")
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
 
@@ -2285,7 +2287,8 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        shipping_info = self.api.calc_shipping_for_order('shop_123', CreateShippingEstimate.from_dict(data_for_url))
+        shipping_info = self.api.orders.calc_shipping_for_order('shop_123',
+                                                                CreateShippingEstimate.from_dict(data_for_url))
 
         self.assertEqual(shipping_info, ShippingCost.from_dict(data_returned_from_url))
 
@@ -2343,7 +2346,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        order_info = self.api.cancel_order('shop_123', '5dee261dc400914833007902')
+        order_info = self.api.orders.cancel_order('shop_123', '5dee261dc400914833007902')
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
         self.assertEqual(order_info.status, 'canceled')
@@ -2432,7 +2435,7 @@ class TestPrintiPyApiV1(TestCase):
             data=second_data_returned_from_url
         )
 
-        artwork_info = self.api.get_artwork_uploads(max_pages=3)
+        artwork_info = self.api.artwork.get_artwork_uploads(max_pages=3)
 
         self.assertEqual(artwork_info,
                          [Artwork.from_dict(x) for x in first_data_returned_from_url['data']] +
@@ -2460,7 +2463,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.get_artwork("5e16d66791287a0006e522b2")
+        artwork_info = self.api.artwork.get_artwork("5e16d66791287a0006e522b2")
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
 
@@ -2485,7 +2488,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.upload_artwork(filename=filename)
+        artwork_info = self.api.artwork.upload_artwork(filename=filename)
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
         for key in ['id', 'file_name', 'height', 'width', 'size', 'mime_type', 'preview_url', 'upload_time']:
@@ -2509,7 +2512,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.upload_artwork(url='http://somekindofimage.com/image.png')
+        artwork_info = self.api.artwork.upload_artwork(url='http://somekindofimage.com/image.png')
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
         for key in ['id', 'file_name', 'height', 'width', 'size', 'mime_type', 'preview_url', 'upload_time']:
@@ -2517,9 +2520,9 @@ class TestPrintiPyApiV1(TestCase):
 
     def test_upload_artwork_raises_with_bad_request(self):
         with self.assertRaises(PrintiPyException):
-            self.api.upload_artwork()
+            self.api.artwork.upload_artwork()
         with self.assertRaises(PrintiPyException):
-            self.api.upload_artwork(filename='something', url='something_else')
+            self.api.artwork.upload_artwork(filename='something', url='something_else')
 
     @responses.activate
     def test_archive_artwork(self):
@@ -2528,7 +2531,7 @@ class TestPrintiPyApiV1(TestCase):
             'https://api.printify.com/v1/uploads/img_123/archive.json',
             data={}
         )
-        self.assertTrue(self.api.archive_artwork('img_123'))
+        self.assertTrue(self.api.artwork.archive_artwork('img_123'))
 
     @responses.activate
     def test_get_shop_webhooks(self):
@@ -2552,7 +2555,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.get_shop_webhooks('shop_123')
+        webhooks_info = self.api.webhooks.get_shop_webhooks('shop_123')
 
         self.assertEqual(webhooks_info, [Webhook.from_dict(x) for x in data_returned_from_url])
         for webhook in webhooks_info:
@@ -2577,7 +2580,7 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.create_webhook('shop_123', CreateWebhook.from_dict(data_for_url))
+        webhooks_info = self.api.webhooks.create_webhook('shop_123', CreateWebhook.from_dict(data_for_url))
 
         self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
 
@@ -2598,8 +2601,8 @@ class TestPrintiPyApiV1(TestCase):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.update_webhook('shop_123', '5cb87a8cd490a2ccb256cec4',
-                                                UpdateWebhook.from_dict(data_for_url))
+        webhooks_info = self.api.webhooks.update_webhook('shop_123', '5cb87a8cd490a2ccb256cec4',
+                                                         UpdateWebhook.from_dict(data_for_url))
 
         self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
 
@@ -2609,4 +2612,4 @@ class TestPrintiPyApiV1(TestCase):
             responses.DELETE,
             url='https://api.printify.com/v1/shops/12345/webhooks/54321.json',
         )
-        self.assertTrue(self.api.delete_webhook('12345', '54321'))
+        self.assertTrue(self.api.webhooks.delete_webhook('12345', '54321'))
