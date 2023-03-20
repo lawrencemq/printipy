@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="printipy",
-    version="0.0.3",
+    version="0.1.0",
     author="Lawrence Weikum",
     description="Printify API for Python",
     url="https://github.com/lawrencemq/printipy",
