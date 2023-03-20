@@ -5,7 +5,7 @@ from unittest import TestCase
 import responses
 from responses import matchers
 
-from printipy.api import ApiV1, Shop, Blueprint, PrintProvider, PrintProviderVariants, ShippingInfo, Product, \
+from printipy.api import PrintiPy, Shop, Blueprint, PrintProvider, PrintProviderVariants, ShippingInfo, Product, \
     UpdateProduct, CreateProduct, Publish, PublishingSucceeded, Order, CreateOrderExistingProduct, \
     CreateShippingEstimate, \
     ShippingCost, Artwork, PrintiPyException, Webhook, CreateWebhook, UpdateWebhook, CreateOrderPrintDetails, \
@@ -14,7 +14,7 @@ from printipy.api import ApiV1, Shop, Blueprint, PrintProvider, PrintProviderVar
 
 class TestPrintiPyApiV1(TestCase):
     test_api_token = 'test_1234567890'
-    api = ApiV1(api_token=test_api_token)
+    api = PrintiPy(api_token=test_api_token)
     default_headers = {'Authorization': f'Bearer {test_api_token}'}
 
     def __prepare_response(self, http_type: Union[responses.GET, responses.POST, responses.DELETE, responses.PUT],
