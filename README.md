@@ -11,6 +11,7 @@ Tested with Python 3.8+
 Example:
 Even though the data below has more information than the API needs, the extraneous data will be filtered out automatically and the call will be sucessfully made.
 ```python
+from printipy import PrintiPy, CreateProduct
 new_product_data = {
         "title": "Testy McTestFace",
         "description": "suc test. wow!",
@@ -230,6 +231,7 @@ new_product_data = {
         ]
     }
     new_product = CreateProduct.from_dict(new_product_data)
+    api = PrintiPy(api_token='...')
     print(api.create_product(7370017, new_product))
 ```
 
