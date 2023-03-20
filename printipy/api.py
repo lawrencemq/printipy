@@ -614,7 +614,7 @@ class PrintifyException(Exception):
     pass
 
 
-class ApiV1:
+class PrintiPy:
     __api_url = 'https://api.printify.com'
 
     def __init__(self, api_token: str):
