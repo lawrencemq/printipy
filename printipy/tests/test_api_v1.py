@@ -1948,6 +1948,34 @@ class TestPrintiPyProductsApiV1(TestPrintiPyApiV1):
 
 
 class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
+    data_for_calc_shipping = {
+        "line_items": [{
+            "product_id": "5bfd0b66a342bcc9b5563216",
+            "variant_id": 17887,
+            "quantity": 1
+        }, {
+            "print_provider_id": 5,
+            "blueprint_id": 9,
+            "variant_id": 17887,
+            "quantity": 1
+        }, {
+            "sku": "MY-SKU",
+            "quantity": 1
+        }],
+        "address_to": {
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "example@msn.com",
+            "phone": "0574 69 21 90",
+            "country": "BE",
+            "region": "",
+            "address1": "ExampleBaan 121",
+            "address2": "45",
+            "city": "Retie",
+            "zip": "2470"
+        }
+    }
+
     @responses.activate
     def test_get_orders(self):
         first_data_returned_from_url = {
@@ -2077,26 +2105,36 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             ]
         }
 
-        self.prepare_response(
-            responses.GET,
-            'https://api.printify.com/v1/shops/shop_123/orders.json',
-            data=first_data_returned_from_url
-        )
-        self.prepare_response(
-            responses.GET,
-            'https://api.printify.com/v1/shops/shop_123/orders.json?page=2',
-            data=second_data_returned_from_url
-        )
+        for _ in range(2):
+            self.prepare_response(
+                responses.GET,
+                'https://api.printify.com/v1/shops/shop_123/orders.json',
+                data=first_data_returned_from_url
+            )
+            self.prepare_response(
+                responses.GET,
+                'https://api.printify.com/v1/shops/shop_123/orders.json?page=2',
+                data=second_data_returned_from_url
+            )
 
-        orders_info = self.api.orders.get_orders('shop_123', max_pages=3)
+        orders_info = self.api.orders.get_orders(max_pages=3)
 
-        self.assertEqual(orders_info, [Order.from_dict(first_data_returned_from_url['data'][0]),
-                                       Order.from_dict(second_data_returned_from_url['data'][0])])
+        expected = [
+            Order.from_dict(first_data_returned_from_url['data'][0]),
+            Order.from_dict(second_data_returned_from_url['data'][0])
+        ]
+        self.assertEqual(orders_info, expected)
+        self.assertEqual(self.api.orders.get_orders(max_pages=3, shop_id=self.shop_id), expected)
 
         for order in orders_info:
             for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                         'status', 'shipping_method', 'created_at']:
                 self.assertIsNotNone(order.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_orders_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.get_orders()
 
     @responses.activate
     def test_get_order(self):
@@ -2163,13 +2201,20 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_info = self.api.orders.get_order('shop_123', "5a96f649b2439217d070f507")
+        order_info = self.api.orders.get_order("5a96f649b2439217d070f507")
 
-        self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
+        expected = Order.from_dict(data_returned_from_url)
+        self.assertEqual(order_info, expected)
+        self.assertEqual(self.api.orders.get_order("5a96f649b2439217d070f507", shop_id=self.shop_id), expected)
 
         for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                     'status', 'shipping_method', 'created_at']:
             self.assertIsNotNone(order_info.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.get_order("5a96f649b2439217d070f507")
 
     @responses.activate
     def test_create_order_for_existing_product(self):
@@ -2208,10 +2253,12 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_id = self.api.orders.create_order_for_existing_product('shop_123',
-                                                                     CreateOrderExistingProduct.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url)),
+            data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url),
+                                                              shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_simple_image_positioning(self):
@@ -2254,11 +2301,11 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_id = self.api.orders.create_order_with_simple_image_positioning('shop_123',
-                                                                              CreateOrderSimpleImageProcessing.from_dict(
-                                                                                  data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
+            CreateOrderSimpleImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
+            CreateOrderSimpleImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_advanced_image_positioning(self):
@@ -2316,11 +2363,11 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_id = self.api.orders.create_order_with_advanced_image_positioning('shop_123',
-                                                                                CreateOrderAdvancedImageProcessing.from_dict(
-                                                                                    data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
+            CreateOrderAdvancedImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
+            CreateOrderAdvancedImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_print_details(self):
@@ -2366,10 +2413,12 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_id = self.api.orders.create_order_with_print_details('shop_123',
-                                                                   CreateOrderPrintDetails.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url)),
+            data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url),
+                                                            shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_sku(self):
@@ -2407,9 +2456,11 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_id = self.api.orders.create_order_with_sku('shop_123', CreateOrderSku.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url)),
+                         data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_send_order_to_production(self):
@@ -2460,43 +2511,24 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_info = self.api.orders.send_order_to_production('shop_123', "5d65c6ac01b403000a5d24d3")
+        order_info = self.api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3")
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3", shop_id=self.shop_id),
+                         Order.from_dict(data_returned_from_url))
 
         for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                     'status', 'shipping_method', 'created_at']:
             self.assertIsNotNone(order_info.__getattribute__(key), f'{key} should not be None')
 
+    def test_send_order_to_production_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3")
+
     @responses.activate
     def test_calc_shipping_for_order(self):
-        data_for_url = {
-            "line_items": [{
-                "product_id": "5bfd0b66a342bcc9b5563216",
-                "variant_id": 17887,
-                "quantity": 1
-            }, {
-                "print_provider_id": 5,
-                "blueprint_id": 9,
-                "variant_id": 17887,
-                "quantity": 1
-            }, {
-                "sku": "MY-SKU",
-                "quantity": 1
-            }],
-            "address_to": {
-                "first_name": "John",
-                "last_name": "Smith",
-                "email": "example@msn.com",
-                "phone": "0574 69 21 90",
-                "country": "BE",
-                "region": "",
-                "address1": "ExampleBaan 121",
-                "address2": "45",
-                "city": "Retie",
-                "zip": "2470"
-            }
-        }
+        data_for_url = self.data_for_calc_shipping
         data_returned_from_url = {
             "standard": 1000,
             "express": 5000
@@ -2508,13 +2540,23 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        shipping_info = self.api.orders.calc_shipping_for_order('shop_123',
-                                                                CreateShippingEstimate.from_dict(data_for_url))
+        shipping_info = self.api.orders.calc_shipping_for_order(CreateShippingEstimate.from_dict(data_for_url))
 
         self.assertEqual(shipping_info, ShippingCost.from_dict(data_returned_from_url))
+        self.assertEqual(
+            self.api.orders.calc_shipping_for_order(
+                CreateShippingEstimate.from_dict(data_for_url),
+                shop_id=self.shop_id),
+            ShippingCost.from_dict(data_returned_from_url)
+        )
 
         for key in ['standard', 'express']:
             self.assertIsNotNone(shipping_info.__getattribute__(key), f'{key} should not be None')
+
+    def test_calc_shipping_for_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.calc_shipping_for_order(CreateShippingEstimate.from_dict(self.data_for_calc_shipping))
 
     @responses.activate
     def test_cancel_order(self):
@@ -2567,10 +2609,17 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        order_info = self.api.orders.cancel_order('shop_123', '5dee261dc400914833007902')
+        order_info = self.api.orders.cancel_order('5dee261dc400914833007902')
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
         self.assertEqual(order_info.status, 'canceled')
+        self.assertEqual(self.api.orders.cancel_order('5dee261dc400914833007902', shop_id=self.shop_id),
+                         Order.from_dict(data_returned_from_url))
+
+    def test_cancel_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.cancel_order('5dee261dc400914833007902')
 
 
 class TestPrintiPyArtworkApiV1(TestPrintiPyApiV1):
