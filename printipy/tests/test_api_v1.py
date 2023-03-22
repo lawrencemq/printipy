@@ -1864,6 +1864,7 @@ class TestPrintiPyProductsApiV1(TestPrintiPyApiV1):
         )
 
         self.assertTrue(self.api.products.publish_product('54321', Publish.from_dict(data_for_url)))
+        self.assertTrue(self.api.products.publish_product('54321', Publish()))
         self.assertTrue(
             self.api.products.publish_product('54321', Publish.from_dict(data_for_url), shop_id=self.shop_id))
 
@@ -1871,17 +1872,6 @@ class TestPrintiPyProductsApiV1(TestPrintiPyApiV1):
         with self.assertRaises(PrintiPyException):
             api = PrintiPy(api_token=self.test_api_token)
             api.products.publish_product('54321')
-
-    @responses.activate
-    def test_publish_product_with_default_publish_all(self):
-
-        self.prepare_response(
-            responses.POST,
-            url='https://api.printify.com/v1/shops/shop_123/products/54321/publish.json',
-        )
-
-        self.assertTrue(self.api.products.publish_product('54321'))
-        self.assertTrue(self.api.products.publish_product('54321', shop_id=self.shop_id))
 
     @responses.activate
     def test_set_product_published_success(self):
