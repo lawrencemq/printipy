@@ -743,7 +743,7 @@ class _ShopIdMixin:
     def __init__(self, shop_id: Optional[Union[str, int]]):
         self.__shop_id = shop_id
 
-    def get_shop_id(self, shop_id: Optional[Union[str, int]]):
+    def _get_shop_id(self, shop_id: Optional[Union[str, int]]):
         shop_id_to_use = shop_id or self.__shop_id
         if not shop_id_to_use:
             raise PrintiPyException(
@@ -753,7 +753,7 @@ class _ShopIdMixin:
     def _require_shop_id(func):
         def inner(ref, *args, **kwargs):
             given_shop_id = kwargs.pop('shop_id', None)
-            shop_id = ref.get_shop_id(given_shop_id)
+            shop_id = ref._get_shop_id(given_shop_id)
             return func(ref, *args, **kwargs, shop_id=shop_id)
 
         return inner
@@ -787,7 +787,7 @@ class _PrintipyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def create_product(self, create_product: CreateProduct, shop_id: Union[str, int]) -> Product:
-        shop_id_to_use = self.get_shop_id(shop_id)
+        shop_id_to_use = self._get_shop_id(shop_id)
         # POST / v1 / shops / {shop_id} / products.json
         create_product_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/products.json'
         product_information = self._post(create_product_url, data=create_product.to_dict())
@@ -845,7 +845,7 @@ class _PrintipyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def get_orders(self, max_pages: int = 1, shop_id: Optional[Union[str, int]] = None) -> List[Order]:
-        shop_id_to_use = self.get_shop_id(shop_id)
+        shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders.json
         initial_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders.json'
         orders_url = deepcopy(initial_url)
@@ -860,7 +860,7 @@ class _PrintipyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def get_order(self, order_id: str, shop_id: Optional[Union[str, int]] = None) -> Order:
-        shop_id_to_use = self.get_shop_id(shop_id)
+        shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders / {order_id}.json
         order_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders/{order_id}.json'
         order_information = self._get(order_url)
