@@ -719,15 +719,15 @@ class TestPrintiPyProductsApiV1(TestPrintiPyApiV1):
                 {
                     "id": "5d39b159e7c48c000728c89f",
                     "title": "Mug 11oz",
-                    "description": """Perfect for coffee, tea and hot chocolate, this classic shape white, durable 
-            ceramic mug in the most popular size. High quality sublimation printing makes it an 
-            appreciated gift to every true hot beverage lover.Perfect for coffee, tea and hot 
-            chocolate, this classic shape white, durable ceramic mug in the most popular size. 
-            High quality sublimation printing makes it an appreciated gift to every true hot beverage lover. 
-            .: White ceramic
-            .: 11 oz (0.33 l)
-            .: Rounded corners
-            .: C-Handle""",
+                    "description": """Perfect for coffee, tea and hot chocolate, this classic shape white,
+                    durable ceramic mug in the most popular size. High quality sublimation printing makes it an
+                    appreciated gift to every true hot beverage lover.Perfect for coffee, tea and hot chocolate,
+                    this classic shape white, durable ceramic mug in the most popular size.  High quality sublimation
+                    printing makes it an appreciated gift to every true hot beverage lover.
+                    .: White ceramic
+                    .: 11 oz (0.33 l)
+                    .: Rounded corners
+                    .: C-Handle""",
                     "tags": [
                         "Home & Living",
                         "Mugs",
