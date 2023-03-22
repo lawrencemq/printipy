@@ -958,28 +958,37 @@ class _PrintipyArtwork(_ApiHandlingMixin):
         return True
 
 
-class _PrintipyWebhooks(_ApiHandlingMixin):
-    def get_shop_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
+class _PrintipyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
+    def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        _ApiHandlingMixin.__init__(self, api_token=api_token)
+        _ShopIdMixin.__init__(self, shop_id=shop_id)
+
+    def get_webhooks(self, shop_id: Optional[Union[str, int]] = None) -> List[Webhook]:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # / v1 / shops / {shop_id} / webhooks.json
-        webhooks_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
+        webhooks_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/webhooks.json'
         webhooks_information = self.get(webhooks_url)
         return self.parse(Webhook, webhooks_information)
 
-    def create_webhook(self, shop_id: Union[str, int], create_webhook: CreateWebhook) -> Webhook:
+    def create_webhook(self, create_webhook: CreateWebhook, shop_id: Optional[Union[str, int]] = None) -> Webhook:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # POST /v1/shops/{shop_id}/webhooks.json
-        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
+        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/webhooks.json'
         webhook_information = self.post(create_webhook_url, data=create_webhook.to_dict())
         return self.parse(Webhook, webhook_information)
 
-    def update_webhook(self, shop_id: Union[str, int], webhook_id: str, update_webhook: UpdateWebhook) -> Webhook:
+    def update_webhook(self, webhook_id: str, update_webhook: UpdateWebhook,
+                       shop_id: Optional[Union[str, int]] = None) -> Webhook:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # PUT /v1/shops/{shop_id}/webhooks/{webhook_id}.json
-        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
+        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/webhooks/{webhook_id}.json'
         webhook_information = self.put(create_webhook_url, data=update_webhook.to_dict())
         return self.parse(Webhook, webhook_information)
 
-    def delete_webhook(self, shop_id: Union[str, int], webhook_id: str) -> True:
+    def delete_webhook(self, webhook_id: str, shop_id: Optional[Union[str, int]] = None) -> True:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # DELETE /v1/shops/{shop_id}/webhooks/{webhook_id}.json
-        delete_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
+        delete_webhook_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/webhooks/{webhook_id}.json'
         self.delete(delete_webhook_url)
         return True
 
@@ -992,4 +1001,4 @@ class PrintiPy:
         self.products = _PrintipyProducts(api_token=api_token, shop_id=shop_id)
         self.orders = _PrintipyOrders(api_token=api_token, shop_id=shop_id)
         self.artwork = _PrintipyArtwork(api_token=api_token)
-        self.webhooks = _PrintipyWebhooks(api_token=api_token)
+        self.webhooks = _PrintipyWebhooks(api_token=api_token, shop_id=shop_id)

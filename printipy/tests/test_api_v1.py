@@ -2829,12 +2829,22 @@ class TestPrintiPyWebhooksApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.webhooks.get_shop_webhooks('shop_123')
-
-        self.assertEqual(webhooks_info, [Webhook.from_dict(x) for x in data_returned_from_url])
+        expected = [Webhook.from_dict(x) for x in data_returned_from_url]
+        webhooks_info = self.api.webhooks.get_webhooks()
+        self.assertEqual(webhooks_info, expected)
+        self.assertEqual(self.api.webhooks.get_webhooks(shop_id=self.shop_id), expected)
         for webhook in webhooks_info:
             for key in ['topic', 'url', 'shop_id', 'id']:
                 self.assertIsNotNone(webhook.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_webhooks_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "topic": "order:created",
+            "url": "https://example.com/webhooks/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_create_webhook(self):
@@ -2854,9 +2864,19 @@ class TestPrintiPyWebhooksApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.webhooks.create_webhook('shop_123', CreateWebhook.from_dict(data_for_url))
+        self.assertEqual(self.api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url)),
+                         Webhook.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url), shop_id=self.shop_id),
+                         Webhook.from_dict(data_returned_from_url))
 
-        self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
+    def test_create_webhook_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "topic": "order:created",
+            "url": "https://example.com/webhooks/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_update_webhook(self):
@@ -2875,15 +2895,31 @@ class TestPrintiPyWebhooksApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.webhooks.update_webhook('shop_123', '5cb87a8cd490a2ccb256cec4',
-                                                         UpdateWebhook.from_dict(data_for_url))
+        self.assertEqual(
+            self.api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url)),
+            Webhook.from_dict(data_returned_from_url))
+        self.assertEqual(
+            self.api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url),
+                                             shop_id=self.shop_id), Webhook.from_dict(data_returned_from_url))
 
-        self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
+    def test_update_webhook_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "url": "https://example.com/callback/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_delete_webhook(self):
         self.prepare_response(
             responses.DELETE,
-            url='https://api.printify.com/v1/shops/12345/webhooks/54321.json',
+            url='https://api.printify.com/v1/shops/shop_123/webhooks/54321.json',
         )
-        self.assertTrue(self.api.webhooks.delete_webhook('12345', '54321'))
+        self.assertTrue(self.api.webhooks.delete_webhook('54321'))
+        self.assertTrue(self.api.webhooks.delete_webhook('54321', shop_id=self.shop_id))
+
+    def test_delete_webhook_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.delete_webhook("54321")
