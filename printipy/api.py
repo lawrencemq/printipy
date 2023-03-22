@@ -614,18 +614,11 @@ class PrintifyException(Exception):
     pass
 
 
-class PrintiPy:
-    __api_url = 'https://api.printify.com'
+class _ApiHandlingMixin:
+    api_url = 'https://api.printify.com'
 
     def __init__(self, api_token: str):
         self.api_token = api_token
-
-    @staticmethod
-    def __get_next_page_url(initial_url: str, info: Dict) -> Optional[str]:
-        next_page = info.get('next_page_url', None)
-        if not next_page:
-            return None
-        return f'{initial_url}{next_page}'
 
     @staticmethod
     def __check_status(resp: Response, url: str):
@@ -645,32 +638,32 @@ class PrintiPy:
             raise PrintifyException(data['error'])
         return data
 
-    def __get(self, url):
+    def _get(self, url):
         headers = {'Authorization': f'Bearer {self.api_token}'}
         resp = requests.get(url, headers=headers)
         data = self.__check_status(resp, url)
         return data
 
-    def __post(self, url: str, data: Optional[Dict[str, Any]] = None):
+    def _post(self, url: str, data: Optional[Dict[str, Any]] = None):
         headers = {'Authorization': f'Bearer {self.api_token}', 'content-type': 'application/json'}
         resp = requests.post(url, headers=headers, json=data)
         data = self.__check_status(resp, url)
         return data
 
-    def __put(self, url, data):
+    def _put(self, url, data):
         headers = {'Authorization': f'Bearer {self.api_token}', 'content-type': 'application/json'}
         resp = requests.put(url, headers=headers, json=data)
         data = self.__check_status(resp, url)
         return data
 
-    def __delete(self, url):
+    def _delete(self, url):
         headers = {'Authorization': f'Bearer {self.api_token}'}
         resp = requests.delete(url, headers=headers)
         data = self.__check_status(resp, url)
         return data
 
     @staticmethod
-    def __parse(clazz, data: Union[List, Dict]):
+    def _parse(clazz, data: Union[List, Dict]):
         if type(data) == list:
             all_elements = []
             for item in data:
@@ -681,213 +674,276 @@ class PrintiPy:
         else:
             raise Exception('Unable to parse response: was not a list or object')
 
-    # SHOPS
+    @staticmethod
+    def _get_next_page_url(initial_url: str, info: Dict) -> Optional[str]:
+        next_page = info.get('next_page_url', None)
+        if not next_page:
+            return None
+        return f'{initial_url}{next_page}'
+
+
+class _PrintipyShop(_ApiHandlingMixin):
+
     def get_shops(self) -> List[Shop]:
-        shops_url = f'{self.__api_url}/v1/shops.json'
-        shop_information = self.__get(shops_url)
-        return self.__parse(Shop, shop_information)
+        shops_url = f'{self.api_url}/v1/shops.json'
+        shop_information = self._get(shops_url)
+        return self._parse(Shop, shop_information)
 
     def delete_shop(self, shop: Shop):
-        delete_url = f'{self.__api_url}/v1/shops/{shop.id}/connection.json'
-        self.__delete(delete_url)
+        delete_url = f'{self.api_url}/v1/shops/{shop.id}/connection.json'
+        self._delete(delete_url)
 
-    # CATALOG
+
+class _PrintipyCatalog(_ApiHandlingMixin):
     def get_blueprints(self) -> List[Blueprint]:
-        blueprint_url = f'{self.__api_url}/v1/catalog/blueprints.json'
-        blueprint_information = self.__get(blueprint_url)
-        return self.__parse(Blueprint, blueprint_information)
+        blueprint_url = f'{self.api_url}/v1/catalog/blueprints.json'
+        blueprint_information = self._get(blueprint_url)
+        return self._parse(Blueprint, blueprint_information)
 
     def get_blueprint(self, blueprint_id: Union[str, int]) -> Optional[Blueprint]:
         # GET / v1 / catalog / blueprints / {blueprint_id}.json
-        blueprint_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}.json'
-        blueprint_information = self.__get(blueprint_url)
-        return self.__parse(Blueprint, blueprint_information)
+        blueprint_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}.json'
+        blueprint_information = self._get(blueprint_url)
+        return self._parse(Blueprint, blueprint_information)
 
     def get_print_providers_for_blueprint(self, blueprint_id: Union[str, int]) -> List[PrintProvider]:
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers.json
-        print_providers_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers.json'
-        print_provider_information = self.__get(print_providers_url)
-        return self.__parse(PrintProvider, print_provider_information)
+        print_providers_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers.json'
+        print_provider_information = self._get(print_providers_url)
+        return self._parse(PrintProvider, print_provider_information)
 
     def get_variants(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> PrintProviderVariants:
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / variants.json
-        variants_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/' \
+        variants_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
                        f'print_providers/{print_provider_id}/variants.json'
-        variant_information = self.__get(variants_url)
-        return self.__parse(PrintProviderVariants, variant_information)
+        variant_information = self._get(variants_url)
+        return self._parse(PrintProviderVariants, variant_information)
 
     def get_shipping_info(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> ShippingInfo:
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / shipping.json
-        shipping_url = f'{self.__api_url}/v1/catalog/blueprints/{blueprint_id}/' \
+        shipping_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
                        f'print_providers/{print_provider_id}/shipping.json'
-        shipping_information = self.__get(shipping_url)
-        return self.__parse(ShippingInfo, shipping_information)
+        shipping_information = self._get(shipping_url)
+        return self._parse(ShippingInfo, shipping_information)
 
     def get_print_providers(self) -> List[PrintProvider]:
         # GET / v1 / catalog / print_providers.json
-        print_providers_url = f'{self.__api_url}/v1/catalog/print_providers.json'
-        print_provider_information = self.__get(print_providers_url)
-        return self.__parse(PrintProvider, print_provider_information)
+        print_providers_url = f'{self.api_url}/v1/catalog/print_providers.json'
+        print_provider_information = self._get(print_providers_url)
+        return self._parse(PrintProvider, print_provider_information)
 
     def get_print_provider(self, print_provider_id: Union[str, int]) -> Optional[PrintProvider]:
         # GET / v1 / catalog / print_providers / {print_provider_id}.json
-        print_provider_url = f'{self.__api_url}/v1/catalog/print_providers/{print_provider_id}.json'
-        print_provider_information = self.__get(print_provider_url)
-        return self.__parse(PrintProvider, print_provider_information)
+        print_provider_url = f'{self.api_url}/v1/catalog/print_providers/{print_provider_id}.json'
+        print_provider_information = self._get(print_provider_url)
+        return self._parse(PrintProvider, print_provider_information)
 
-    # PRODUCTS
+
+class _ShopIdMixin:
+    def __init__(self, shop_id: Optional[Union[str, int]]):
+        self.__shop_id = shop_id
+
+    def _get_shop_id(self, shop_id: Optional[Union[str, int]]):
+        shop_id_to_use = shop_id or self.__shop_id
+        if not shop_id_to_use:
+            raise PrintiPyException(
+                "No shop_id was specified. Add it to the method call or the instantiation of the API.")
+        return shop_id_to_use
+
+    def _require_shop_id(func):
+        def inner(ref, *args, **kwargs):
+            given_shop_id = kwargs.pop('shop_id', None)
+            shop_id = ref._get_shop_id(given_shop_id)
+            return func(ref, *args, **kwargs, shop_id=shop_id)
+
+        return inner
+
+
+class _PrintipyProducts(_ApiHandlingMixin, _ShopIdMixin):
+    def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        _ApiHandlingMixin.__init__(self, api_token=api_token)
+        _ShopIdMixin.__init__(self, shop_id=shop_id)
+
+    @_ShopIdMixin._require_shop_id
     def get_products(self, shop_id: Union[str, int], max_pages: int = 1) -> List[Product]:
         # GET / v1 / shops / {shop_id} / products.json
-        initial_url = f'{self.__api_url}/v1/shops/{shop_id}/products.json'
+        initial_url = f'{self.api_url}/v1/shops/{shop_id}/products.json'
         products_url = deepcopy(initial_url)
         all_products = []
         for _ in range(max_pages):
             if products_url is None:
                 break
-            products_information = self.__get(products_url)
-            all_products.extend(self.__parse(Product, products_information['data']))
-            products_url = self.__get_next_page_url(initial_url, products_information)
+            products_information = self._get(products_url)
+            all_products.extend(self._parse(Product, products_information['data']))
+            products_url = self._get_next_page_url(initial_url, products_information)
         return all_products
 
-    def get_product(self, shop_id: Union[str, int], product_id: str) -> Optional[Product]:
+    @_ShopIdMixin._require_shop_id
+    def get_product(self, product_id: str, shop_id: Union[str, int]) -> Optional[Product]:
         # GET / v1 / shops / {shop_id} / products / {product_id}.json
-        product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}.json'
-        product_information = self.__get(product_url)
-        return self.__parse(Product, product_information)
+        product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
+        product_information = self._get(product_url)
+        return self._parse(Product, product_information)
 
-    def create_product(self, shop_id: Union[str, int], create_product: CreateProduct) -> Product:
+    @_ShopIdMixin._require_shop_id
+    def create_product(self, create_product: CreateProduct, shop_id: Union[str, int]) -> Product:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # POST / v1 / shops / {shop_id} / products.json
-        create_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products.json'
-        product_information = self.__post(create_product_url, data=create_product.to_dict())
-        return self.__parse(Product, product_information)
+        create_product_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/products.json'
+        product_information = self._post(create_product_url, data=create_product.to_dict())
+        return self._parse(Product, product_information)
 
-    def update_product(self, shop_id: Union[str, int], product_id: str, update_product: UpdateProduct) -> Product:
+    @_ShopIdMixin._require_shop_id
+    def update_product(self, product_id: str, update_product: UpdateProduct, shop_id: Union[str, int]) -> Product:
         # PUT / v1 / shops / {shop_id} / products / {product_id}.json
-        update_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}.json'
-        product_information = self.__put(update_product_url, data=update_product.to_dict())
-        return self.__parse(Product, product_information)
+        update_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
+        product_information = self._put(update_product_url, data=update_product.to_dict())
+        return self._parse(Product, product_information)
 
-    def delete_product(self, shop_id: Union[str, int], product_id: str) -> True:
+    @_ShopIdMixin._require_shop_id
+    def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         # DELETE / v1 / shops / {shop_id} / products / {product_id}.json
-        delete_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}.json'
-        self.__delete(delete_product_url)
+        delete_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
+        self._delete(delete_product_url)
         return True
 
-    def publish_product(self, shop_id: Union[str, int], product_id: str, publish: Publish = Publish()) -> True:
+    @_ShopIdMixin._require_shop_id
+    def publish_product(self, product_id: str, publish: Publish, shop_id: Union[str, int]) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / publish.json
-        publish_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}/publish.json'
-        self.__post(publish_product_url, data=publish.to_dict())
+        publish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publish.json'
+        self._post(publish_product_url, data=publish.to_dict())
         return True
 
-    def set_product_published_success(self, shop_id: Union[str, int], product_id: str,
-                                      publishing_succeeded: PublishingSucceeded) -> True:
+    @_ShopIdMixin._require_shop_id
+    def set_product_published_success(self, product_id: str, publishing_succeeded: PublishingSucceeded,
+                                      shop_id: Union[str, int]) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_succeeded.json
-        publishing_succeeded_url = f'{self.__api_url}/v1/shops/{shop_id}/products/' \
+        publishing_succeeded_url = f'{self.api_url}/v1/shops/{shop_id}/products/' \
                                    f'{product_id}/publishing_succeeded.json'
-        self.__post(publishing_succeeded_url, data=publishing_succeeded.to_dict())
+        self._post(publishing_succeeded_url, data=publishing_succeeded.to_dict())
         return True
 
-    def set_product_published_failed(self, shop_id: Union[str, int], product_id: str, reason: str) -> True:
+    @_ShopIdMixin._require_shop_id
+    def set_product_published_failed(self, product_id: str, reason: str, shop_id: Union[str, int]) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_failed.json
-        publishing_failed_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_failed.json'
-        self.__post(publishing_failed_url, data={"reason": reason})
+        publishing_failed_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_failed.json'
+        self._post(publishing_failed_url, data={"reason": reason})
         return True
 
-    def unpublish_product(self, shop_id: Union[str, int], product_id: str) -> True:
+    @_ShopIdMixin._require_shop_id
+    def unpublish_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         # POST / v1 / shops / {shop_id} / products / {product_id} / unpublish.json
-        unpublish_product_url = f'{self.__api_url}/v1/shops/{shop_id}/products/{product_id}/unpublish.json'
-        self.__post(unpublish_product_url)
+        unpublish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/unpublish.json'
+        self._post(unpublish_product_url)
         return True
 
-    # ORDERS
-    def get_orders(self, shop_id: Union[str, int], max_pages: int = 1) -> List[Order]:
+
+class _PrintipyOrders(_ApiHandlingMixin, _ShopIdMixin):
+    def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        _ApiHandlingMixin.__init__(self, api_token=api_token)
+        _ShopIdMixin.__init__(self, shop_id=shop_id)
+
+    @_ShopIdMixin._require_shop_id
+    def get_orders(self, max_pages: int = 1, shop_id: Optional[Union[str, int]] = None) -> List[Order]:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders.json
-        initial_url = f'{self.__api_url}/v1/shops/{shop_id}/orders.json'
+        initial_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders.json'
         orders_url = deepcopy(initial_url)
         all_orders = []
         for _ in range(max_pages):
             if orders_url is None:
                 break
-            orders_information = self.__get(orders_url)
-            all_orders.extend(self.__parse(Order, orders_information['data']))
-            orders_url = self.__get_next_page_url(initial_url, orders_information)
+            orders_information = self._get(orders_url)
+            all_orders.extend(self._parse(Order, orders_information['data']))
+            orders_url = self._get_next_page_url(initial_url, orders_information)
         return all_orders
 
-    def get_order(self, shop_id: Union[str, int], order_id: str) -> Order:
+    @_ShopIdMixin._require_shop_id
+    def get_order(self, order_id: str, shop_id: Optional[Union[str, int]] = None) -> Order:
+        shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders / {order_id}.json
-        order_url = f'{self.__api_url}/v1/shops/{shop_id}/orders/{order_id}.json'
-        order_information = self.__get(order_url)
-        return self.__parse(Order, order_information)
+        order_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders/{order_id}.json'
+        order_information = self._get(order_url)
+        return self._parse(Order, order_information)
 
-    def __create_order(self, shop_id: Union[str, int], create_order: _CreateOrder) -> str:
+    def __create_order(self, create_order: _CreateOrder, shop_id: Union[str, int]) -> str:
         # POST / v1 / shops / {shop_id} / orders.json
-        create_order_url = f'{self.__api_url}/v1/shops/{shop_id}/orders.json'
-        order_information = self.__post(create_order_url, data=create_order.to_dict())
+        create_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders.json'
+        order_information = self._post(create_order_url, data=create_order.to_dict())
         return order_information['id']
 
-    def create_order_for_existing_product(self, shop_id: Union[str, int],
-                                          create_order: CreateOrderExistingProduct) -> str:
-        return self.__create_order(shop_id, create_order)
+    @_ShopIdMixin._require_shop_id
+    def create_order_for_existing_product(self, create_order: CreateOrderExistingProduct,
+                                          shop_id: Union[str, int]) -> str:
+        return self.__create_order(create_order, shop_id=shop_id)
 
-    def create_order_with_simple_image_positioning(self, shop_id: Union[str, int],
-                                                   create_order: CreateOrderExistingProduct) -> str:
-        return self.__create_order(shop_id, create_order)
+    @_ShopIdMixin._require_shop_id
+    def create_order_with_simple_image_positioning(self, create_order: CreateOrderExistingProduct,
+                                                   shop_id: Union[str, int]) -> str:
+        return self.__create_order(create_order, shop_id=shop_id)
 
-    def create_order_with_advanced_image_positioning(self, shop_id: Union[str, int],
-                                                     create_order: CreateOrderAdvancedImageProcessing) -> str:
-        return self.__create_order(shop_id, create_order)
+    @_ShopIdMixin._require_shop_id
+    def create_order_with_advanced_image_positioning(self, create_order: CreateOrderAdvancedImageProcessing,
+                                                     shop_id: Union[str, int]) -> str:
+        return self.__create_order(create_order, shop_id=shop_id)
 
-    def create_order_with_print_details(self, shop_id: Union[str, int], create_order: CreateOrderPrintDetails) -> str:
-        return self.__create_order(shop_id, create_order)
+    @_ShopIdMixin._require_shop_id
+    def create_order_with_print_details(self, create_order: CreateOrderPrintDetails, shop_id: Union[str, int]) -> str:
+        return self.__create_order(create_order, shop_id=shop_id)
 
-    def create_order_with_sku(self, shop_id: Union[str, int], create_order: CreateOrderSku) -> str:
-        return self.__create_order(shop_id, create_order)
+    @_ShopIdMixin._require_shop_id
+    def create_order_with_sku(self, create_order: CreateOrderSku, shop_id: Union[str, int]) -> str:
+        return self.__create_order(create_order, shop_id=shop_id)
 
-    def send_order_to_production(self, shop_id: Union[str, int], order_id: str) -> Order:
+    @_ShopIdMixin._require_shop_id
+    def send_order_to_production(self, order_id: str, shop_id: Union[str, int]) -> Order:
         # POST / v1 / shops / {shop_id} / orders / {order_id} / send_to_production.json
-        send_order_to_production_url = f'{self.__api_url}/v1/shops/{shop_id}/orders/{order_id}/send_to_production.json'
-        order_information = self.__post(send_order_to_production_url)
-        return self.__parse(Order, order_information)
+        send_order_to_production_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/send_to_production.json'
+        order_information = self._post(send_order_to_production_url)
+        return self._parse(Order, order_information)
 
-    def calc_shipping_for_order(self, shop_id: Union[str, int],
-                                create_shipping_cost_estimate: CreateShippingEstimate) -> ShippingCost:
+    @_ShopIdMixin._require_shop_id
+    def calc_shipping_for_order(self, create_shipping_cost_estimate: CreateShippingEstimate,
+                                shop_id: Union[str, int]) -> ShippingCost:
         # POST / v1 / shops / {shop_id} / orders / shipping.json
-        shipping_estimate_url = f'{self.__api_url}/v1/shops/{shop_id}/orders/shipping.json'
-        shipping_information = self.__post(shipping_estimate_url, data=create_shipping_cost_estimate.to_dict())
-        return self.__parse(ShippingCost, shipping_information)
+        shipping_estimate_url = f'{self.api_url}/v1/shops/{shop_id}/orders/shipping.json'
+        shipping_information = self._post(shipping_estimate_url, data=create_shipping_cost_estimate.to_dict())
+        return self._parse(ShippingCost, shipping_information)
 
-    def cancel_order(self, shop_id: Union[str, int], order_id: str) -> Order:
+    @_ShopIdMixin._require_shop_id
+    def cancel_order(self, order_id: str, shop_id: Union[str, int]) -> Order:
         # POST / v1 / shops / {shop_id} / orders / {order_id} / cancel.json
-        cancel_order_url = f'{self.__api_url}/v1/shops/{shop_id}/orders/{order_id}/cancel.json'
-        order_information = self.__post(cancel_order_url)
-        return self.__parse(Order, order_information)
+        cancel_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/cancel.json'
+        order_information = self._post(cancel_order_url)
+        return self._parse(Order, order_information)
 
-    # ARTWORK UPLOADS
+
+class _PrintipyArtwork(_ApiHandlingMixin):
     def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
         # GET / v1 / uploads.json
-        initial_url = f'{self.__api_url}/v1/uploads.json'
+        initial_url = f'{self.api_url}/v1/uploads.json'
         artwork_url = deepcopy(initial_url)
         all_artworks = []
         for _ in range(max_pages):
             if artwork_url is None:
                 break
-            artwork_information = self.__get(artwork_url)
-            all_artworks.extend(self.__parse(Artwork, artwork_information['data']))
-            artwork_url = self.__get_next_page_url(initial_url, artwork_information)
+            artwork_information = self._get(artwork_url)
+            all_artworks.extend(self._parse(Artwork, artwork_information['data']))
+            artwork_url = self._get_next_page_url(initial_url, artwork_information)
         return all_artworks
 
     def get_artwork(self, image_id: str) -> Artwork:
         # GET / v1 / uploads / {image_id}.json
-        artwork_url = f'{self.__api_url}/v1/uploads/{image_id}.json'
-        artwork_information = self.__get(artwork_url)
-        return self.__parse(Artwork, artwork_information)
+        artwork_url = f'{self.api_url}/v1/uploads/{image_id}.json'
+        artwork_information = self._get(artwork_url)
+        return self._parse(Artwork, artwork_information)
 
     def upload_artwork(self, filename: Optional[str] = None, url: Optional[str] = None) -> Artwork:
         if filename and url:
             raise PrintiPyException("Must provide a local filename or url for upload, not both.")
 
         # POST / v1 / uploads / images.json
-        upload_artwork_url = f'{self.__api_url}/v1/uploads/images.json'
+        upload_artwork_url = f'{self.api_url}/v1/uploads/images.json'
         if url:
             artwork_data = {
                 "file_name": url.split('/')[-1],
@@ -903,36 +959,56 @@ class PrintiPy:
         else:
             raise PrintiPyException("Must provide at least a local filename or url for upload.")
 
-        artwork_information = self.__post(upload_artwork_url, data=artwork_data)
-        return self.__parse(Artwork, artwork_information)
+        artwork_information = self._post(upload_artwork_url, data=artwork_data)
+        return self._parse(Artwork, artwork_information)
 
     def archive_artwork(self, image_id: str) -> True:
         # post / v1 / uploads / {image_id} / archive.json
-        archive_artwork_url = f'{self.__api_url}/v1/uploads/{image_id}/archive.json'
-        self.__post(archive_artwork_url)
+        archive_artwork_url = f'{self.api_url}/v1/uploads/{image_id}/archive.json'
+        self._post(archive_artwork_url)
         return True
 
-    # EVENTS AND WEBHOOKS
-    def get_shop_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
+
+class _PrintipyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
+    def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        _ApiHandlingMixin.__init__(self, api_token=api_token)
+        _ShopIdMixin.__init__(self, shop_id=shop_id)
+
+    @_ShopIdMixin._require_shop_id
+    def get_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
         # / v1 / shops / {shop_id} / webhooks.json
-        webhooks_url = f'{self.__api_url}/v1/shops/{shop_id}/webhooks.json'
-        webhooks_information = self.__get(webhooks_url)
-        return self.__parse(Webhook, webhooks_information)
+        webhooks_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
+        webhooks_information = self._get(webhooks_url)
+        return self._parse(Webhook, webhooks_information)
 
-    def create_webhook(self, shop_id: Union[str, int], create_webhook: CreateWebhook) -> Webhook:
+    @_ShopIdMixin._require_shop_id
+    def create_webhook(self, create_webhook: CreateWebhook, shop_id: Union[str, int]) -> Webhook:
         # POST /v1/shops/{shop_id}/webhooks.json
-        create_webhook_url = f'{self.__api_url}/v1/shops/{shop_id}/webhooks.json'
-        webhook_information = self.__post(create_webhook_url, data=create_webhook.to_dict())
-        return self.__parse(Webhook, webhook_information)
+        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
+        webhook_information = self._post(create_webhook_url, data=create_webhook.to_dict())
+        return self._parse(Webhook, webhook_information)
 
-    def update_webhook(self, shop_id: Union[str, int], webhook_id: str, update_webhook: UpdateWebhook) -> Webhook:
+    @_ShopIdMixin._require_shop_id
+    def update_webhook(self, webhook_id: str, update_webhook: UpdateWebhook, shop_id: Union[str, int]) -> Webhook:
         # PUT /v1/shops/{shop_id}/webhooks/{webhook_id}.json
-        create_webhook_url = f'{self.__api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
-        webhook_information = self.__put(create_webhook_url, data=update_webhook.to_dict())
-        return self.__parse(Webhook, webhook_information)
+        create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
+        webhook_information = self._put(create_webhook_url, data=update_webhook.to_dict())
+        return self._parse(Webhook, webhook_information)
 
-    def delete_webhook(self, shop_id: Union[str, int], webhook_id: str) -> True:
+    @_ShopIdMixin._require_shop_id
+    def delete_webhook(self, webhook_id: str, shop_id: Union[str, int]) -> True:
         # DELETE /v1/shops/{shop_id}/webhooks/{webhook_id}.json
-        delete_webhook_url = f'{self.__api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
-        self.__delete(delete_webhook_url)
+        delete_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
+        self._delete(delete_webhook_url)
         return True
+
+
+class PrintiPy:
+
+    def __init__(self, api_token: str, shop_id: Optional[Union[str, int]] = None):
+        self.shops = _PrintipyShop(api_token=api_token)
+        self.catalog = _PrintipyCatalog(api_token=api_token)
+        self.products = _PrintipyProducts(api_token=api_token, shop_id=shop_id)
+        self.orders = _PrintipyOrders(api_token=api_token, shop_id=shop_id)
+        self.artwork = _PrintipyArtwork(api_token=api_token)
+        self.webhooks = _PrintipyWebhooks(api_token=api_token, shop_id=shop_id)

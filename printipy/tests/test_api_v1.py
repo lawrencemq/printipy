@@ -14,11 +14,12 @@ from printipy.api import PrintiPy, Shop, Blueprint, PrintProvider, PrintProvider
 
 class TestPrintiPyApiV1(TestCase):
     test_api_token = 'test_1234567890'
-    api = PrintiPy(api_token=test_api_token)
+    shop_id = 'shop_123'
+    api = PrintiPy(api_token=test_api_token, shop_id=shop_id)
     default_headers = {'Authorization': f'Bearer {test_api_token}'}
 
-    def __prepare_response(self, http_type: Union[responses.GET, responses.POST, responses.DELETE, responses.PUT],
-                           url: str, data: Optional[Union[Dict, List]] = None):
+    def prepare_response(self, http_type: Union[responses.GET, responses.POST, responses.DELETE, responses.PUT],
+                         url: str, data: Optional[Union[Dict, List]] = None):
         if data is None:
             data = {}
         headers = self.default_headers
@@ -31,6 +32,8 @@ class TestPrintiPyApiV1(TestCase):
             json=data,
         )
 
+
+class TestPrintiPyShopsApiV1(TestPrintiPyApiV1):
     @responses.activate
     def test_get_shops(self):
         data_returned_from_url = [
@@ -46,13 +49,13 @@ class TestPrintiPyApiV1(TestCase):
             }
         ]
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             url='https://api.printify.com/v1/shops.json',
             data=data_returned_from_url
         )
 
-        shops = self.api.get_shops()
+        shops = self.api.shops.get_shops()
         self.assertEqual(len(shops), 2)
         self.assertEqual(shops, [Shop.from_dict(x) for x in data_returned_from_url])
         for shop in shops:
@@ -70,15 +73,17 @@ class TestPrintiPyApiV1(TestCase):
             },
         )
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.DELETE,
             url='https://api.printify.com/v1/shops/5432/connection.json',
             data={}
         )
 
-        resp = self.api.delete_shop(shop)
+        resp = self.api.shops.delete_shop(shop)
         self.assertIsNone(resp)
 
+
+class TestPrintiPyCatalogApiV1(TestPrintiPyApiV1):
     @responses.activate
     def test_get_blueprints(self):
         data_returned_from_url = [
@@ -175,13 +180,13 @@ class TestPrintiPyApiV1(TestCase):
             }
         ]
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/blueprints.json',
             data=data_returned_from_url
         )
 
-        blueprints = self.api.get_blueprints()
+        blueprints = self.api.catalog.get_blueprints()
         self.assertEqual(len(blueprints), 7)
         self.assertEqual(blueprints, [Blueprint.from_dict(x) for x in data_returned_from_url])
         for blueprint in blueprints:
@@ -208,13 +213,13 @@ class TestPrintiPyApiV1(TestCase):
             ]
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             url='https://api.printify.com/v1/catalog/blueprints/3.json',
             data=data_returned_from_url
         )
 
-        blueprint = self.api.get_blueprint(3)
+        blueprint = self.api.catalog.get_blueprint(3)
         self.assertEqual(blueprint, Blueprint.from_dict(data_returned_from_url))
         for key in ["id", "title", "description", "brand", "model"]:
             self.assertIsNotNone(blueprint.__getattribute__(key), f'{key} should not be None')
@@ -248,13 +253,13 @@ class TestPrintiPyApiV1(TestCase):
             }
         ]
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/blueprints/12345/print_providers.json',
             data=data_returned_from_url
         )
 
-        providers = self.api.get_print_providers_for_blueprint(12345)
+        providers = self.api.catalog.get_print_providers_for_blueprint(12345)
         self.assertEqual(len(providers), 4)
         self.assertEqual(providers, [PrintProvider.from_dict(x) for x in data_returned_from_url])
         for provider in providers:
@@ -312,13 +317,13 @@ class TestPrintiPyApiV1(TestCase):
             ]
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/blueprints/12345/print_providers/5/variants.json',
             data=data_returned_from_url
         )
 
-        variant_info = self.api.get_variants(12345, 5)
+        variant_info = self.api.catalog.get_variants(12345, 5)
         self.assertEqual(variant_info.id, 3)
         self.assertEqual(variant_info.title, "DJ")
         self.assertEqual(len(variant_info.variants), 2)
@@ -416,13 +421,13 @@ class TestPrintiPyApiV1(TestCase):
             ]
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/blueprints/12345/print_providers/5/shipping.json',
             data=data_returned_from_url
         )
 
-        shipping_info = self.api.get_shipping_info(12345, 5)
+        shipping_info = self.api.catalog.get_shipping_info(12345, 5)
         self.assertEqual(len(shipping_info.profiles), 3)
         self.assertEqual(shipping_info, ShippingInfo.from_dict(data_returned_from_url))
         self.assertEqual(shipping_info.handling_time.to_dict(), {"value": 30, "unit": "day"})
@@ -615,13 +620,13 @@ class TestPrintiPyApiV1(TestCase):
             }
         ]
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/print_providers.json',
             data=data_returned_from_url
         )
 
-        print_provider_info = self.api.get_print_providers()
+        print_provider_info = self.api.catalog.get_print_providers()
         self.assertEqual(len(print_provider_info), 15)
         self.assertEqual(print_provider_info, [PrintProvider.from_dict(x) for x in data_returned_from_url])
 
@@ -647,18 +652,213 @@ class TestPrintiPyApiV1(TestCase):
             }
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/catalog/print_providers/1.json',
             data=data_returned_from_url
         )
 
-        print_provider_info = self.api.get_print_provider(1)
+        print_provider_info = self.api.catalog.get_print_provider(1)
         self.assertEqual(print_provider_info, PrintProvider.from_dict(data_returned_from_url))
+
+
+class TestPrintiPyProductsApiV1(TestPrintiPyApiV1):
+    data_for_create_product = {
+        "title": "Product",
+        "description": "Good product",
+        "blueprint_id": 384,
+        "print_provider_id": 1,
+        "variants": [
+            {
+                "id": 45740,
+                "price": 400,
+                "is_enabled": True
+            },
+            {
+                "id": 45742,
+                "price": 400,
+                "is_enabled": True
+            },
+            {
+                "id": 45744,
+                "price": 400,
+                "is_enabled": False
+            },
+            {
+                "id": 45746,
+                "price": 400,
+                "is_enabled": False
+            }
+        ],
+        "print_areas": [
+            {
+                "variant_ids": [45740, 45742, 45744, 45746],
+                "placeholders": [
+                    {
+                        "position": "front",
+                        "images": [
+                            {
+                                "id": "5d15ca551163cde90d7b2203",
+                                "x": 0.5,
+                                "y": 0.5,
+                                "scale": 1,
+                                "angle": 0
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 
     @responses.activate
     def test_get_products(self):
-        pass
+        data_returned_from_url = {
+            "current_page": 1,
+            "data": [
+                {
+                    "id": "5d39b159e7c48c000728c89f",
+                    "title": "Mug 11oz",
+                    "description": """Perfect for coffee, tea and hot chocolate, this classic shape white,
+                    durable ceramic mug in the most popular size. High quality sublimation printing makes it an
+                    appreciated gift to every true hot beverage lover.Perfect for coffee, tea and hot chocolate,
+                    this classic shape white, durable ceramic mug in the most popular size.  High quality sublimation
+                    printing makes it an appreciated gift to every true hot beverage lover.
+                    .: White ceramic
+                    .: 11 oz (0.33 l)
+                    .: Rounded corners
+                    .: C-Handle""",
+                    "tags": [
+                        "Home & Living",
+                        "Mugs",
+                        "11 oz",
+                        "White base",
+                        "Sublimation"
+                    ],
+                    "options": [
+                        {
+                            "name": "Sizes",
+                            "type": "size",
+                            "values": [
+                                {
+                                    "id": 1189,
+                                    "title": "11oz"
+                                }
+                            ]
+                        }
+                    ],
+                    "variants": [
+                        {
+                            "id": 33719,
+                            "sku": "866366009",
+                            "cost": 516,
+                            "price": 860,
+                            "title": "11oz",
+                            "grams": 460,
+                            "is_enabled": True,
+                            "is_default": True,
+                            "is_available": True,
+                            "options": [
+                                1189
+                            ]
+                        }
+                    ],
+                    "images": [
+                        {
+                            "src": "https://images.printify.com/mockup/5d39b159e7c48c000728c89f/33719/145/mug-11oz.jpg",
+                            "variant_ids": [
+                                33719
+                            ],
+                            "position": "front",
+                            "is_default": False
+                        },
+                        {
+                            "src": "https://images.printify.com/mockup/5d39b159e7c48c000728c89f/33719/146/mug-11oz.jpg",
+                            "variant_ids": [
+                                33719
+                            ],
+                            "position": "other",
+                            "is_default": False
+                        },
+                        {
+                            "src": "https://images.printify.com/mockup/5d39b159e7c48c000728c89f/33719/147/mug-11oz.jpg",
+                            "variant_ids": [
+                                33719
+                            ],
+                            "position": "other",
+                            "is_default": True
+                        }
+                    ],
+                    "created_at": "2019-07-25 13:40:41+00:00",
+                    "updated_at": "2019-07-25 13:40:59+00:00",
+                    "visible": True,
+                    "is_locked": False,
+                    "blueprint_id": 68,
+                    "user_id": 1337,
+                    "shop_id": 1337,
+                    "print_provider_id": 9,
+                    "print_areas": [
+                        {
+                            "variant_ids": [
+                                33719
+                            ],
+                            "placeholders": [
+                                {
+                                    "position": "front",
+                                    "images": [
+                                        {
+                                            "id": "5c7665205342af161e1cb26e",
+                                            "name": "Test.png",
+                                            "type": "image/png",
+                                            "height": 5850,
+                                            "width": 4350,
+                                            "x": 0.5,
+                                            "y": 0.5,
+                                            "scale": 1.01,
+                                            "angle": 0
+                                        }
+                                    ]
+                                }
+                            ],
+                            "background": "#ffffff"
+                        }
+                    ],
+                    "sales_channel_properties": []
+                }
+            ],
+            "first_page_url": "/?page=1",
+            "from": 1,
+            "last_page": 22,
+            "last_page_url": "/?page=22",
+            "next_page_url": "/?page=2",
+            "path": "/",
+            "per_page": 1,
+            "prev_page_url": None,
+            "to": 1,
+            "total": 22
+        }
+        self.prepare_response(
+            responses.GET,
+            'https://api.printify.com/v1/shops/shop_123/products.json',
+            data=data_returned_from_url
+        )
+
+        product_info = self.api.products.get_products()
+        expected = [Product.from_dict(x) for x in data_returned_from_url['data']]
+        self.assertEqual(product_info, expected)
+        self.assertEqual(self.api.products.get_products(shop_id=self.shop_id), expected)
+
+        for product in product_info:
+            for key in ['id', 'title', 'description', 'created_at', 'updated_at', 'visible', 'is_locked',
+                        'blueprint_id',
+                        'user_id', 'shop_id', 'print_provider_id', 'print_areas', 'images', 'variants', 'options',
+                        'tags']:
+                self.assertIsNotNone(product.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_products_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.get_products()
 
     @responses.activate
     def test_get_product(self):
@@ -777,69 +977,29 @@ class TestPrintiPyApiV1(TestCase):
             ],
             "sales_channel_properties": []
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/shops/shop_123/products/121.json',
             data=data_returned_from_url
         )
 
-        product_info = self.api.get_product("shop_123", '121')
+        product_info = self.api.products.get_product('121')
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.products.get_product('121', shop_id=self.shop_id),
+                         Product.from_dict(data_returned_from_url))
 
         for key in ['id', 'title', 'description', 'created_at', 'updated_at', 'visible', 'is_locked', 'blueprint_id',
                     'user_id', 'shop_id', 'print_provider_id', 'print_areas', 'images', 'variants', 'options', 'tags']:
             self.assertIsNotNone(product_info.__getattribute__(key), f'{key} should not be None')
 
+    def test_get_product_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.get_product('121')
+
     @responses.activate
     def test_create_product(self):
-        data_for_url = {
-            "title": "Product",
-            "description": "Good product",
-            "blueprint_id": 384,
-            "print_provider_id": 1,
-            "variants": [
-                {
-                    "id": 45740,
-                    "price": 400,
-                    "is_enabled": True
-                },
-                {
-                    "id": 45742,
-                    "price": 400,
-                    "is_enabled": True
-                },
-                {
-                    "id": 45744,
-                    "price": 400,
-                    "is_enabled": False
-                },
-                {
-                    "id": 45746,
-                    "price": 400,
-                    "is_enabled": False
-                }
-            ],
-            "print_areas": [
-                {
-                    "variant_ids": [45740, 45742, 45744, 45746],
-                    "placeholders": [
-                        {
-                            "position": "front",
-                            "images": [
-                                {
-                                    "id": "5d15ca551163cde90d7b2203",
-                                    "x": 0.5,
-                                    "y": 0.5,
-                                    "scale": 1,
-                                    "angle": 0
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-
+        data_for_url = self.data_for_create_product
         data_returned_from_url = {
             "id": "5d39b411749d0a000f30e0f4",
             "title": "Product",
@@ -1498,19 +1658,26 @@ class TestPrintiPyApiV1(TestCase):
             "sales_channel_properties": []
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/products.json',
             data=data_returned_from_url
         )
 
-        product_info = self.api.create_product('shop_123', CreateProduct.from_dict(data_for_url))
+        product_info = self.api.products.create_product(CreateProduct.from_dict(data_for_url))
 
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.products.create_product(CreateProduct.from_dict(data_for_url), shop_id=self.shop_id),
+                         Product.from_dict(data_returned_from_url))
 
         for key in ['id', 'title', 'description', 'created_at', 'updated_at', 'visible', 'is_locked', 'blueprint_id',
                     'user_id', 'shop_id', 'print_provider_id', 'print_areas', 'images', 'variants', 'options', 'tags']:
             self.assertIsNotNone(product_info.__getattribute__(key), f'{key} should not be None')
+
+    def test_create_product_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.create_product(CreateProduct.from_dict(self.data_for_create_product))
 
     @responses.activate
     def test_update_product(self):
@@ -1640,27 +1807,44 @@ class TestPrintiPyApiV1(TestCase):
             ],
             "sales_channel_properties": []
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.PUT,
             'https://api.printify.com/v1/shops/shop_123/products/121.json',
             data=data_returned_from_url
         )
 
-        product_info = self.api.update_product('shop_123', '121', UpdateProduct.from_dict(data_for_url))
+        product_info = self.api.products.update_product('121', UpdateProduct.from_dict(data_for_url))
 
         self.assertEqual(product_info, Product.from_dict(data_returned_from_url))
+        self.assertEqual(
+            self.api.products.update_product('121', UpdateProduct.from_dict(data_for_url), shop_id=self.shop_id),
+            Product.from_dict(data_returned_from_url))
 
         for key in ['id', 'title', 'description', 'created_at', 'updated_at', 'visible', 'is_locked', 'blueprint_id',
                     'user_id', 'shop_id', 'print_provider_id', 'print_areas', 'images', 'variants', 'options', 'tags']:
             self.assertIsNotNone(product_info.__getattribute__(key), f'{key} should not be None')
 
+    def test_update_product_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "title": "Product"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.update_product('121', UpdateProduct.from_dict(data_for_url))
+
     @responses.activate
     def test_delete_product(self):
-        self.__prepare_response(
+        self.prepare_response(
             responses.DELETE,
-            url='https://api.printify.com/v1/shops/12345/products/54321.json',
+            url='https://api.printify.com/v1/shops/shop_123/products/54321.json',
         )
-        self.assertTrue(self.api.delete_product('12345', '54321'))
+        self.assertTrue(self.api.products.delete_product('54321'))
+        self.assertTrue(self.api.products.delete_product('54321', shop_id=self.shop_id))
+
+    def test_delete_product_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.delete_product('54321')
 
     @responses.activate
     def test_publish_product(self):
@@ -1674,22 +1858,20 @@ class TestPrintiPyApiV1(TestCase):
             "shipping_template": True,
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
-            url='https://api.printify.com/v1/shops/12345/products/54321/publish.json',
+            url='https://api.printify.com/v1/shops/shop_123/products/54321/publish.json',
         )
 
-        self.assertTrue(self.api.publish_product('12345', '54321', Publish.from_dict(data_for_url)))
+        self.assertTrue(self.api.products.publish_product('54321', Publish.from_dict(data_for_url)))
+        self.assertTrue(self.api.products.publish_product('54321', Publish()))
+        self.assertTrue(
+            self.api.products.publish_product('54321', Publish.from_dict(data_for_url), shop_id=self.shop_id))
 
-    @responses.activate
-    def test_publish_product_with_default_publish_all(self):
-
-        self.__prepare_response(
-            responses.POST,
-            url='https://api.printify.com/v1/shops/12345/products/54321/publish.json',
-        )
-
-        self.assertTrue(self.api.publish_product('12345', '54321'))
+    def test_publish_product_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.publish_product('54321')
 
     @responses.activate
     def test_set_product_published_success(self):
@@ -1700,31 +1882,89 @@ class TestPrintiPyApiV1(TestCase):
             }
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
-            url='https://api.printify.com/v1/shops/12345/products/54321/publishing_succeeded.json',
+            url='https://api.printify.com/v1/shops/shop_123/products/54321/publishing_succeeded.json',
         )
 
         self.assertTrue(
-            self.api.set_product_published_success('12345', '54321', PublishingSucceeded.from_dict(data_for_url)))
+            self.api.products.set_product_published_success('54321', PublishingSucceeded.from_dict(data_for_url))
+        )
+        self.assertTrue(
+            self.api.products.set_product_published_success('54321', PublishingSucceeded.from_dict(data_for_url),
+                                                            shop_id=self.shop_id)
+        )
+
+    def test_set_product_published_success_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "external": {
+                "id": "5941187eb8e7e37b3f0e62e5",
+                "handle": "https://example.com/path/to/product"
+            }
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.set_product_published_success('54321', PublishingSucceeded.from_dict(data_for_url))
 
     @responses.activate
     def test_set_product_published_failed(self):
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
-            url='https://api.printify.com/v1/shops/12345/products/54321/publishing_failed.json',
+            url='https://api.printify.com/v1/shops/shop_123/products/54321/publishing_failed.json',
         )
 
-        self.assertTrue(self.api.set_product_published_failed('12345', '54321', "just because"))
+        self.assertTrue(self.api.products.set_product_published_failed('54321', "just because"))
+        self.assertTrue(self.api.products.set_product_published_failed('54321', "just because", shop_id=self.shop_id))
+
+    def test_set_product_published_failed_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.set_product_published_failed('54321', "i said so")
 
     @responses.activate
     def test_unpublish_product(self):
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
-            url='https://api.printify.com/v1/shops/12345/products/54321/unpublish.json',
+            url='https://api.printify.com/v1/shops/shop_123/products/54321/unpublish.json',
         )
 
-        self.assertTrue(self.api.unpublish_product('12345', '54321'))
+        self.assertTrue(self.api.products.unpublish_product('54321'))
+        self.assertTrue(self.api.products.unpublish_product('54321', shop_id=self.shop_id))
+
+    def test_unpublish_product_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.products.unpublish_product('54321')
+
+
+class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
+    data_for_calc_shipping = {
+        "line_items": [{
+            "product_id": "5bfd0b66a342bcc9b5563216",
+            "variant_id": 17887,
+            "quantity": 1
+        }, {
+            "print_provider_id": 5,
+            "blueprint_id": 9,
+            "variant_id": 17887,
+            "quantity": 1
+        }, {
+            "sku": "MY-SKU",
+            "quantity": 1
+        }],
+        "address_to": {
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "example@msn.com",
+            "phone": "0574 69 21 90",
+            "country": "BE",
+            "region": "",
+            "address1": "ExampleBaan 121",
+            "address2": "45",
+            "city": "Retie",
+            "zip": "2470"
+        }
+    }
 
     @responses.activate
     def test_get_orders(self):
@@ -1855,26 +2095,36 @@ class TestPrintiPyApiV1(TestCase):
             ]
         }
 
-        self.__prepare_response(
-            responses.GET,
-            'https://api.printify.com/v1/shops/shop_123/orders.json',
-            data=first_data_returned_from_url
-        )
-        self.__prepare_response(
-            responses.GET,
-            'https://api.printify.com/v1/shops/shop_123/orders.json?page=2',
-            data=second_data_returned_from_url
-        )
+        for _ in range(2):
+            self.prepare_response(
+                responses.GET,
+                'https://api.printify.com/v1/shops/shop_123/orders.json',
+                data=first_data_returned_from_url
+            )
+            self.prepare_response(
+                responses.GET,
+                'https://api.printify.com/v1/shops/shop_123/orders.json?page=2',
+                data=second_data_returned_from_url
+            )
 
-        orders_info = self.api.get_orders('shop_123', max_pages=3)
+        orders_info = self.api.orders.get_orders(max_pages=3)
 
-        self.assertEqual(orders_info, [Order.from_dict(first_data_returned_from_url['data'][0]),
-                                       Order.from_dict(second_data_returned_from_url['data'][0])])
+        expected = [
+            Order.from_dict(first_data_returned_from_url['data'][0]),
+            Order.from_dict(second_data_returned_from_url['data'][0])
+        ]
+        self.assertEqual(orders_info, expected)
+        self.assertEqual(self.api.orders.get_orders(max_pages=3, shop_id=self.shop_id), expected)
 
         for order in orders_info:
             for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                         'status', 'shipping_method', 'created_at']:
                 self.assertIsNotNone(order.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_orders_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.get_orders()
 
     @responses.activate
     def test_get_order(self):
@@ -1935,19 +2185,26 @@ class TestPrintiPyApiV1(TestCase):
             "sent_to_production_at": "2017-04-18 13:24:28+00:00",
             "fulfilled_at": "2017-04-18 13:24:28+00:00"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/shops/shop_123/orders/5a96f649b2439217d070f507.json',
             data=data_returned_from_url
         )
 
-        order_info = self.api.get_order('shop_123', "5a96f649b2439217d070f507")
+        order_info = self.api.orders.get_order("5a96f649b2439217d070f507")
 
-        self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
+        expected = Order.from_dict(data_returned_from_url)
+        self.assertEqual(order_info, expected)
+        self.assertEqual(self.api.orders.get_order("5a96f649b2439217d070f507", shop_id=self.shop_id), expected)
 
         for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                     'status', 'shipping_method', 'created_at']:
             self.assertIsNotNone(order_info.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.get_order("5a96f649b2439217d070f507")
 
     @responses.activate
     def test_create_order_for_existing_product(self):
@@ -1980,16 +2237,18 @@ class TestPrintiPyApiV1(TestCase):
             "id": "5a96f649b2439217d070f507"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders.json',
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_for_existing_product('shop_123',
-                                                              CreateOrderExistingProduct.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url)),
+            data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url),
+                                                              shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_simple_image_positioning(self):
@@ -2026,17 +2285,17 @@ class TestPrintiPyApiV1(TestCase):
             "id": "5a96f649b2439217d070f507"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders.json',
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_simple_image_positioning('shop_123',
-                                                                       CreateOrderSimpleImageProcessing.from_dict(
-                                                                           data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
+            CreateOrderSimpleImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
+            CreateOrderSimpleImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_advanced_image_positioning(self):
@@ -2088,17 +2347,17 @@ class TestPrintiPyApiV1(TestCase):
             "id": "5a96f649b2439217d070f507"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders.json',
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_advanced_image_positioning('shop_123',
-                                                                         CreateOrderAdvancedImageProcessing.from_dict(
-                                                                             data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
+            CreateOrderAdvancedImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
+            CreateOrderAdvancedImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_print_details(self):
@@ -2138,15 +2397,18 @@ class TestPrintiPyApiV1(TestCase):
             "id": "5a96f649b2439217d070f507"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders.json',
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_print_details('shop_123', CreateOrderPrintDetails.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url)),
+            data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url),
+                                                            shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
     def test_create_order_with_sku(self):
@@ -2178,15 +2440,17 @@ class TestPrintiPyApiV1(TestCase):
             "id": "5a96f649b2439217d070f507"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders.json',
             data=data_returned_from_url
         )
 
-        order_id = self.api.create_order_with_sku('shop_123', CreateOrderSku.from_dict(data_for_url))
-
-        self.assertEqual(order_id, data_returned_from_url['id'])
+        self.assertEqual(self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url)),
+                         data_returned_from_url['id'])
+        self.assertEqual(
+            self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url), shop_id=self.shop_id),
+            data_returned_from_url['id'])
 
     @responses.activate
     def test_send_order_to_production(self):
@@ -2231,66 +2495,58 @@ class TestPrintiPyApiV1(TestCase):
             "shipping_method": 1,
             "created_at": "2019-08-28 00:11:24+00:00"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders/5d65c6ac01b403000a5d24d3/send_to_production.json',
             data=data_returned_from_url
         )
 
-        order_info = self.api.send_order_to_production('shop_123', "5d65c6ac01b403000a5d24d3")
+        order_info = self.api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3")
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3", shop_id=self.shop_id),
+                         Order.from_dict(data_returned_from_url))
 
         for key in ['id', 'address_to', 'line_items', 'metadata', 'total_price', 'total_shipping', 'total_tax',
                     'status', 'shipping_method', 'created_at']:
             self.assertIsNotNone(order_info.__getattribute__(key), f'{key} should not be None')
 
+    def test_send_order_to_production_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.send_order_to_production("5d65c6ac01b403000a5d24d3")
+
     @responses.activate
     def test_calc_shipping_for_order(self):
-        data_for_url = {
-            "line_items": [{
-                "product_id": "5bfd0b66a342bcc9b5563216",
-                "variant_id": 17887,
-                "quantity": 1
-            }, {
-                "print_provider_id": 5,
-                "blueprint_id": 9,
-                "variant_id": 17887,
-                "quantity": 1
-            }, {
-                "sku": "MY-SKU",
-                "quantity": 1
-            }],
-            "address_to": {
-                "first_name": "John",
-                "last_name": "Smith",
-                "email": "example@msn.com",
-                "phone": "0574 69 21 90",
-                "country": "BE",
-                "region": "",
-                "address1": "ExampleBaan 121",
-                "address2": "45",
-                "city": "Retie",
-                "zip": "2470"
-            }
-        }
+        data_for_url = self.data_for_calc_shipping
         data_returned_from_url = {
             "standard": 1000,
             "express": 5000
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders/shipping.json',
             data=data_returned_from_url
         )
 
-        shipping_info = self.api.calc_shipping_for_order('shop_123', CreateShippingEstimate.from_dict(data_for_url))
+        shipping_info = self.api.orders.calc_shipping_for_order(CreateShippingEstimate.from_dict(data_for_url))
 
         self.assertEqual(shipping_info, ShippingCost.from_dict(data_returned_from_url))
+        self.assertEqual(
+            self.api.orders.calc_shipping_for_order(
+                CreateShippingEstimate.from_dict(data_for_url),
+                shop_id=self.shop_id),
+            ShippingCost.from_dict(data_returned_from_url)
+        )
 
         for key in ['standard', 'express']:
             self.assertIsNotNone(shipping_info.__getattribute__(key), f'{key} should not be None')
+
+    def test_calc_shipping_for_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.calc_shipping_for_order(CreateShippingEstimate.from_dict(self.data_for_calc_shipping))
 
     @responses.activate
     def test_cancel_order(self):
@@ -2337,17 +2593,26 @@ class TestPrintiPyApiV1(TestCase):
             "created_at": "2019-12-09 10:46:53+00:00"
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/orders/5dee261dc400914833007902/cancel.json',
             data=data_returned_from_url
         )
 
-        order_info = self.api.cancel_order('shop_123', '5dee261dc400914833007902')
+        order_info = self.api.orders.cancel_order('5dee261dc400914833007902')
 
         self.assertEqual(order_info, Order.from_dict(data_returned_from_url))
         self.assertEqual(order_info.status, 'canceled')
+        self.assertEqual(self.api.orders.cancel_order('5dee261dc400914833007902', shop_id=self.shop_id),
+                         Order.from_dict(data_returned_from_url))
 
+    def test_cancel_order_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.orders.cancel_order('5dee261dc400914833007902')
+
+
+class TestPrintiPyArtworkApiV1(TestPrintiPyApiV1):
     @responses.activate
     def test_get_artwork_uploads(self):
         first_data_returned_from_url = {
@@ -2421,18 +2686,18 @@ class TestPrintiPyApiV1(TestCase):
             "total": 2
         }
 
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/uploads.json',
             data=first_data_returned_from_url
         )
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/uploads.json?page=2',
             data=second_data_returned_from_url
         )
 
-        artwork_info = self.api.get_artwork_uploads(max_pages=3)
+        artwork_info = self.api.artwork.get_artwork_uploads(max_pages=3)
 
         self.assertEqual(artwork_info,
                          [Artwork.from_dict(x) for x in first_data_returned_from_url['data']] +
@@ -2454,13 +2719,13 @@ class TestPrintiPyApiV1(TestCase):
             "preview_url": "https://example.com/image-storage/uuid1",
             "upload_time": "2020-01-09 07:29:43"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/uploads/5e16d66791287a0006e522b2.json',
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.get_artwork("5e16d66791287a0006e522b2")
+        artwork_info = self.api.artwork.get_artwork("5e16d66791287a0006e522b2")
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
 
@@ -2479,13 +2744,13 @@ class TestPrintiPyApiV1(TestCase):
             "preview_url": "https://example.com/image-storage/uuid3",
             "upload_time": "2020-01-09 07:29:43"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/uploads/images.json',
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.upload_artwork(filename=filename)
+        artwork_info = self.api.artwork.upload_artwork(filename=filename)
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
         for key in ['id', 'file_name', 'height', 'width', 'size', 'mime_type', 'preview_url', 'upload_time']:
@@ -2503,13 +2768,13 @@ class TestPrintiPyApiV1(TestCase):
             "preview_url": "https://example.com/image-storage/uuid3",
             "upload_time": "2020-01-09 07:29:43"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/uploads/images.json',
             data=data_returned_from_url
         )
 
-        artwork_info = self.api.upload_artwork(url='http://somekindofimage.com/image.png')
+        artwork_info = self.api.artwork.upload_artwork(url='http://somekindofimage.com/image.png')
 
         self.assertEqual(artwork_info, Artwork.from_dict(data_returned_from_url))
         for key in ['id', 'file_name', 'height', 'width', 'size', 'mime_type', 'preview_url', 'upload_time']:
@@ -2517,19 +2782,21 @@ class TestPrintiPyApiV1(TestCase):
 
     def test_upload_artwork_raises_with_bad_request(self):
         with self.assertRaises(PrintiPyException):
-            self.api.upload_artwork()
+            self.api.artwork.upload_artwork()
         with self.assertRaises(PrintiPyException):
-            self.api.upload_artwork(filename='something', url='something_else')
+            self.api.artwork.upload_artwork(filename='something', url='something_else')
 
     @responses.activate
     def test_archive_artwork(self):
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/uploads/img_123/archive.json',
             data={}
         )
-        self.assertTrue(self.api.archive_artwork('img_123'))
+        self.assertTrue(self.api.artwork.archive_artwork('img_123'))
 
+
+class TestPrintiPyWebhooksApiV1(TestPrintiPyApiV1):
     @responses.activate
     def test_get_shop_webhooks(self):
         data_returned_from_url = [
@@ -2546,18 +2813,28 @@ class TestPrintiPyApiV1(TestCase):
                 "id": "5cb87a8cd490a2ccb256cec5"
             }
         ]
-        self.__prepare_response(
+        self.prepare_response(
             responses.GET,
             'https://api.printify.com/v1/shops/shop_123/webhooks.json',
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.get_shop_webhooks('shop_123')
-
-        self.assertEqual(webhooks_info, [Webhook.from_dict(x) for x in data_returned_from_url])
+        expected = [Webhook.from_dict(x) for x in data_returned_from_url]
+        webhooks_info = self.api.webhooks.get_webhooks()
+        self.assertEqual(webhooks_info, expected)
+        self.assertEqual(self.api.webhooks.get_webhooks(shop_id=self.shop_id), expected)
         for webhook in webhooks_info:
             for key in ['topic', 'url', 'shop_id', 'id']:
                 self.assertIsNotNone(webhook.__getattribute__(key), f'{key} should not be None')
+
+    def test_get_webhooks_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "topic": "order:created",
+            "url": "https://example.com/webhooks/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_create_webhook(self):
@@ -2571,15 +2848,25 @@ class TestPrintiPyApiV1(TestCase):
             "shop_id": "1",
             "id": "5cb87a8cd490a2ccb256cec4"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.POST,
             'https://api.printify.com/v1/shops/shop_123/webhooks.json',
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.create_webhook('shop_123', CreateWebhook.from_dict(data_for_url))
+        self.assertEqual(self.api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url)),
+                         Webhook.from_dict(data_returned_from_url))
+        self.assertEqual(self.api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url), shop_id=self.shop_id),
+                         Webhook.from_dict(data_returned_from_url))
 
-        self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
+    def test_create_webhook_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "topic": "order:created",
+            "url": "https://example.com/webhooks/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.create_webhook(CreateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_update_webhook(self):
@@ -2592,21 +2879,37 @@ class TestPrintiPyApiV1(TestCase):
             "shop_id": "1",
             "id": "5cb87a8cd490a2ccb256cec4"
         }
-        self.__prepare_response(
+        self.prepare_response(
             responses.PUT,
             'https://api.printify.com/v1/shops/shop_123/webhooks/5cb87a8cd490a2ccb256cec4.json',
             data=data_returned_from_url
         )
 
-        webhooks_info = self.api.update_webhook('shop_123', '5cb87a8cd490a2ccb256cec4',
-                                                UpdateWebhook.from_dict(data_for_url))
+        self.assertEqual(
+            self.api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url)),
+            Webhook.from_dict(data_returned_from_url))
+        self.assertEqual(
+            self.api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url),
+                                             shop_id=self.shop_id), Webhook.from_dict(data_returned_from_url))
 
-        self.assertEqual(webhooks_info, Webhook.from_dict(data_returned_from_url))
+    def test_update_webhook_raises_exception_without_shop_id(self):
+        data_for_url = {
+            "url": "https://example.com/callback/order/created"
+        }
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.update_webhook('5cb87a8cd490a2ccb256cec4', UpdateWebhook.from_dict(data_for_url))
 
     @responses.activate
     def test_delete_webhook(self):
-        self.__prepare_response(
+        self.prepare_response(
             responses.DELETE,
-            url='https://api.printify.com/v1/shops/12345/webhooks/54321.json',
+            url='https://api.printify.com/v1/shops/shop_123/webhooks/54321.json',
         )
-        self.assertTrue(self.api.delete_webhook('12345', '54321'))
+        self.assertTrue(self.api.webhooks.delete_webhook('54321'))
+        self.assertTrue(self.api.webhooks.delete_webhook('54321', shop_id=self.shop_id))
+
+    def test_delete_webhook_raises_exception_without_shop_id(self):
+        with self.assertRaises(PrintiPyException):
+            api = PrintiPy(api_token=self.test_api_token)
+            api.webhooks.delete_webhook("54321")
