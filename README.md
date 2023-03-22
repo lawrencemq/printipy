@@ -231,7 +231,7 @@ new_product_data = {
         ]
     }
     new_product = CreateProduct.from_dict(new_product_data)
-    api = PrintiPy(api_token='...')
+    api = PrintiPy(api_token='...', shop_id='...')
     print(api.products.create_product(7370017, new_product))
 ```
 
