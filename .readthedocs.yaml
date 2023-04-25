@@ -14,9 +14,13 @@ build:
     python: "3.11"
 
 mkdocs:
-  configuration: mkdocs.yml
+  source_dir: docs
 
 # Optionally declare the Python requirements required to build your docs
 python:
    install:
    - requirements: docs/requirements.txt
+   system_packages: true
+   system_site_packages: true
+   packages:
+     - printipy.api
