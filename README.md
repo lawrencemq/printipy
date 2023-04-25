@@ -67,6 +67,19 @@ Table of Contents:
 
 ### Getting Started
 
+Every instance of PrintiPy requires an API Token. Follow [these steps](https://help.printify.com/hc/en-us/articles/4483626447249-How-can-I-generate-an-API-token-) to generate your token.
+
+Printify accounts can have multiple shops; each shop has its own ID.
+
+`shop_id` may also be passed in. If present, the ID will be used for all PrintiPy function calls automatically unless overridden in the PrintiPy function calls (see examples below). Otherwise, it will be required on specific PrintyPy function calls as needed.
+
+```python
+from printipy.api import PrintiPy
+
+shop_1_api = PrintiPy(api_token='...', shop_id='shop_1_ABC123')
+
+general_api = PrintiPy(api_token='...')
+```
 
 ### Shop
 
