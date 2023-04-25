@@ -1,10 +1,119 @@
 # PrintiPy
 The Printify API for Python
 
-Tested with Python 3.8+
+Tested with Python 3.8 - 3.11.
 
 
-## documentation - to do
+## Quickstart
+
+Quickly connect to the Printify API via PrintiPy. Pass an API token for the Printify account and an optional Shop ID and start automating!
+
+```python
+from printipy.api import PrintiPy
+
+api = PrintiPy(api_token='...', shop_id='...')
+
+for product in api.products.get_products():
+    print(product)
+```
+
+## API
+
+### Getting Started
+
+
+### Shop
+
+#### get shops
+
+#### delete shop
+
+### Catalog
+
+#### get_blueprints
+
+#### get_blueprint
+
+#### get_print_providers_for_blueprint
+
+#### get_variants
+
+#### get_shipping_info
+
+#### get_print_providers
+
+#### get_print_provider
+
+
+### Products
+
+#### get_products
+
+#### get_product
+
+#### create_product
+
+#### update_product
+
+#### delete_product
+
+#### publish_product
+
+#### set_product_published_success
+
+#### set_product_published_failed
+
+#### unpublish_product
+
+
+### Orders
+
+#### get_orders
+
+#### get_order
+
+#### create order
+
+##### create_order_for_existing_product
+
+##### create_order_with_simple_image_positioning
+
+##### create_order_with_advanced_image_positioning
+
+##### create_order_with_print_details
+
+##### create_order_with_sku
+
+#### send_order_to_production
+
+#### calc_shipping_for_order
+
+#### cancel_order
+
+
+### Artwork
+
+#### get_artwork_uploads
+
+#### get_artwork
+
+#### upload_artwork
+
+#### archive_artwork
+
+
+### Webhooks
+
+#### get_webhooks
+
+#### create_webhook
+
+#### update_webhook
+
+#### delete_webhook
+
+
+
 
 ## create product
 
@@ -236,9 +345,16 @@ new_product_data = {
 ```
 
 
-## Running Tests
+## Development
+
+TODO
+
+### Build
+TODO
+
+### Tests
 
 `pipenv run pytest`
 
-## Releasing
+### Releasing
 Specific contributors are allowed to create a tag. Upon a tag's push, Actions will deploy to TestPypi and Pypi
