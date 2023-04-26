@@ -11,6 +11,6 @@ dataclasses-json = "==0.5.7"
 responses = "==0.22.0"
 pytest = "==7.2.2"
 flake8 = "==6.0.0"
-mkdocs = "*"
-mkdocstrings = {extras = ["python"], version = "*"}
-mkdocs-material = "*"
+mkdocs = "==1.4.2"
+mkdocstrings = {extras = ["python"], version = "==0.9.0"}
+mkdocs-material = "==9.1.8"
