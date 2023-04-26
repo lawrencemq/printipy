@@ -602,6 +602,10 @@ class PrintiPyException(Exception):
     pass
 
 
+class ParseException(PrintiPyException):
+    pass
+
+
 class InvalidScopeException(Exception):
     pass
 
@@ -672,7 +676,7 @@ class _ApiHandlingMixin:
         elif type(data) == dict:
             return clazz.from_dict(data)
         else:
-            raise Exception('Unable to parse response: was not a list or object')
+            raise ParseException('Unable to parse response: was not a list or object')
 
     @staticmethod
     def _get_next_page_url(initial_url: str, info: Dict) -> Optional[str]:
@@ -682,19 +686,58 @@ class _ApiHandlingMixin:
         return f'{initial_url}{next_page}'
 
 
-class _PrintipyShop(_ApiHandlingMixin):
+class PrintiPyShop(_ApiHandlingMixin):
+    """
+    Used to access the [Printify Shops](https://developers.printify.com/#shops) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...')
+        >>> shops = api.shops.get_shops()
+    """
 
     def get_shops(self) -> List[Shop]:
+        """
+        Pulls a list of shops for a Printify account. Returns empty list if no shops exist for account.
+
+        Examples:
+            >>> api.get_shops()
+
+        Returns:
+            List of `printipy.api.Shop` objects
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            PrintiPyException: If the request failed to validate with Printify's schema - usually contains information regarding malformed input
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
+        """
         shops_url = f'{self.api_url}/v1/shops.json'
         shop_information = self._get(shops_url)
         return self._parse(Shop, shop_information)
 
-    def delete_shop(self, shop: Shop):
+    def delete_shop(self, shop: Shop) -> None:
+        """
+        Deletes a shop from a Printify account
+
+        Examples:
+            By pass in data pulled from `printipy.api.PrintiPyShop.get_shops`
+            >>> shops = api.get_shops()
+            >>> api.delete_shop(shops[0])
+
+            By passing in specific shop information
+            >>> from printipy.api import Shop
+            >>> shop = Shop(id='...', title='...', sales_channel='...')
+            >>> api.delete_shop(shop)
+
+        Args:
+            shop (Shop): A Shop to delete. Pull all shops using :func:`get_shops <printipy.api.PrintiPyShop.get_shops>`
+        """
         delete_url = f'{self.api_url}/v1/shops/{shop.id}/connection.json'
         self._delete(delete_url)
 
 
-class _PrintipyCatalog(_ApiHandlingMixin):
+class PrintiPyCatalog(_ApiHandlingMixin):
     def get_blueprints(self) -> List[Blueprint]:
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints.json'
         blueprint_information = self._get(blueprint_url)
@@ -759,7 +802,7 @@ class _ShopIdMixin:
         return inner
 
 
-class _PrintipyProducts(_ApiHandlingMixin, _ShopIdMixin):
+class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
@@ -838,7 +881,7 @@ class _PrintipyProducts(_ApiHandlingMixin, _ShopIdMixin):
         return True
 
 
-class _PrintipyOrders(_ApiHandlingMixin, _ShopIdMixin):
+class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
@@ -918,7 +961,7 @@ class _PrintipyOrders(_ApiHandlingMixin, _ShopIdMixin):
         return self._parse(Order, order_information)
 
 
-class _PrintipyArtwork(_ApiHandlingMixin):
+class PrintiPyArtwork(_ApiHandlingMixin):
     def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
         # GET / v1 / uploads.json
         initial_url = f'{self.api_url}/v1/uploads.json'
@@ -969,7 +1012,7 @@ class _PrintipyArtwork(_ApiHandlingMixin):
         return True
 
 
-class _PrintipyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
+class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
@@ -1006,9 +1049,9 @@ class _PrintipyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 class PrintiPy:
 
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]] = None):
-        self.shops = _PrintipyShop(api_token=api_token)
-        self.catalog = _PrintipyCatalog(api_token=api_token)
-        self.products = _PrintipyProducts(api_token=api_token, shop_id=shop_id)
-        self.orders = _PrintipyOrders(api_token=api_token, shop_id=shop_id)
-        self.artwork = _PrintipyArtwork(api_token=api_token)
-        self.webhooks = _PrintipyWebhooks(api_token=api_token, shop_id=shop_id)
+        self.shops = PrintiPyShop(api_token=api_token)
+        self.catalog = PrintiPyCatalog(api_token=api_token)
+        self.products = PrintiPyProducts(api_token=api_token, shop_id=shop_id)
+        self.orders = PrintiPyOrders(api_token=api_token, shop_id=shop_id)
+        self.artwork = PrintiPyArtwork(api_token=api_token)
+        self.webhooks = PrintiPyWebhooks(api_token=api_token, shop_id=shop_id)
