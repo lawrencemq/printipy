@@ -358,6 +358,9 @@ class CreateShippingEstimate:
 @dataclass_json
 @dataclass
 class ProductOptionValue:
+    """
+    TODO
+    """
     id: str
     title: str
 
@@ -365,6 +368,9 @@ class ProductOptionValue:
 @dataclass_json
 @dataclass
 class ProductOption:
+    """
+    TODO
+    """
     name: str
     type: str
     values: List[ProductOptionValue]
@@ -373,6 +379,9 @@ class ProductOption:
 @dataclass_json
 @dataclass
 class ProductVariant:
+    """
+    TODO
+    """
     id: int
     price: int
     is_enabled: bool
@@ -389,6 +398,9 @@ class ProductVariant:
 @dataclass_json
 @dataclass
 class ProductImage:
+    """
+    TODO
+    """
     src: str
     variant_ids: List[int]
     position: str
@@ -399,6 +411,9 @@ class ProductImage:
 @dataclass_json
 @dataclass
 class PrintAreaInfo:
+    """
+    TODO
+    """
     x: float
     y: float
     scale: float
@@ -408,6 +423,9 @@ class PrintAreaInfo:
 @dataclass_json
 @dataclass
 class PlaceholderImage(PrintAreaInfo):
+    """
+    TODO
+    """
     id: str
     name: Optional[str] = None
     type: Optional[str] = None
@@ -418,6 +436,9 @@ class PlaceholderImage(PrintAreaInfo):
 @dataclass_json
 @dataclass
 class ProductPlaceholder:
+    """
+    TODO
+    """
     position: str
     images: List[PlaceholderImage]
 
@@ -425,6 +446,9 @@ class ProductPlaceholder:
 @dataclass_json
 @dataclass
 class ProductPrintArea:
+    """
+    TODO
+    """
     variant_ids: List[int]
     placeholders: List[ProductPlaceholder]
     background: Optional[str] = None
@@ -433,6 +457,9 @@ class ProductPrintArea:
 @dataclass_json
 @dataclass
 class ProductExternal:
+    """
+    TODO
+    """
     id: str
     handle: str
     shipping_template_id: Optional[str] = None
@@ -442,6 +469,9 @@ class ProductExternal:
 @dataclass_json
 @dataclass
 class Product:
+    """
+    TODO
+    """
     id: str
     title: str
     description: str
@@ -492,6 +522,9 @@ class Publish:
 @dataclass_json
 @dataclass
 class PublishingSucceededExternal:
+    """
+    TODO
+    """
     id: str
     handle: str
 
@@ -499,12 +532,18 @@ class PublishingSucceededExternal:
 @dataclass_json
 @dataclass
 class PublishingSucceeded:
+    """
+    TODO
+    """
     external: PublishingSucceededExternal
 
 
 @dataclass_json
 @dataclass
 class LineItem:
+    """
+    TODO
+    """
     product_id: str
     quantity: int
     variant_id: int
@@ -520,6 +559,9 @@ class LineItem:
 @dataclass_json
 @dataclass
 class Shipment:
+    """
+    TODO
+    """
     carrier: str
     number: str
     url: str
@@ -529,6 +571,9 @@ class Shipment:
 @dataclass_json
 @dataclass
 class Order:
+    """
+    TODO
+    """
     id: str
     address_to: Address
     line_items: List[LineItem]
@@ -555,6 +600,9 @@ class __CreateOrderLineItemBase:
 @dataclass_json
 @dataclass
 class CreateOrderLineItem(__CreateOrderLineItemBase):
+    """
+    TODO
+    """
     product_id: str
 
 
@@ -567,6 +615,9 @@ class _CreateOrder:
 @dataclass_json
 @dataclass
 class CreateOrderExistingProduct(_CreateOrder):
+    """
+    TODO
+    """
     external_id: str
     label: str
     line_items: List[CreateOrderLineItem]
@@ -578,6 +629,9 @@ class CreateOrderExistingProduct(_CreateOrder):
 @dataclass_json
 @dataclass
 class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
+    """
+    TODO
+    """
     print_provider_id: int
     blueprint_id: int
     print_areas: Dict[str, Any]
@@ -586,6 +640,9 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
 @dataclass_json
 @dataclass
 class CreateOrderSimpleImageProcessing(CreateOrderExistingProduct):
+    """
+    TODO
+    """
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemSimpleProcessing]
@@ -597,12 +654,18 @@ class CreateOrderSimpleImageProcessing(CreateOrderExistingProduct):
 @dataclass_json
 @dataclass
 class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
+    """
+    TODO
+    """
     src: str
 
 
 @dataclass_json
 @dataclass
 class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
+    """
+    TODO
+    """
     blueprint_id: int
     print_provider_id: int
     print_areas: Dict[str, List[PrintAreaInfo]]
@@ -611,6 +674,9 @@ class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
 @dataclass_json
 @dataclass
 class CreateOrderAdvancedImageProcessing(_CreateOrder):
+    """
+    TODO
+    """
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemAdvancedProcessing]
@@ -622,12 +688,18 @@ class CreateOrderAdvancedImageProcessing(_CreateOrder):
 @dataclass_json
 @dataclass
 class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
+    """
+    TODO
+    """
     print_details: Dict[str, Any]
 
 
 @dataclass_json
 @dataclass
 class CreateOrderPrintDetails(_CreateOrder):
+    """
+    TODO
+    """
     external_id: str
     label: str
     line_items = List[CreateOrderLineItemPrintDetails]
@@ -639,6 +711,9 @@ class CreateOrderPrintDetails(_CreateOrder):
 @dataclass_json
 @dataclass
 class CreateOrderLineItemSku:
+    """
+    TODO
+    """
     sku: str
     quantity: int
 
@@ -646,6 +721,9 @@ class CreateOrderLineItemSku:
 @dataclass_json
 @dataclass
 class CreateOrderSku(_CreateOrder):
+    """
+    TODO
+    """
     external_id: str
     label: str
     line_items = List[CreateOrderLineItemSku]
@@ -657,6 +735,9 @@ class CreateOrderSku(_CreateOrder):
 @dataclass_json
 @dataclass
 class Artwork:
+    """
+    TODO
+    """
     id: str
     file_name: str
     height: int
@@ -670,6 +751,9 @@ class Artwork:
 @dataclass_json
 @dataclass
 class Webhook:
+    """
+    TODO
+    """
     id: str
     shop_id: str
     url: str
@@ -679,6 +763,9 @@ class Webhook:
 @dataclass_json
 @dataclass
 class CreateWebhook:
+    """
+    TODO
+    """
     url: str
     topic: str
 
@@ -686,6 +773,9 @@ class CreateWebhook:
 @dataclass_json
 @dataclass
 class UpdateWebhook:
+    """
+    TODO
+    """
     url: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
@@ -697,12 +787,18 @@ class UpdateWebhook:
 @dataclass_json
 @dataclass
 class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
+    """
+    TODO
+    """
     id: str
 
 
 @dataclass_json
 @dataclass
 class CreateProductPrintAreaPlaceholder:
+    """
+    TODO
+    """
     position: str
     images: List[CreateProductPrintAreaPlaceholderImage]
 
@@ -710,6 +806,9 @@ class CreateProductPrintAreaPlaceholder:
 @dataclass_json
 @dataclass
 class CreateProductPrintArea:
+    """
+    TODO
+    """
     variant_ids: List[int]
     placeholders: List[CreateProductPrintAreaPlaceholder]
 
@@ -717,6 +816,9 @@ class CreateProductPrintArea:
 @dataclass_json
 @dataclass
 class CreateProductVariant:
+    """
+    TODO
+    """
     id: int
     price: int
     is_enabled: bool
@@ -725,6 +827,9 @@ class CreateProductVariant:
 @dataclass_json
 @dataclass
 class CreateProduct:
+    """
+    TODO
+    """
     title: str
     description: str
     blueprint_id: int
@@ -733,15 +838,24 @@ class CreateProduct:
     print_areas: List[CreateProductPrintArea]
 
     def add_variant(self, variant: CreateProductVariant):
+        """
+        TODO
+        """
         self.variants.append(variant)
 
     def add_print_area(self, print_area: CreateProductPrintArea):
+        """
+        TODO
+        """
         self.print_areas.append(print_area)
 
 
 @dataclass_json
 @dataclass
 class UpdateProductExternal:
+    """
+    TODO
+    """
     id: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
@@ -756,6 +870,9 @@ class UpdateProductExternal:
 @dataclass_json
 @dataclass
 class UpdateProduct:
+    """
+    TODO
+    """
     title: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
