@@ -24,7 +24,7 @@ for product in api.products.get_products():
 
 ## API
 
-TODO Add API link to the generated docs here
+Read the docs [here](https://lawrencemq.github.io/printipy/)!
 
 ## create product
 
