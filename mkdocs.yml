@@ -9,7 +9,7 @@ plugins:
 nav:
   - index.md
   - how-to-guides.md
-  - API Reference: reference.md
-  - Data Objects: data-objects.md
-  - API Exceptions: exceptions.md
+  - PrintiPy Reference: reference.md
+  - PrintiPy Data Objects: data-objects.md
+  - PrintiPy Exceptions: exceptions.md
   - explanation.md

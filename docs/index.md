@@ -23,7 +23,31 @@ your use case by looking at the different pages.
 
 ## Project Overview
 
-::: printipy
+
+### Install
+
+```shell
+pipenv install printipy
+```
+
+### Example
+
+Quickly connect to the Printify API via PrintiPy. Pass an API token for the Printify account and an optional Shop ID and start automating!
+
+```python
+from printipy.api import PrintiPy
+
+api = PrintiPy(api_token='...', shop_id='...')
+
+for product in api.products.get_products():
+    print(product)
+```
+
+### References
+
+- [Printipy API Documentation](./reference.md)
+- [Printipy Data Object Documentation](./data-objects.md)
+- [Printipy Exception Documentation](./exceptions.md)
 
 ## Acknowledgements
 
