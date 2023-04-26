@@ -146,23 +146,35 @@ class PrintiPyCatalog(_ApiHandlingMixin):
         >>> print_providers = api.catalog.get_print_providers()
     """
     def get_blueprints(self) -> List[Blueprint]:
+        """
+        TODO
+        """
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints.json'
         blueprint_information = self._get(blueprint_url)
         return self._parse(Blueprint, blueprint_information)
 
     def get_blueprint(self, blueprint_id: Union[str, int]) -> Optional[Blueprint]:
+        """
+        TODO
+        """
         # GET / v1 / catalog / blueprints / {blueprint_id}.json
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}.json'
         blueprint_information = self._get(blueprint_url)
         return self._parse(Blueprint, blueprint_information)
 
     def get_print_providers_for_blueprint(self, blueprint_id: Union[str, int]) -> List[PrintProvider]:
+        """
+        TODO
+        """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers.json
         print_providers_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers.json'
         print_provider_information = self._get(print_providers_url)
         return self._parse(PrintProvider, print_provider_information)
 
     def get_variants(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> PrintProviderVariants:
+        """
+        TODO
+        """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / variants.json
         variants_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
                        f'print_providers/{print_provider_id}/variants.json'
@@ -170,6 +182,9 @@ class PrintiPyCatalog(_ApiHandlingMixin):
         return self._parse(PrintProviderVariants, variant_information)
 
     def get_shipping_info(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> ShippingInfo:
+        """
+        TODO
+        """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / shipping.json
         shipping_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
                        f'print_providers/{print_provider_id}/shipping.json'
@@ -177,12 +192,18 @@ class PrintiPyCatalog(_ApiHandlingMixin):
         return self._parse(ShippingInfo, shipping_information)
 
     def get_print_providers(self) -> List[PrintProvider]:
+        """
+        TODO
+        """
         # GET / v1 / catalog / print_providers.json
         print_providers_url = f'{self.api_url}/v1/catalog/print_providers.json'
         print_provider_information = self._get(print_providers_url)
         return self._parse(PrintProvider, print_provider_information)
 
     def get_print_provider(self, print_provider_id: Union[str, int]) -> Optional[PrintProvider]:
+        """
+        TODO
+        """
         # GET / v1 / catalog / print_providers / {print_provider_id}.json
         print_provider_url = f'{self.api_url}/v1/catalog/print_providers/{print_provider_id}.json'
         print_provider_information = self._get(print_provider_url)
@@ -219,11 +240,17 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         >>> shop_products = api.products.get_products()
     """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        """
+        TODO
+        """
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def get_products(self, shop_id: Union[str, int], max_pages: int = 1) -> List[Product]:
+        """
+        TODO
+        """
         # GET / v1 / shops / {shop_id} / products.json
         initial_url = f'{self.api_url}/v1/shops/{shop_id}/products.json'
         products_url = deepcopy(initial_url)
@@ -238,6 +265,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def get_product(self, product_id: str, shop_id: Union[str, int]) -> Optional[Product]:
+        """
+        TODO
+        """
         # GET / v1 / shops / {shop_id} / products / {product_id}.json
         product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
         product_information = self._get(product_url)
@@ -245,6 +275,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def create_product(self, create_product: CreateProduct, shop_id: Union[str, int]) -> Product:
+        """
+        TODO
+        """
         shop_id_to_use = self._get_shop_id(shop_id)
         # POST / v1 / shops / {shop_id} / products.json
         create_product_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/products.json'
@@ -253,6 +286,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def update_product(self, product_id: str, update_product: UpdateProduct, shop_id: Union[str, int]) -> Product:
+        """
+        TODO
+        """
         # PUT / v1 / shops / {shop_id} / products / {product_id}.json
         update_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
         product_information = self._put(update_product_url, data=update_product.to_dict())
@@ -260,6 +296,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # DELETE / v1 / shops / {shop_id} / products / {product_id}.json
         delete_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
         self._delete(delete_product_url)
@@ -267,6 +306,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def publish_product(self, product_id: str, publish: Publish, shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publish.json
         publish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publish.json'
         self._post(publish_product_url, data=publish.to_dict())
@@ -275,6 +317,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def set_product_published_success(self, product_id: str, publishing_succeeded: PublishingSucceeded,
                                       shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_succeeded.json
         publishing_succeeded_url = f'{self.api_url}/v1/shops/{shop_id}/products/' \
                                    f'{product_id}/publishing_succeeded.json'
@@ -283,6 +328,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def set_product_published_failed(self, product_id: str, reason: str, shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_failed.json
         publishing_failed_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_failed.json'
         self._post(publishing_failed_url, data={"reason": reason})
@@ -290,6 +338,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def unpublish_product(self, product_id: str, shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / products / {product_id} / unpublish.json
         unpublish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/unpublish.json'
         self._post(unpublish_product_url)
@@ -311,6 +362,9 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def get_orders(self, max_pages: int = 1, shop_id: Optional[Union[str, int]] = None) -> List[Order]:
+        """
+        TODO
+        """
         shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders.json
         initial_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders.json'
@@ -326,6 +380,9 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def get_order(self, order_id: str, shop_id: Optional[Union[str, int]] = None) -> Order:
+        """
+        TODO
+        """
         shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders / {order_id}.json
         order_url = f'{self.api_url}/v1/shops/{shop_id_to_use}/orders/{order_id}.json'
@@ -341,28 +398,46 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def create_order_for_existing_product(self, create_order: CreateOrderExistingProduct,
                                           shop_id: Union[str, int]) -> str:
+        """
+        TODO
+        """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_simple_image_positioning(self, create_order: CreateOrderExistingProduct,
                                                    shop_id: Union[str, int]) -> str:
+        """
+        TODO
+        """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_advanced_image_positioning(self, create_order: CreateOrderAdvancedImageProcessing,
                                                      shop_id: Union[str, int]) -> str:
+        """
+        TODO
+        """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_print_details(self, create_order: CreateOrderPrintDetails, shop_id: Union[str, int]) -> str:
+        """
+        TODO
+        """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_sku(self, create_order: CreateOrderSku, shop_id: Union[str, int]) -> str:
+        """
+        TODO
+        """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def send_order_to_production(self, order_id: str, shop_id: Union[str, int]) -> Order:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / orders / {order_id} / send_to_production.json
         send_order_to_production_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/send_to_production.json'
         order_information = self._post(send_order_to_production_url)
@@ -371,6 +446,9 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def calc_shipping_for_order(self, create_shipping_cost_estimate: CreateShippingEstimate,
                                 shop_id: Union[str, int]) -> ShippingCost:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / orders / shipping.json
         shipping_estimate_url = f'{self.api_url}/v1/shops/{shop_id}/orders/shipping.json'
         shipping_information = self._post(shipping_estimate_url, data=create_shipping_cost_estimate.to_dict())
@@ -378,6 +456,9 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def cancel_order(self, order_id: str, shop_id: Union[str, int]) -> Order:
+        """
+        TODO
+        """
         # POST / v1 / shops / {shop_id} / orders / {order_id} / cancel.json
         cancel_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/cancel.json'
         order_information = self._post(cancel_order_url)
@@ -394,6 +475,9 @@ class PrintiPyArtwork(_ApiHandlingMixin):
         >>> artwork = api.artwork.upload_artwork(filename='...')
     """
     def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
+        """
+        TODO
+        """
         # GET / v1 / uploads.json
         initial_url = f'{self.api_url}/v1/uploads.json'
         artwork_url = deepcopy(initial_url)
@@ -407,12 +491,18 @@ class PrintiPyArtwork(_ApiHandlingMixin):
         return all_artworks
 
     def get_artwork(self, image_id: str) -> Artwork:
+        """
+        TODO
+        """
         # GET / v1 / uploads / {image_id}.json
         artwork_url = f'{self.api_url}/v1/uploads/{image_id}.json'
         artwork_information = self._get(artwork_url)
         return self._parse(Artwork, artwork_information)
 
     def upload_artwork(self, filename: Optional[str] = None, url: Optional[str] = None) -> Artwork:
+        """
+        TODO
+        """
         if filename and url:
             raise PrintiPyException("Must provide a local filename or url for upload, not both.")
 
@@ -437,6 +527,9 @@ class PrintiPyArtwork(_ApiHandlingMixin):
         return self._parse(Artwork, artwork_information)
 
     def archive_artwork(self, image_id: str) -> True:
+        """
+        TODO
+        """
         # post / v1 / uploads / {image_id} / archive.json
         archive_artwork_url = f'{self.api_url}/v1/uploads/{image_id}/archive.json'
         self._post(archive_artwork_url)
@@ -453,11 +546,17 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
         >>> webhooks = api.webhooks.get_webhooks()
     """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+        """
+        TODO
+        """
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def get_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
+        """
+        TODO
+        """
         # / v1 / shops / {shop_id} / webhooks.json
         webhooks_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
         webhooks_information = self._get(webhooks_url)
@@ -465,6 +564,9 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def create_webhook(self, create_webhook: CreateWebhook, shop_id: Union[str, int]) -> Webhook:
+        """
+        TODO
+        """
         # POST /v1/shops/{shop_id}/webhooks.json
         create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
         webhook_information = self._post(create_webhook_url, data=create_webhook.to_dict())
@@ -472,6 +574,9 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def update_webhook(self, webhook_id: str, update_webhook: UpdateWebhook, shop_id: Union[str, int]) -> Webhook:
+        """
+        TODO
+        """
         # PUT /v1/shops/{shop_id}/webhooks/{webhook_id}.json
         create_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
         webhook_information = self._put(create_webhook_url, data=update_webhook.to_dict())
@@ -479,6 +584,9 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
     @_ShopIdMixin._require_shop_id
     def delete_webhook(self, webhook_id: str, shop_id: Union[str, int]) -> True:
+        """
+        TODO
+        """
         # DELETE /v1/shops/{shop_id}/webhooks/{webhook_id}.json
         delete_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
         self._delete(delete_webhook_url)
