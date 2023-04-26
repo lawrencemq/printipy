@@ -1,8 +1,3 @@
-
-
-This part of the project documentation focuses on
-an **information-oriented** approach. Use it as a
-reference for the technical implementation of the
-`calculator` project code.
+Technical documentation on the various data objects (dataclasses) in the Python interface for PrintiPy.
 
 ::: printipy.data_objects
