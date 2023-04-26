@@ -3,8 +3,13 @@ The Printify API for Python
 
 Tested with Python 3.8 - 3.11.
 
+## Install
 
-## Quickstart
+```shell
+pipenv install printipy
+```
+
+## Example
 
 Quickly connect to the Printify API via PrintiPy. Pass an API token for the Printify account and an optional Shop ID and start automating!
 
@@ -19,177 +24,7 @@ for product in api.products.get_products():
 
 ## API
 
-Table of Contents:
-1. [Getting Started](#getting-started)
-1. [Shop](#Shop)
-   1. [get shops](#get shops)
-   1. [delete shop](#delete shop)
-1. [Catalog](#Catalog)
-   1. [get_blueprints](#get_blueprints)
-   1. [get_blueprint](#get_blueprint)
-   1. [get_print_providers_for_blueprint](#get_print_providers_for_blueprint)
-   1. [get_variants](#get_variants)
-   1. [get_shipping_info](#get_shipping_info)
-   1. [get_print_providers](#get_print_providers)
-   1. [get_print_provider](#get_print_provider)
-1. [Products](#Products)
-   1. [get_products](#get_products)
-   1. [get_product](#get_product)
-   1. [create_product](#create_product)
-   1. [update_product](#update_product)
-   1. [delete_product](#delete_product)
-   1. [publish_product](#publish_product)
-   1. [set_product_published_success](#set_product_published_success)
-   1. [set_product_published_failed](#set_product_published_failed)
-   1. [unpublish_product](#unpublish_product)
-1. [Orders](#Orders)
-   1. [get_orders](#get_orders)
-   1. [get_order](#get_order)
-   1. [create order](#create order)
-   1. [create_order_for_existing_product](#create_order_for_existing_product)
-   1. [create_order_with_simple_image_positioning](#create_order_with_simple_image_positioning)
-   1. [create_order_with_advanced_image_positioning](#create_order_with_advanced_image_positioning)
-   1. [create_order_with_print_details](#create_order_with_print_details)
-   1. [create_order_with_sku](#create_order_with_sku)
-   1. [send_order_to_production](#send_order_to_production)
-   1. [calc_shipping_for_order](#calc_shipping_for_order)
-   1. [cancel_order](#cancel_order)
-1. [Artwork](#Artwork)
-   1. [get_artwork_uploads](#get_artwork_uploads)
-   1. [get_artwork](#get_artwork)
-   1. [upload_artwork](#upload_artwork)
-   1. [archive_artwork](#archive_artwork)
-1. [Webhooks](#Webhooks)
-   1. [get_webhooks](#get_webhooks)
-   1. [create_webhook](#create_webhook)
-   1. [update_webhook](#update_webhook)
-   1. [delete_webhook](#delete_webhook)
-
-### Getting Started
-
-Every instance of PrintiPy requires an API Token. Follow [these steps](https://help.printify.com/hc/en-us/articles/4483626447249-How-can-I-generate-an-API-token-) to generate your token.
-
-
-Create an instance of Printipy:
-
-```python
-from printipy.api import PrintiPy
-
-api = PrintiPy(api_token='...')
-```
-
-Printify accounts can have multiple shops; each shop has its own ID.
-
-`shop_id` may also be passed in. If present, the ID will be used for all PrintiPy function calls automatically unless overridden in the PrintiPy function calls (see examples below). Otherwise, it will be required on specific PrintyPy function calls as needed.
-
-```python
-from printipy.api import PrintiPy
-
-api = PrintiPy(api_token='...', shop_id='shop_1_ABC123')
-```
-
-### Shop
-
-#### get_shops
-
-Returns instances of 
-
-```python
-from printipy.api import PrintiPy
-
-api = PrintiPy(api_token='...')
-
-api.shops.get_shops()
-```
-
-#### delete_shop
-
-### Catalog
-
-#### get_blueprints
-
-#### get_blueprint
-
-#### get_print_providers_for_blueprint
-
-#### get_variants
-
-#### get_shipping_info
-
-#### get_print_providers
-
-#### get_print_provider
-
-
-### Products
-
-#### get_products
-
-#### get_product
-
-#### create_product
-
-#### update_product
-
-#### delete_product
-
-#### publish_product
-
-#### set_product_published_success
-
-#### set_product_published_failed
-
-#### unpublish_product
-
-
-### Orders
-
-#### get_orders
-
-#### get_order
-
-#### create order
-
-##### create_order_for_existing_product
-
-##### create_order_with_simple_image_positioning
-
-##### create_order_with_advanced_image_positioning
-
-##### create_order_with_print_details
-
-##### create_order_with_sku
-
-#### send_order_to_production
-
-#### calc_shipping_for_order
-
-#### cancel_order
-
-
-### Artwork
-
-#### get_artwork_uploads
-
-#### get_artwork
-
-#### upload_artwork
-
-#### archive_artwork
-
-
-### Webhooks
-
-#### get_webhooks
-
-#### create_webhook
-
-#### update_webhook
-
-#### delete_webhook
-
-
-
+TODO Add API link to the generated docs here
 
 ## create product
 
@@ -423,10 +258,11 @@ new_product_data = {
 
 ## Development
 
-TODO
+`pipenv install`
 
 ### Build
-TODO
+
+`python setup.py sdist bdist_wheel`
 
 ### Tests
 
@@ -434,7 +270,9 @@ TODO
 
 ### Documentation
 
-`pipenv run mkdocs build`
+Build docs using `pipenv run mkdocs build`
+
+Deploy docs using `mkdocs gh-deploy`. This pushes the generated `/site` to `gh-pages` branch on Github. 
 
 ### Releasing
 Specific contributors are allowed to create a tag. Upon a tag's push, Actions will deploy to TestPypi and Pypi
