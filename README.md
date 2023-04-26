@@ -432,5 +432,9 @@ TODO
 
 `pipenv run pytest`
 
+### Documentation
+
+`pipenv run mkdocs build`
+
 ### Releasing
 Specific contributors are allowed to create a tag. Upon a tag's push, Actions will deploy to TestPypi and Pypi
