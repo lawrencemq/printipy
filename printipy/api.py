@@ -738,6 +738,14 @@ class PrintiPyShop(_ApiHandlingMixin):
 
 
 class PrintiPyCatalog(_ApiHandlingMixin):
+    """
+    Used to access the [Printify Catalog](https://developers.printify.com/#catalog) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...')
+        >>> print_providers = api.catalog.get_print_providers()
+    """
     def get_blueprints(self) -> List[Blueprint]:
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints.json'
         blueprint_information = self._get(blueprint_url)
@@ -803,6 +811,14 @@ class _ShopIdMixin:
 
 
 class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
+    """
+    Used to access the [Printify Products](https://developers.printify.com/#products) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...', shop_id='...')
+        >>> shop_products = api.products.get_products()
+    """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
@@ -882,6 +898,14 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
 
 class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
+    """
+    Used to access the [Printify Orders](https://developers.printify.com/#orders) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...', shop_id='...')
+        >>> shop_orders = api.orders.get_orders()
+    """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
@@ -962,6 +986,14 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
 
 class PrintiPyArtwork(_ApiHandlingMixin):
+    """
+    Used to access the [Printify Uploads](https://developers.printify.com/#uploads) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...')
+        >>> artwork = api.artwork.upload_artwork(filename='...')
+    """
     def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
         # GET / v1 / uploads.json
         initial_url = f'{self.api_url}/v1/uploads.json'
@@ -1013,6 +1045,14 @@ class PrintiPyArtwork(_ApiHandlingMixin):
 
 
 class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
+    """
+    Used to access the [Printify Webhooks](https://developers.printify.com/#webhooks) APIs
+
+    Examples:
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...', shop_id='...')
+        >>> webhooks = api.webhooks.get_webhooks()
+    """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
