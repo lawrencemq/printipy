@@ -1087,8 +1087,30 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
 
 class PrintiPy:
+    """
+    Used to access all [Printify APIs](https://developers.printify.com/)
+
+    Examples:
+        To use the same Shop ID for each call
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...', shop_id='...')
+        >>> artwork = api.artwork.upload_artwork(filename='...')
+
+        To use a differnt Shop ID for each call
+        >>> from printipy.api import PrintiPy
+        >>> api = PrintiPy(api_token='...')
+        >>> shop123_products = api.products.get_products(shop_id='shop123')
+        >>> shop456_products = api.products.get_products(shop_id='shop456')
+    """
 
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]] = None):
+        """
+        Entrypoint needed to access all [Printify APIs](https://developers.printify.com/)
+
+        Args:
+            api_token (str): Every instance of PrintiPy requires an API Token. Follow [these steps](https://help.printify.com/hc/en-us/articles/4483626447249-How-can-I-generate-an-API-token-) to generate a token
+            shop_id (Optional[str]): The ID of a specific Printify shop. If none is given, some APIs will still work (as they do not require a Shop) while others will require a Shop ID to be passed upon a function call
+        """
         self.shops = PrintiPyShop(api_token=api_token)
         self.catalog = PrintiPyCatalog(api_token=api_token)
         self.products = PrintiPyProducts(api_token=api_token, shop_id=shop_id)
