@@ -8,7 +8,6 @@ plugins:
 
 nav:
   - index.md
-  - tutorials.md
   - how-to-guides.md
   - API Reference: reference.md
   - explanation.md
