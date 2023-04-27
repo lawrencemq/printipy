@@ -632,7 +632,7 @@ class CreateOrderByExistingProduct(__CreateOrder):
     Args:
         external_id: ID of the external storefront
         label: label for the order - typically an order number
-        line_items = list of items to include in order, specified by product information
+        line_items: list of items to include in order, specified by product information
         shipping_method: ID of the shipping policy in the storefront
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
@@ -674,7 +674,7 @@ class CreateOrderBySimpleImageProcessing(CreateOrderByExistingProduct):
     Args:
         external_id: ID of the external storefront
         label: label for the order - typically an order number
-        line_items = list of items to include in order, specified by blueprints, variants, and print areas
+        line_items: list of items to include in order, specified by blueprints, variants, and print areas
         shipping_method: ID of the shipping policy in the storefront
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
@@ -694,10 +694,10 @@ class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
     Options to create or update a print area for an image. Stores and validate data between Python and Printify.
 
     Args:
-        x: Coordinate across the X axis for an image to start
-        y: Coordinate across the Y axis for an image to start
-        scale: The scaling factor for an image to be resized
-        angle: The angle at which an image will be rotated
+        x (float): Coordinate across the X axis for an image to start
+        y (float): Coordinate across the Y axis for an image to start
+        scale (float): The scaling factor for an image to be resized
+        angle (float): The angle at which an image will be rotated
         src: the filename of the image to use
     """
     src: str
@@ -730,12 +730,14 @@ class CreateOrderByAdvancedImageProcessing(__CreateOrder):
     """
     Options to create an order by advanced image processing. This method allows for setting a new blueprint, print provider, and print areas for each line item.
 
+    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+
     Stores and validate data between Python and Printify.
 
     Args:
         external_id: ID of the external storefront
         label: label for the order - typically an order number
-        line_items = list of items to include in order, specified by blueprints, print providers, and print areas
+        line_items: list of items to include in order, specified by blueprints, print providers, and print areas
         shipping_method: ID of the shipping policy in the storefront
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
@@ -759,9 +761,10 @@ class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
     Args:
         variant_id (int): the variant of the product to use in an order
         quantity (int): the number of copies to include int he line item for a specific product
-        print_provider_id: ID of the print provider
-        blueprint_id: ID of the blueprint for the product
-        print_areas: information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
+        print_provider_id (int): ID of the print provider
+        blueprint_id (int): ID of the blueprint for the product
+        print_areas (Dict[str, Any]): information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
+        print_details (Dict[str, Any): information on print details. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
     """
     print_details: Dict[str, Any]
 
@@ -777,14 +780,14 @@ class CreateOrderByPrintDetails(__CreateOrder):
     Args:
         external_id: ID of the external storefront
         label: label for the order - typically an order number
-        line_items = list of items to include in order, specified by print details
+        line_items: list of items to include in order, specified by print details
         shipping_method: ID of the shipping policy in the storefront
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
     external_id: str
     label: str
-    line_items = List[CreateOrderLineItemPrintDetails]
+    line_items: List[CreateOrderLineItemPrintDetails]
     shipping_method: int
     send_shipping_notification: bool
     address_to: Address
@@ -813,14 +816,14 @@ class CreateOrderBySku(__CreateOrder):
     Args:
         external_id: ID of the external storefront
         label: label for the order - typically an order number
-        line_items = list of items to include in order, specified by SKUs
+        line_items: list of items to include in order, specified by SKUs
         shipping_method: ID of the shipping policy in the storefront
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
     external_id: str
     label: str
-    line_items = List[CreateOrderLineItemSku]
+    line_items: List[CreateOrderLineItemSku]
     shipping_method: int
     send_shipping_notification: bool
     address_to: Address
