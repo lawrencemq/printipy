@@ -412,7 +412,13 @@ class ProductImage:
 @dataclass
 class PrintAreaInfo:
     """
-    TODO
+    Options to create or update a print area for an image. Stores and validate data between Python and Printify.
+
+    Args:
+        x: Coordinate across the X axis for an image to start
+        y: Coordinate across the Y axis for an image to start
+        scale: The scaling factor for an image to be resized
+        angle: The angle at which an image will be rotated
     """
     x: float
     y: float
@@ -752,7 +758,13 @@ class Artwork:
 @dataclass
 class Webhook:
     """
-    TODO
+    Object representing a Webhook. Stores and validate data between Python and Printify.
+
+    Args:
+        id: Webhook ID
+        shop_id: ID of the shop relating to the webhook
+        url: External webhook URL
+        topic: type of event to push data to
     """
     id: str
     shop_id: str
@@ -764,7 +776,11 @@ class Webhook:
 @dataclass
 class CreateWebhook:
     """
-    TODO
+    Options to create a webhook. Stores and validate data between Python and Printify.
+
+    Args:
+        url: External webhook URL
+        topic: type of event to push data to
     """
     url: str
     topic: str
@@ -774,7 +790,11 @@ class CreateWebhook:
 @dataclass
 class UpdateWebhook:
     """
-    TODO
+    Options to update a webhook. All fields are optional. Stores and validate data between Python and Printify.
+
+    Args:
+        url: External webhook URL
+        topic: type of event to push data to
     """
     url: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
@@ -788,7 +808,14 @@ class UpdateWebhook:
 @dataclass
 class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
     """
-    TODO
+    Options to create a new image in a place holder for a print area. Stores and validate data between Python and Printify.
+
+    Args:
+        id: Image ID to use in the print area
+        x (float): Coordinate across the X axis for an image to start
+        y (float): Coordinate across the Y axis for an image to start
+        scale (float): The scaling factor for an image to be resized
+        angle (float): The angle at which an image will be rotated
     """
     id: str
 
@@ -797,7 +824,11 @@ class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
 @dataclass
 class CreateProductPrintAreaPlaceholder:
     """
-    TODO
+    Options to create a new print area for a product placeholder. Stores and validate data between Python and Printify.
+
+    Args:
+        position: The position of the print area
+        images: List of images, their size, and dimensions for the placeholder
     """
     position: str
     images: List[CreateProductPrintAreaPlaceholderImage]
@@ -807,7 +838,11 @@ class CreateProductPrintAreaPlaceholder:
 @dataclass
 class CreateProductPrintArea:
     """
-    TODO
+    Options to create a new product print area. Stores and validate data between Python and Printify.
+
+    Args:
+        variant_ids: List of variants of the product to include from the print provider.
+        placeholders: List of product placeholders - their dimensions and sizes
     """
     variant_ids: List[int]
     placeholders: List[CreateProductPrintAreaPlaceholder]
@@ -817,7 +852,12 @@ class CreateProductPrintArea:
 @dataclass
 class CreateProductVariant:
     """
-    TODO
+    Options to create a new product variant. Stores and validate data between Python and Printify.
+
+    Args:
+        id: Variant ID for a product from a print provider
+        price: Price the product will sell at. All numbers are whole integers, e.g., $12.95 is `1295`
+        is_enabled: Flag for enabling a variant in a store
     """
     id: int
     price: int
@@ -828,7 +868,15 @@ class CreateProductVariant:
 @dataclass
 class CreateProduct:
     """
-    TODO
+    Options to create a new product. Stores and validate data between Python and Printify.
+
+    Args:
+        title: Display name of the product
+        description: Lengthy description of the item
+        blueprint_id: Blueprint ID from the Print Provider
+        print_provider_id: Print Provider ID
+        variants: List of product variants, their price, and if they are enabled
+        print_areas: List of product dimensions and print areas
     """
     title: str
     description: str
@@ -839,13 +887,19 @@ class CreateProduct:
 
     def add_variant(self, variant: CreateProductVariant):
         """
-        TODO
+        Appends a new variant to the product. Useful if variants are not all known at the time of creating the product
+
+        Args:
+            variant: New variant to attach to the new product
         """
         self.variants.append(variant)
 
     def add_print_area(self, print_area: CreateProductPrintArea):
         """
-        TODO
+        Appends a new pint area to the product. Useful if variants are not all known at the time of creating the product
+
+        Args:
+            print_area: New print area to attach to the new product
         """
         self.print_areas.append(print_area)
 
@@ -854,7 +908,12 @@ class CreateProduct:
 @dataclass
 class UpdateProductExternal:
     """
-    TODO
+    Options to update a product external information. Stores and validate data between Python and Printify.
+
+    Args:
+        id: Storefront ID
+        handle: The type of storefront
+        shipping_template_id: Shipping methods in the store the product will use
     """
     id: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
@@ -871,7 +930,16 @@ class UpdateProductExternal:
 @dataclass
 class UpdateProduct:
     """
-    TODO
+    Options to update a product and its information. All fields are optional. Stores and validate data between Python and Printify.
+
+    Args:
+        title: New product title
+        description: New product description
+        blueprint_id: New ID of a blueprint from the print provider
+        print_provider_id: New ID of the print provider
+        variants: New product variants - prices and eligibility - for the product
+        print_areas: New print areas - placeholders and printing specifications - for the product
+        external: New external information - storefront and shipping - for the product
     """
     title: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
