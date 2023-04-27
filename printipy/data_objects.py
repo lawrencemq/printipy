@@ -607,22 +607,35 @@ class __CreateOrderLineItemBase:
 @dataclass
 class CreateOrderLineItem(__CreateOrderLineItemBase):
     """
-    TODO
+    Options to create an line item for an order order by using product information. Stores and validate data between Python and Printify.
+
+    Args:
+        product_id: ID of the product to include in an order
+        variant_id (int): the variant of the product to use in an order
+        quantity (int): the number of copies to include int he line item for a specific product
     """
     product_id: str
 
 
 @dataclass_json
 @dataclass
-class _CreateOrder:
+class __CreateOrder:
     pass
 
 
 @dataclass_json
 @dataclass
-class CreateOrderExistingProduct(_CreateOrder):
+class CreateOrderByExistingProduct(__CreateOrder):
     """
-    TODO
+    Options to create an order for existing products. Stores and validate data between Python and Printify.
+
+    Args:
+        external_id: ID of the external storefront
+        label: label for the order - typically an order number
+        line_items = list of items to include in order, specified by product information
+        shipping_method: ID of the shipping policy in the storefront
+        send_shipping_notification: flag to send or silence shipping notifications
+        address_to: address for the recipient
     """
     external_id: str
     label: str
@@ -636,7 +649,16 @@ class CreateOrderExistingProduct(_CreateOrder):
 @dataclass
 class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
     """
-    TODO
+    Options to create an line item for an order by using product information and using simple print area information and transformations. Stores and validate data between Python and Printify.
+
+    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+
+    Args:
+        variant_id (int): the variant of the product to use in an order
+        quantity (int): the number of copies to include int he line item for a specific product
+        print_provider_id: ID of the print provider
+        blueprint_id: ID of the blueprint for the product
+        print_areas: information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
     """
     print_provider_id: int
     blueprint_id: int
@@ -645,9 +667,17 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
 
 @dataclass_json
 @dataclass
-class CreateOrderSimpleImageProcessing(CreateOrderExistingProduct):
+class CreateOrderBySimpleImageProcessing(CreateOrderByExistingProduct):
     """
-    TODO
+    Options to create an order for existing products with simple image manipulations against a blueprint, variant, and print area. Stores and validate data between Python and Printify.
+
+    Args:
+        external_id: ID of the external storefront
+        label: label for the order - typically an order number
+        line_items = list of items to include in order, specified by blueprints, variants, and print areas
+        shipping_method: ID of the shipping policy in the storefront
+        send_shipping_notification: flag to send or silence shipping notifications
+        address_to: address for the recipient
     """
     external_id: str
     label: str
@@ -661,7 +691,14 @@ class CreateOrderSimpleImageProcessing(CreateOrderExistingProduct):
 @dataclass
 class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
     """
-    TODO
+    Options to create or update a print area for an image. Stores and validate data between Python and Printify.
+
+    Args:
+        x: Coordinate across the X axis for an image to start
+        y: Coordinate across the Y axis for an image to start
+        scale: The scaling factor for an image to be resized
+        angle: The angle at which an image will be rotated
+        src: the filename of the image to use
     """
     src: str
 
@@ -670,8 +707,18 @@ class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
 @dataclass
 class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
     """
-    TODO
+    Options to create an line item for an order order by using advanced image processing. Stores and validate data between Python and Printify.
+
+    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+
+    Args:
+        variant_id: ID of the variant
+        quantity: number of items to include
+        blueprint_id: ID of the blueprint from the print provider
+        print_provider_id: ID of the print provider
+        print_areas: information for new print areas
     """
+
     blueprint_id: int
     print_provider_id: int
     print_areas: Dict[str, List[PrintAreaInfo]]
@@ -679,9 +726,19 @@ class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
 
 @dataclass_json
 @dataclass
-class CreateOrderAdvancedImageProcessing(_CreateOrder):
+class CreateOrderByAdvancedImageProcessing(__CreateOrder):
     """
-    TODO
+    Options to create an order by advanced image processing. This method allows for setting a new blueprint, print provider, and print areas for each line item.
+
+    Stores and validate data between Python and Printify.
+
+    Args:
+        external_id: ID of the external storefront
+        label: label for the order - typically an order number
+        line_items = list of items to include in order, specified by blueprints, print providers, and print areas
+        shipping_method: ID of the shipping policy in the storefront
+        send_shipping_notification: flag to send or silence shipping notifications
+        address_to: address for the recipient
     """
     external_id: str
     label: str
@@ -695,16 +752,35 @@ class CreateOrderAdvancedImageProcessing(_CreateOrder):
 @dataclass
 class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
     """
-    TODO
+    Options to create an line item for an order by using product information and using simple print area information and transformations. Stores and validate data between Python and Printify.
+
+    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+
+    Args:
+        variant_id (int): the variant of the product to use in an order
+        quantity (int): the number of copies to include int he line item for a specific product
+        print_provider_id: ID of the print provider
+        blueprint_id: ID of the blueprint for the product
+        print_areas: information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
     """
     print_details: Dict[str, Any]
 
 
 @dataclass_json
 @dataclass
-class CreateOrderPrintDetails(_CreateOrder):
+class CreateOrderByPrintDetails(__CreateOrder):
     """
-    TODO
+    Options to create an order by print details. Stores and validate data between Python and Printify.
+
+    Author's note - this is the `least desirable` way to create an order. Please use another `CreateOrberBy` method
+
+    Args:
+        external_id: ID of the external storefront
+        label: label for the order - typically an order number
+        line_items = list of items to include in order, specified by print details
+        shipping_method: ID of the shipping policy in the storefront
+        send_shipping_notification: flag to send or silence shipping notifications
+        address_to: address for the recipient
     """
     external_id: str
     label: str
@@ -718,7 +794,11 @@ class CreateOrderPrintDetails(_CreateOrder):
 @dataclass
 class CreateOrderLineItemSku:
     """
-    TODO
+    Options to create an line item for an order by using SKU. Stores and validate data between Python and Printify.
+
+    Args:
+        sku: the SKU of an item to include in the order
+        quantity: the number of items to include
     """
     sku: str
     quantity: int
@@ -726,9 +806,17 @@ class CreateOrderLineItemSku:
 
 @dataclass_json
 @dataclass
-class CreateOrderSku(_CreateOrder):
+class CreateOrderBySku(__CreateOrder):
     """
-    TODO
+    Options to create an order by an SKU number. Stores and validate data between Python and Printify.
+
+    Args:
+        external_id: ID of the external storefront
+        label: label for the order - typically an order number
+        line_items = list of items to include in order, specified by SKUs
+        shipping_method: ID of the shipping policy in the storefront
+        send_shipping_notification: flag to send or silence shipping notifications
+        address_to: address for the recipient
     """
     external_id: str
     label: str
@@ -742,7 +830,17 @@ class CreateOrderSku(_CreateOrder):
 @dataclass
 class Artwork:
     """
-    TODO
+    Object representing an Image or Artwork. Stores and validate data between Python and Printify.
+
+    Args:
+        id: Artwork ID in Printify
+        file_name: filename in Printify
+        height: height of the image
+        width: width of the image
+        size: byte size of the image
+        mime_type: media type of the image, e.g., `image/png`
+        preview_url: URL to preview the image
+        upload_time: ISO date format of the time the image was uploaded
     """
     id: str
     file_name: str

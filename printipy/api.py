@@ -9,9 +9,9 @@ import requests
 from requests import Response
 
 from printipy.data_objects import Shop, Blueprint, PrintProvider, PrintProviderVariants, \
-    ShippingInfo, ShippingCost, CreateShippingEstimate, Product, Publish, PublishingSucceeded, Order, _CreateOrder, \
-    CreateOrderExistingProduct, CreateOrderAdvancedImageProcessing, \
-    CreateOrderPrintDetails, CreateOrderSku, Artwork, Webhook, CreateWebhook, UpdateWebhook, \
+    ShippingInfo, ShippingCost, CreateShippingEstimate, Product, Publish, PublishingSucceeded, Order, \
+    CreateOrderByExistingProduct, CreateOrderByAdvancedImageProcessing, \
+    CreateOrderByPrintDetails, CreateOrderBySku, Artwork, Webhook, CreateWebhook, UpdateWebhook, \
     CreateProduct, UpdateProduct
 from printipy.exceptions import PrintiPyException, ParseException, InvalidScopeException, InvalidRequestException, \
     PrintifyException
@@ -389,14 +389,16 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
         order_information = self._get(order_url)
         return self._parse(Order, order_information)
 
-    def __create_order(self, create_order: _CreateOrder, shop_id: Union[str, int]) -> str:
+    def __create_order(self, create_order: Union[CreateOrderByPrintDetails, CreateOrderBySku,
+                       CreateOrderByExistingProduct, CreateOrderByAdvancedImageProcessing],
+                       shop_id: Union[str, int]) -> str:
         # POST / v1 / shops / {shop_id} / orders.json
         create_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders.json'
         order_information = self._post(create_order_url, data=create_order.to_dict())
         return order_information['id']
 
     @_ShopIdMixin._require_shop_id
-    def create_order_for_existing_product(self, create_order: CreateOrderExistingProduct,
+    def create_order_for_existing_product(self, create_order: CreateOrderByExistingProduct,
                                           shop_id: Union[str, int]) -> str:
         """
         TODO
@@ -404,7 +406,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
-    def create_order_with_simple_image_positioning(self, create_order: CreateOrderExistingProduct,
+    def create_order_with_simple_image_positioning(self, create_order: CreateOrderByExistingProduct,
                                                    shop_id: Union[str, int]) -> str:
         """
         TODO
@@ -412,7 +414,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
-    def create_order_with_advanced_image_positioning(self, create_order: CreateOrderAdvancedImageProcessing,
+    def create_order_with_advanced_image_positioning(self, create_order: CreateOrderByAdvancedImageProcessing,
                                                      shop_id: Union[str, int]) -> str:
         """
         TODO
@@ -420,14 +422,14 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
-    def create_order_with_print_details(self, create_order: CreateOrderPrintDetails, shop_id: Union[str, int]) -> str:
+    def create_order_with_print_details(self, create_order: CreateOrderByPrintDetails, shop_id: Union[str, int]) -> str:
         """
         TODO
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
-    def create_order_with_sku(self, create_order: CreateOrderSku, shop_id: Union[str, int]) -> str:
+    def create_order_with_sku(self, create_order: CreateOrderBySku, shop_id: Union[str, int]) -> str:
         """
         TODO
         """
