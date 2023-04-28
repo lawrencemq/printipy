@@ -72,7 +72,8 @@ class Location:
 @dataclass
 class Address:
     """
-    Address object to store and validate shop data between Python and Printify. This is similar to `Location` but includes more information and used for specific APIs
+    Address object to store and validate shop data between Python and Printify.
+    This is similar to `Location` but includes more information and used for specific APIs
 
     Args:
         first_name: First name of recipient
@@ -548,7 +549,20 @@ class PublishingSucceeded:
 @dataclass
 class LineItem:
     """
-    TODO
+    Information for an order containing specific product, the variant used, and the quantity ordered.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        product_id: ID of the product
+        quantity: Number of items the customer bought
+        variant_id: Specific variant of the product from the print provider
+        print_provider_id: ID of theprint provider
+        cost: Cost of all the items
+        shipping_cost: Shipping cost for the items
+        status: Status of the items
+        metadata: Any associated metadata for the items
+        sent_to_production_at: ISO timestamp of when the products were sent to production
+        fulfilled_at: ISO timestamp of when the products were fulfilled for the order
     """
     product_id: str
     quantity: int
@@ -566,7 +580,14 @@ class LineItem:
 @dataclass
 class Shipment:
     """
-    TODO
+    Object representing a shipment for an order
+    Stores and validate data between Python and Printify.
+
+    Args:
+        carrier: Carrier name
+        number: Tracking number
+        url: URL for tracking
+        delivered_at: ISO timestamp of when the item was delivered
     """
     carrier: str
     number: str
@@ -578,7 +599,24 @@ class Shipment:
 @dataclass
 class Order:
     """
-    TODO
+    Object representing a previously created order.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: Order ID
+        address_to: Address of the recipient
+        line_items: List of items in the order - their products and quantities
+        metadata: Any extra metadata regarding the order
+        total_price: Total price the customer paid
+        total_shipping: Total price the shipping cost
+        total_tax: Total tax of the order
+        status: Current status of the order
+        shipping_method: Shipping ID linked to the storefront
+        created_at: ISO timestamp of when the order was created
+        sent_to_production_at: ISO timestamp of when the order was sent to production
+        shipments: List of shipments of the items in the order
+        fulfilled_at: ISO timestamp of when the order was fulfilled
+        fulfilment_type: How the order was fulfilled
     """
     id: str
     address_to: Address
@@ -607,7 +645,8 @@ class __CreateOrderLineItemBase:
 @dataclass
 class CreateOrderLineItem(__CreateOrderLineItemBase):
     """
-    Options to create an line item for an order order by using product information. Stores and validate data between Python and Printify.
+    Options to create an line item for an order order by using product information.
+    Stores and validate data between Python and Printify.
 
     Args:
         product_id: ID of the product to include in an order
@@ -649,9 +688,11 @@ class CreateOrderByExistingProduct(__CreateOrder):
 @dataclass
 class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
     """
-    Options to create an line item for an order by using product information and using simple print area information and transformations. Stores and validate data between Python and Printify.
+    Options to create an line item for an order by using product information and using simple print area information
+    and transformations. Stores and validate data between Python and Printify.
 
-    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+    Author's note - It may be best to create a product with a specific variant first and then use
+    `CreateOrderByExistingProduct` to create orders.
 
     Args:
         variant_id (int): the variant of the product to use in an order
@@ -669,7 +710,8 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
 @dataclass
 class CreateOrderBySimpleImageProcessing(CreateOrderByExistingProduct):
     """
-    Options to create an order for existing products with simple image manipulations against a blueprint, variant, and print area. Stores and validate data between Python and Printify.
+    Options to create an order for existing products with simple image manipulations against a blueprint, variant,
+    and print area. Stores and validate data between Python and Printify.
 
     Args:
         external_id: ID of the external storefront
@@ -707,9 +749,11 @@ class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
 @dataclass
 class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
     """
-    Options to create an line item for an order order by using advanced image processing. Stores and validate data between Python and Printify.
+    Options to create an line item for an order order by using advanced image processing.
+    Stores and validate data between Python and Printify.
 
-    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+    Author's note - It may be best to create a product with a specific variant first and then use
+    `CreateOrderByExistingProduct` to create orders.
 
     Args:
         variant_id: ID of the variant
@@ -728,9 +772,11 @@ class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
 @dataclass
 class CreateOrderByAdvancedImageProcessing(__CreateOrder):
     """
-    Options to create an order by advanced image processing. This method allows for setting a new blueprint, print provider, and print areas for each line item.
+    Options to create an order by advanced image processing. This method allows for setting a new blueprint,
+    print provider, and print areas for each line item.
 
-    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+    Author's note - It may be best to create a product with a specific variant first and then use
+    `CreateOrderByExistingProduct` to create orders.
 
     Stores and validate data between Python and Printify.
 
@@ -754,9 +800,11 @@ class CreateOrderByAdvancedImageProcessing(__CreateOrder):
 @dataclass
 class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
     """
-    Options to create an line item for an order by using product information and using simple print area information and transformations. Stores and validate data between Python and Printify.
+    Options to create an line item for an order by using product information and using simple print area information
+    and transformations. Stores and validate data between Python and Printify.
 
-    Author's note - It may be best to create a product with a specific variant first and then use `CreateOrderByExistingProduct` to create orders.
+    Author's note - It may be best to create a product with a specific variant first and then use
+    `CreateOrderByExistingProduct` to create orders.
 
     Args:
         variant_id (int): the variant of the product to use in an order
@@ -909,7 +957,8 @@ class UpdateWebhook:
 @dataclass
 class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
     """
-    Options to create a new image in a place holder for a print area. Stores and validate data between Python and Printify.
+    Options to create a new image in a place holder for a print area.
+    Stores and validate data between Python and Printify.
 
     Args:
         id: Image ID to use in the print area
@@ -1031,7 +1080,8 @@ class UpdateProductExternal:
 @dataclass
 class UpdateProduct:
     """
-    Options to update a product and its information. All fields are optional. Stores and validate data between Python and Printify.
+    Options to update a product and its information. All fields are optional.
+    Stores and validate data between Python and Printify.
 
     Args:
         title: New product title
