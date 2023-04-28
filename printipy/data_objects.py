@@ -360,7 +360,12 @@ class CreateShippingEstimate:
 @dataclass
 class ProductOptionValue:
     """
-    TODO
+    Object representing product option information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: ID of the option
+        title: Display name for the option
     """
     id: str
     title: str
@@ -370,7 +375,13 @@ class ProductOptionValue:
 @dataclass
 class ProductOption:
     """
-    TODO
+    Object representing product option information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        name: Option display name
+        type: Type of option
+        values: List of values to include as options
     """
     name: str
     type: str
@@ -381,7 +392,21 @@ class ProductOption:
 @dataclass
 class ProductVariant:
     """
-    TODO
+    Object representing variant information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: Variant ID
+        price: Price of the specific variant
+        is_enabled: Flag if the variant is included in the product
+        sku: SKU for the variant
+        cost: Cost to produce the variant
+        title: Display title of the variant
+        grams: Weight of the variant
+        is_default: Flag if the variant is the default in the storefront
+        is_available: Flag if the variant is available - false may mean out of stock
+        options: Additional options for the variant
+        quantity: The number of variants left
     """
     id: int
     price: int
@@ -400,7 +425,15 @@ class ProductVariant:
 @dataclass
 class ProductImage:
     """
-    TODO
+    Object representing image information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        src: File source in Printify
+        variant_ids: List of possible variants for the product
+        position: Position of the image agaist the blueprint for the given variants
+        is_default: Flag if the image is the first image in the storefront
+        is_selected_for_publishing: Flag if the image should be published
     """
     src: str
     variant_ids: List[int]
@@ -431,7 +464,19 @@ class PrintAreaInfo:
 @dataclass
 class PlaceholderImage(PrintAreaInfo):
     """
-    TODO
+    Object representing placeholder information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: Placeholder ID
+        name: Name of the placeholder
+        type: Type of the placeholder
+        height: Height of the image
+        width: Width of the image
+        x (float): Coordinate across the X axis for an image to start
+        y (float): Coordinate across the Y axis for an image to start
+        scale (float): The scaling factor for an image to be resized
+        angle (float): The angle at which an image will be rotated
     """
     id: str
     name: Optional[str] = None
@@ -444,7 +489,12 @@ class PlaceholderImage(PrintAreaInfo):
 @dataclass
 class ProductPlaceholder:
     """
-    TODO
+    Object representing placeholder information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        position: Position of the image across the blueprint on its variant
+        images: List of image information - dimensions and alterations - across the blueprint on its variant
     """
     position: str
     images: List[PlaceholderImage]
@@ -454,7 +504,13 @@ class ProductPlaceholder:
 @dataclass
 class ProductPrintArea:
     """
-    TODO
+    Object representing a print area for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        variant_ids: List of variants for the product
+        placeholders: List of placeholders against the variants for the product
+        background: Color for the background - useful if a placeholder is transparent
     """
     variant_ids: List[int]
     placeholders: List[ProductPlaceholder]
@@ -465,7 +521,14 @@ class ProductPrintArea:
 @dataclass
 class ProductExternal:
     """
-    TODO
+    Object representing storefront information for a published product.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: ID in the storefront
+        handle: link associated with the product in the storefront
+        shipping_template_id: shipping profile associated with the product in the storefront
+        channel: type of storefront
     """
     id: str
     handle: str
@@ -477,7 +540,28 @@ class ProductExternal:
 @dataclass
 class Product:
     """
-    TODO
+    Object representing a product in Printify.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: Product ID
+        title: Display name of the product
+        description: Lengthy description of the item
+        tags: List of tags associated with the product
+        options: List of product options - types and names
+        variants: List of product variants - features and measurements
+        images: List of URLs for displaying the product variants
+        created_at: ISO timestamp of when the product was created
+        updated_at: ISO timestamp of when the product was updated
+        visible: flag if the product is visible in shop (false typically means archived)
+        is_locked: flag if the features of the product are locked from changes
+        blueprint_id: Blueprint ID from the print provider
+        user_id: Printify account ID
+        shop_id: Storefront ID for the specific store in the Printify account
+        print_provider_id: Print Provider ID
+        print_areas: List of prrint areas for the product across its variants
+        twodaydelivery_enabled: flag if two-day delivery is allowed as an option
+        external: storefront information for published products
     """
     id: str
     title: str
@@ -530,7 +614,12 @@ class Publish:
 @dataclass
 class PublishingSucceededExternal:
     """
-    TODO
+    Options to set storefront information for a product that has been successfully published.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        id: the storefront id
+        handle: the type of storefront
     """
     id: str
     handle: str
@@ -540,7 +629,11 @@ class PublishingSucceededExternal:
 @dataclass
 class PublishingSucceeded:
     """
-    TODO
+    Options to set a product publishing to a storefront as succeeded.
+    Stores and validate data between Python and Printify.
+
+    Args:
+        external: Storefront information
     """
     external: PublishingSucceededExternal
 
