@@ -13,7 +13,7 @@ from printipy.data_objects import Shop, Blueprint, PrintProvider, PrintProviderV
     CreateOrderByExistingProduct, CreateOrderByAdvancedImageProcessing, \
     CreateOrderByPrintDetails, CreateOrderBySku, Artwork, Webhook, CreateWebhook, UpdateWebhook, \
     CreateProduct, UpdateProduct
-from printipy.exceptions import PrintiPyException, ParseException, InvalidScopeException, InvalidRequestException, \
+from printipy.exceptions import PrintiPyException, PrintiPyParseException, InvalidScopeException, InvalidRequestException, \
     PrintifyException
 
 
@@ -31,7 +31,7 @@ class _ApiHandlingMixin:
                 message = f'{info["message"]} {info["errors"]["reason"]}'
             except JSONDecodeError:
                 message = f'Bad Request: {url}'
-            raise PrintiPyException(message)
+            raise PrintifyException(message)
         elif resp.status_code == 403:
             raise InvalidScopeException('This API key is not permitted to access this information.')
         elif resp.status_code == 500:
@@ -75,7 +75,7 @@ class _ApiHandlingMixin:
         elif type(data) == dict:
             return clazz.from_dict(data)
         else:
-            raise ParseException('Unable to parse response: was not a list or object')
+            raise PrintiPyParseException('Unable to parse response: was not a list or object')
 
     @staticmethod
     def _get_next_page_url(initial_url: str, info: Dict) -> Optional[str]:
