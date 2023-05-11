@@ -1179,6 +1179,7 @@ class UpdateProduct:
     Args:
         title: New product title
         description: New product description
+        images: New product images or parameters for visibility or default image
         blueprint_id: New ID of a blueprint from the print provider
         print_provider_id: New ID of the print provider
         variants: New product variants - prices and eligibility - for the product
@@ -1189,6 +1190,9 @@ class UpdateProduct:
         default=None, metadata=config(exclude=_exclude_if_none)
     )
     description: Optional[str] = field(
+        default=None, metadata=config(exclude=_exclude_if_none)
+    )
+    images: Optional[List[ProductImage]] = field( #TODO ADD TO TESTS
         default=None, metadata=config(exclude=_exclude_if_none)
     )
     blueprint_id: Optional[int] = field(

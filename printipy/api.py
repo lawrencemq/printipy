@@ -100,14 +100,15 @@ class PrintiPyShop(_ApiHandlingMixin):
         Pulls a list of shops for a Printify account. Returns empty list if no shops exist for account.
 
         Examples:
-            >>> api.get_shops()
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> shops = api.shops.get_shops()
 
         Returns:
             List of `printipy.api.Shop` objects
 
         Raises:
             ParseException: If unable to parse Printify's response
-            PrintiPyException: If the request failed to validate with Printify's schema - usually contains information regarding malformed input
             InvalidScopeException: If the API keys isn't permitted to perform this operation
             PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
@@ -121,16 +122,23 @@ class PrintiPyShop(_ApiHandlingMixin):
 
         Examples:
             By pass in data pulled from `printipy.api.PrintiPyShop.get_shops`
-            >>> shops = api.get_shops()
-            >>> api.delete_shop(shops[0])
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> shops = api.shops.get_shops()
+            >>> api.shops.delete_shop(shops[0])
 
             By passing in specific shop information
+            >>> from printipy.api import PrintiPy
             >>> from printipy.data_objects import Shop
-            >>> shop = Shop(id='...', title='...', sales_channel='...')
-            >>> api.delete_shop(shop)
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> api.shops.delete_shop(shop)
 
         Args:
             shop (Shop): A Shop to delete. Pull all shops using :func:`get_shops <printipy.api.PrintiPyShop.get_shops>`
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         delete_url = f'{self.api_url}/v1/shops/{shop.id}/connection.json'
         self._delete(delete_url)
@@ -147,15 +155,40 @@ class PrintiPyCatalog(_ApiHandlingMixin):
     """
     def get_blueprints(self) -> List[Blueprint]:
         """
-        TODO
+        Pulls a list of all blueprints available from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> blueprints = api.catalog.get_blueprints()
+
+        Returns:
+            List of `printipy.api.Blueprint` objects
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
         """
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints.json'
         blueprint_information = self._get(blueprint_url)
         return self._parse(Blueprint, blueprint_information)
 
-    def get_blueprint(self, blueprint_id: Union[str, int]) -> Optional[Blueprint]:
+    def get_blueprint(self, blueprint_id: Union[str, int]) -> Blueprint:
         """
-        TODO
+        Pulls a specific blueprint from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> blueprint = api.catalog.get_blueprint('...')
+
+        Returns:
+            Blueprint `printipy.api.Blueprint` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Blueprint ID does not exist in Printify
         """
         # GET / v1 / catalog / blueprints / {blueprint_id}.json
         blueprint_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}.json'
@@ -164,7 +197,22 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 
     def get_print_providers_for_blueprint(self, blueprint_id: Union[str, int]) -> List[PrintProvider]:
         """
-        TODO
+        Pulls a list of print providers for a given blueprint from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> blueprint = api.catalog.get_blueprint('...')
+            >>> print_providers = api.catalog.get_print_providers_for_blueprint(blueprint.id)
+
+        Returns:
+            List of `printipy.api.PrintProvider` objects
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Blueprint ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers.json
         print_providers_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/print_providers.json'
@@ -173,7 +221,23 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 
     def get_variants(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> PrintProviderVariants:
         """
-        TODO
+        Pulls a list of variants for a given blueprint and print provider from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> blueprint = api.catalog.get_blueprint('...')
+            >>> print_providers = api.catalog.get_print_providers_for_blueprint(blueprint.id)
+            >>> variants = api.catalog.get_variants(blueprint.id, print_providers[0].id)
+
+        Returns:
+            Variant `printipy.api.PrintProviderVariants` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Blueprint ID or Print Provider ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / variants.json
         variants_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
@@ -183,7 +247,23 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 
     def get_shipping_info(self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]) -> ShippingInfo:
         """
-        TODO
+        Pulls a shipping information a given blueprint and print provider from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> blueprint = api.catalog.get_blueprint('...')
+            >>> print_providers = api.catalog.get_print_providers_for_blueprint(blueprint.id)
+            >>> shipping_information = api.catalog.get_shipping_info(blueprint.id, print_providers[0].id)
+
+        Returns:
+            Shipping information `printipy.api.ShippingInfo` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Blueprint ID or Print Provider ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / catalog / blueprints / {blueprint_id} / print_providers / {print_provider_id} / shipping.json
         shipping_url = f'{self.api_url}/v1/catalog/blueprints/{blueprint_id}/' \
@@ -193,16 +273,43 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 
     def get_print_providers(self) -> List[PrintProvider]:
         """
-        TODO
+        Pulls a list of all print providers from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> print_providers = api.catalog.get_print_providers()
+
+        Returns:
+            List of `printipy.api.PrintProvider` objects
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / catalog / print_providers.json
         print_providers_url = f'{self.api_url}/v1/catalog/print_providers.json'
         print_provider_information = self._get(print_providers_url)
         return self._parse(PrintProvider, print_provider_information)
 
-    def get_print_provider(self, print_provider_id: Union[str, int]) -> Optional[PrintProvider]:
+    def get_print_provider(self, print_provider_id: Union[str, int]) -> PrintProvider:
         """
-        TODO
+        Pulls a specific print provider from Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> print_provider = api.catalog.get_print_provider('...')
+
+        Returns:
+            Print Provider `printipy.api.PrintProvider` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Print Provider ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / catalog / print_providers / {print_provider_id}.json
         print_provider_url = f'{self.api_url}/v1/catalog/print_providers/{print_provider_id}.json'
@@ -264,7 +371,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         return all_products
 
     @_ShopIdMixin._require_shop_id
-    def get_product(self, product_id: str, shop_id: Union[str, int]) -> Optional[Product]:
+    def get_product(self, product_id: str, shop_id: Union[str, int]) -> Product:
         """
         TODO
         """
@@ -297,7 +404,23 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Examples:
+            By pass in data pulled from `printipy.api.PrintiPyShop.get_shops`
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> products = api.products.get_products()
+            >>> api.delete_product(products[0])
+
+            By passing in specific shop information
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import Shop
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> api.delete_shop(shop)
+
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # DELETE / v1 / shops / {shop_id} / products / {product_id}.json
         delete_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
@@ -588,6 +711,9 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
     def delete_webhook(self, webhook_id: str, shop_id: Union[str, int]) -> True:
         """
         TODO
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # DELETE /v1/shops/{shop_id}/webhooks/{webhook_id}.json
         delete_webhook_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks/{webhook_id}.json'
