@@ -254,7 +254,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
             >>> api = PrintiPy(api_token='...')
             >>> blueprint = api.catalog.get_blueprint('...')
             >>> print_providers = api.catalog.get_print_providers_for_blueprint(blueprint.id)
-            >>> shipping_information = api.catalog.get_shipping_info(blueprint.id, print_providers[0].id)
+            >>> shipping_info = api.catalog.get_shipping_info(blueprint.id, print_providers[0].id)
 
         Returns:
             Shipping information `printipy.api.ShippingInfo` object
@@ -347,16 +347,37 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         >>> shop_products = api.products.get_products()
     """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
-        """
-        TODO
-        """
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def get_products(self, shop_id: Union[str, int], max_pages: int = 1) -> List[Product]:
         """
-        TODO
+        Pulls products for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> products = api.products.get_products(shop_id='...')
+
+            Or, with specifying the shop_id at PrintiPy-creation time
+
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> products = api.products.get_products()
+
+        Args:
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
+        Returns:
+            List of products `printipy.api.Product` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / shops / {shop_id} / products.json
         initial_url = f'{self.api_url}/v1/shops/{shop_id}/products.json'
@@ -373,7 +394,31 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def get_product(self, product_id: str, shop_id: Union[str, int]) -> Product:
         """
-        TODO
+        Pull a specific product for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> product = api.products.get_product(product_id='...', shop_id='...')
+
+            Or, with specifying the shop_id at PrintiPy-creation time
+
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> product = api.products.get_product(product_id='...')
+
+        Args:
+            product_id: The ID of the specific product to pull
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Product `printipy.api.Product` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID or Product ID do not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / shops / {shop_id} / products / {product_id}.json
         product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}.json'
@@ -405,17 +450,18 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         """
         Examples:
-            By pass in data pulled from `printipy.api.PrintiPyShop.get_shops`
+            By pass in data pulled from `printipy.api.PrintiPyShop.get_products`
             >>> from printipy.api import PrintiPy
             >>> api = PrintiPy(api_token='...', shop_id='...')
             >>> products = api.products.get_products()
-            >>> api.delete_product(products[0])
+            >>> api.products.delete_product(product_id=products[0].id)
 
             By passing in specific shop information
             >>> from printipy.api import PrintiPy
             >>> from printipy.data_objects import Shop
-            >>> api = PrintiPy(api_token='...', shop_id='...')
-            >>> api.delete_shop(shop)
+            >>> api = PrintiPy(api_token='...')
+            >>> products = api.products.get_products()
+            >>> api.products.delete_product(product_id=products[0].id, shop_id='...')
 
 
         Raises:
@@ -486,7 +532,31 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def get_orders(self, max_pages: int = 1, shop_id: Optional[Union[str, int]] = None) -> List[Order]:
         """
-        TODO
+        Pulls orders for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> orders = api.orders.get_orders(shop_id='...')
+
+            Or, with specifying the shop_id at PrintiPy-creation time
+
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> orders = api.orders.get_orders()
+
+        Args:
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
+        Returns:
+            List of orders `printipy.api.Order` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders.json
@@ -504,7 +574,31 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def get_order(self, order_id: str, shop_id: Optional[Union[str, int]] = None) -> Order:
         """
-        TODO
+        Pulls a specific order for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> order = api.orders.get_order(order_id='...', shop_id='...')
+
+            Or, with specifying the shop_id at PrintiPy-creation time
+
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> order = api.orders.get_order(order_id='...')
+
+        Args:
+            order_id: ID of the order to pull for a specific shop in Printify.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Orders `printipy.api.Order` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID or Order ID do not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         shop_id_to_use = self._get_shop_id(shop_id)
         # GET / v1 / shops / {shop_id} / orders / {order_id}.json
@@ -601,7 +695,23 @@ class PrintiPyArtwork(_ApiHandlingMixin):
     """
     def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
         """
-        TODO
+        Pulls artwork/image information for an account in Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> artworks = api.artwork.get_artwork_uploads()
+
+        Args:
+            max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
+        Returns:
+            List of artwork `printipy.api.Artwork` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Artwork ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # GET / v1 / uploads.json
         initial_url = f'{self.api_url}/v1/uploads.json'
@@ -617,7 +727,21 @@ class PrintiPyArtwork(_ApiHandlingMixin):
 
     def get_artwork(self, image_id: str) -> Artwork:
         """
-        TODO
+        Pulls information for a speciic artwork/image for an account in Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> artwork = api.artwork.get_artwork(image_id='...')
+
+        Args:
+            image_id: The ID of the specific artwork for an account in Printify.
+        Returns:
+            Artwork `printipy.api.Artwork` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
         """
         # GET / v1 / uploads / {image_id}.json
         artwork_url = f'{self.api_url}/v1/uploads/{image_id}.json'
@@ -653,7 +777,19 @@ class PrintiPyArtwork(_ApiHandlingMixin):
 
     def archive_artwork(self, image_id: str) -> True:
         """
-        TODO
+        Archives a specific artwork/image for an account in Printify
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import Shop
+            >>> api = PrintiPy(api_token='...')
+            >>> artworks = api.artwork.get_artwork_uploads()
+            >>> api.artwork.archive_artwork(artworks[0].id)
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Artwork ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # post / v1 / uploads / {image_id} / archive.json
         archive_artwork_url = f'{self.api_url}/v1/uploads/{image_id}/archive.json'
@@ -671,16 +807,37 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
         >>> webhooks = api.webhooks.get_webhooks()
     """
     def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
-        """
-        TODO
-        """
         _ApiHandlingMixin.__init__(self, api_token=api_token)
         _ShopIdMixin.__init__(self, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def get_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
         """
-        TODO
+        Pulls webhooks for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...')
+            >>> webhooks = api.webhooks.get_webhooks(shop_id='...')
+
+            Or, with specifying the shop_id at PrintiPy-creation time
+
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> webhooks = api.webhooks.get_webhooks()
+
+        Args:
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
+        Returns:
+            List of webhooks `printipy.api.Webhook` object
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # / v1 / shops / {shop_id} / webhooks.json
         webhooks_url = f'{self.api_url}/v1/shops/{shop_id}/webhooks.json'
@@ -710,9 +867,25 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def delete_webhook(self, webhook_id: str, shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Deletes a specific webhook for a specific shop in Printify
+
+        Examples:
+            By passing in data pulled from `printipy.api.PrintiPyWebhook.get_shops`
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> webhooks = api.webhooks.get_webhooks()
+            >>> api.webhooks.delete_webhook(webhook_id=webhooks[0].id)
+
+            By passing in specific shop information
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import Shop
+            >>> api = PrintiPy(api_token='...')
+            >>> webhooks = api.webhooks.get_webhooks()
+            >>> api.webhooks.delete_webhook(webhook_id=webhooks[0].id, shop_id='...')
+
         Raises:
             InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If the Webhook ID does not exist in Printify
             PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # DELETE /v1/shops/{shop_id}/webhooks/{webhook_id}.json
