@@ -5,6 +5,8 @@ This site contains the project documentation for the
 
 Its aim is to give you easy, Pythonic, programmatic access to Printify's API.
 
+If you would like to contribute, please see the [GitHub page](https://github.com/lawrencemq/printipy).
+
 ## Table Of Contents
 
 [//]: # (1. [How-To Guides]&#40;how-to-guides.md&#41;)
