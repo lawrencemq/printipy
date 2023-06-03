@@ -7,9 +7,9 @@ Its aim is to give you easy, Pythonic, programmatic access to Printify's API.
 
 ## Table Of Contents
 
-1. [How-To Guides](how-to-guides.md)
-2. [API Reference](reference.md)
-3. [Explanation](explanation.md)
+[//]: # (1. [How-To Guides]&#40;how-to-guides.md&#41;)
+1. [API Reference](reference.md)
+1. [Explanation](explanation.md)
 
 ## Project Overview
 

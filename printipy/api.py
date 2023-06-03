@@ -531,7 +531,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         """
         Examples:
-            By pass in data pulled from `printipy.api.PrintiPyShop.get_products`
+            By passing in data pulled from `printipy.api.PrintiPyShop.get_products`
             >>> from printipy.api import PrintiPy
             >>> api = PrintiPy(api_token='...', shop_id='...')
             >>> products = api.products.get_products()
@@ -544,6 +544,9 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
             >>> products = api.products.get_products()
             >>> api.products.delete_product(product_id=products[0].id, shop_id='...')
 
+        Args:
+            product_id: ID of the product to publish
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Raises:
             InvalidScopeException: If the API keys isn't permitted to perform this operation
@@ -557,7 +560,26 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def publish_product(self, product_id: str, publish: Publish, shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Publishes changes for a specific product for a given store in Printify
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import UpdateProduct
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> product = api.products.create_product(...)
+            >>> api.products.publish_product(product.id, Publish())
+
+        Args:
+            product_id: ID of the product to publish
+            publish: Publish settings for the product
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+
+        Returns:
+            True when a product has been marked for publishing
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publish.json
         publish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publish.json'
@@ -568,7 +590,27 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     def set_product_published_success(self, product_id: str, publishing_succeeded: PublishingSucceeded,
                                       shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Marks a product as published for a given store in Printify. Useful when managing a custom site, not a linked store supportd by Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import UpdateProduct
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> product = api.products.create_product(...)
+            >>> api.products.publish_product(product.id, Publish())
+            >>> api.products.set_product_published_success(product.id, PublishingSucceeded(...))
+
+        Args:
+            product_id: ID of the product
+            publishing_succeeded: Publishing details for the external store
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+
+        Returns:
+            True when a product has been marked as published
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_succeeded.json
         publishing_succeeded_url = f'{self.api_url}/v1/shops/{shop_id}/products/' \
@@ -579,7 +621,27 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def set_product_published_failed(self, product_id: str, reason: str, shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Marks a product as not published for a given store in Printify. Useful when managing a custom site, not a linked store supportd by Printify.
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import UpdateProduct
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> product = api.products.create_product(...)
+            >>> api.products.publish_product(product.id, Publish())
+            >>> api.products.set_product_published_failed(product.id, reason='...')
+
+        Args:
+            product_id: ID of the product
+            reason: Explination of a publishing failure - useful for tacking
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+
+        Returns:
+            True when a product has been marked as not published
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # POST / v1 / shops / {shop_id} / products / {product_id} / publishing_failed.json
         publishing_failed_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_failed.json'
@@ -589,7 +651,25 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def unpublish_product(self, product_id: str, shop_id: Union[str, int]) -> True:
         """
-        TODO
+        Removes a published product from the storefront a given store in Printify
+
+        Examples:
+            >>> from printipy.api import PrintiPy
+            >>> from printipy.data_objects import UpdateProduct
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> product_id = '...'
+            >>> api.products.unpublish_product(product_id)
+
+        Args:
+            product_id: ID of the product to unpublish
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+
+        Returns:
+            True when a product has been marked as unpublished
+
+        Raises:
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # POST / v1 / shops / {shop_id} / products / {product_id} / unpublish.json
         unpublish_product_url = f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/unpublish.json'
@@ -699,7 +779,50 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     def create_order_for_existing_product(self, create_order: CreateOrderByExistingProduct,
                                           shop_id: Union[str, int]) -> str:
         """
-        TODO
+        Create an order for an existing project for specific shop in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> new_order_props = CreateOrderByExistingProduct.from_dict({
+            >>>   "external_id": "2750e210-39bb-11e9-a503-452618153e4a",
+            >>>   "label": "00012",
+            >>>   "line_items": [
+            >>>     {
+            >>>       "product_id": "5bfd0b66a342bcc9b5563216",
+            >>>       "variant_id": 17887,
+            >>>       "quantity": 1
+            >>>     }
+            >>>   ],
+            >>>   "shipping_method": 1,
+            >>>   "send_shipping_notification": False,
+            >>>   "address_to": {
+            >>>     "first_name": "John",
+            >>>     "last_name": "Smith",
+            >>>     "email": "example@msn.com",
+            >>>     "phone": "0574 69 21 90",
+            >>>     "country": "BE",
+            >>>     "region": "",
+            >>>     "address1": "ExampleBaan 121",
+            >>>     "address2": "45",
+            >>>     "city": "Retie",
+            >>>     "zip": "2470"
+            >>> })
+            >>> order_number = api.orders.create_order_for_existing_product(new_order_props)
+
+
+        Args:
+            create_order: Order information
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order reference number
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
@@ -707,7 +830,55 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     def create_order_with_simple_image_positioning(self, create_order: CreateOrderByExistingProduct,
                                                    shop_id: Union[str, int]) -> str:
         """
-        TODO
+        Create an order for a new product using simple image positioning.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> new_order_props = CreateOrderByExistingProduct.from_dict({
+            >>>    "external_id": "2750e210-39bb-11e9-a503-452618153e5a",
+            >>>    "label": "00012",
+            >>>    "line_items": [
+            >>>      {
+            >>>        "print_provider_id": 5,
+            >>>        "blueprint_id": 9,
+            >>>        "variant_id": 17887,
+            >>>        "print_areas": {
+            >>>          "front": "https://images.example.com/image.png"
+            >>>        },
+            >>>        "quantity": 1
+            >>>      }
+            >>>    ],
+            >>>    "shipping_method": 1,
+            >>>    "send_shipping_notification": False,
+            >>>    "address_to": {
+            >>>      "first_name": "John",
+            >>>      "last_name": "Smith",
+            >>>      "email": "example@msn.com",
+            >>>      "phone": "0574 69 21 90",
+            >>>      "country": "BE",
+            >>>      "region": "",
+            >>>      "address1": "ExampleBaan 121",
+            >>>      "address2": "45",
+            >>>      "city": "Retie",
+            >>>      "zip": "2470"
+            >>>    }
+            >>> })
+            >>> order_number = api.orders.create_order_with_simple_image_positioning(new_order_props)
+
+
+        Args:
+            create_order: Order information
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order reference number
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
@@ -715,28 +886,201 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
     def create_order_with_advanced_image_positioning(self, create_order: CreateOrderByAdvancedImageProcessing,
                                                      shop_id: Union[str, int]) -> str:
         """
-        TODO
+        Create an order for a new product using advanced image positioning.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> new_order_props = CreateOrderByAdvancedImageProcessing.from_dict({
+            >>>    "external_id": "2750e210-39bb-11e9-a503-452618153e5a",
+            >>>    "label": "00012",
+            >>>    "line_items": [
+            >>>      {
+            >>>        "print_provider_id": 5,
+            >>>        "blueprint_id": 9,
+            >>>        "variant_id": 17887,
+            >>>        "print_areas": {
+            >>>          "front": [
+            >>>            {
+            >>>                "src": "https://images.example.com/image.png",
+            >>>                "scale": 0.15,
+            >>>                "x": 0.80,
+            >>>                "y": 0.34,
+            >>>                "angle": 0.34
+            >>>            },
+            >>>            {
+            >>>                "src": "https://images.example.com/image.png",
+            >>>                "scale": 1,
+            >>>                "x": 0.5,
+            >>>                "y": 0.5,
+            >>>                "angle": 1
+            >>>            }
+            >>>          ]
+            >>>        },
+            >>>        "quantity": 1
+            >>>      }
+            >>>    ],
+            >>>    "shipping_method": 1,
+            >>>    "send_shipping_notification": False,
+            >>>    "address_to": {
+            >>>      "first_name": "John",
+            >>>      "last_name": "Smith",
+            >>>      "email": "example@msn.com",
+            >>>      "phone": "0574 69 21 90",
+            >>>      "country": "BE",
+            >>>      "region": "",
+            >>>      "address1": "ExampleBaan 121",
+            >>>      "address2": "45",
+            >>>      "city": "Retie",
+            >>>      "zip": "2470"
+            >>>    }
+            >>> })
+            >>> order_number = api.orders.create_order_with_advanced_image_positioning(new_order_props)
+
+        Args:
+            create_order: Order information
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order reference number
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_print_details(self, create_order: CreateOrderByPrintDetails, shop_id: Union[str, int]) -> str:
         """
-        TODO
+        Create an order for a new product using print deatils.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> new_order_props = CreateOrderByPrintDetails.from_dict({
+            >>>        "external_id": "2750e210-39bb-11e9-a503-452618153e5a",
+            >>>        "label": "00012",
+            >>>        "line_items": [
+            >>>          {
+            >>>            "print_provider_id": 5,
+            >>>            "blueprint_id": 9,
+            >>>            "variant_id": 17887,
+            >>>            "print_areas": {
+            >>>              "front": "https://images.example.com/image.png"
+            >>>            },
+            >>>            "print_details": {
+            >>>                "print_on_side": "mirror"
+            >>>            },
+            >>>            "quantity": 1
+            >>>          }
+            >>>        ],
+            >>>        "shipping_method": 1,
+            >>>        "send_shipping_notification": False,
+            >>>        "address_to": {
+            >>>          "first_name": "John",
+            >>>          "last_name": "Smith",
+            >>>          "email": "example@msn.com",
+            >>>          "phone": "0574 69 21 90",
+            >>>          "country": "BE",
+            >>>          "region": "",
+            >>>          "address1": "ExampleBaan 121",
+            >>>          "address2": "45",
+            >>>          "city": "Retie",
+            >>>          "zip": "2470"
+            >>>    }
+            >>> })
+            >>> order_number = api.orders.create_order_with_print_details(new_order_props)
+
+        Args:
+            create_order: Order information
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order reference number
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def create_order_with_sku(self, create_order: CreateOrderBySku, shop_id: Union[str, int]) -> str:
         """
-        TODO
+        Create an order for a product based on its SKU.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> new_order_props = CreateOrderBySku.from_dict({
+            >>>    "external_id": "2750e210-39bb-11e9-a503-452618153e6a",
+            >>>    "label": "00012",
+            >>>    "line_items": [
+            >>>      {
+            >>>        "sku": "MY-SKU",
+            >>>        "quantity": 1
+            >>>      }
+            >>>    ],
+            >>>    "shipping_method": 1,
+            >>>    "send_shipping_notification": False,
+            >>>    "address_to": {
+            >>>      "first_name": "John",
+            >>>      "last_name": "Smith",
+            >>>      "email": "example@msn.com",
+            >>>      "phone": "0574 69 21 90",
+            >>>      "country": "BE",
+            >>>      "region": "",
+            >>>      "address1": "ExampleBaan 121",
+            >>>      "address2": "45",
+            >>>      "city": "Retie",
+            >>>      "zip": "2470"
+            >>>    }
+            >>> })
+            >>> order_number = api.orders.create_order_with_sku(new_order_props)
+
+        Args:
+            create_order: Order information
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order reference number
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         return self.__create_order(create_order, shop_id=shop_id)
 
     @_ShopIdMixin._require_shop_id
     def send_order_to_production(self, order_id: str, shop_id: Union[str, int]) -> Order:
         """
-        TODO
+        Sends an open order to production in Printify.
+
+        Examples:
+            With specifying the shop_id at the function level
+            >>> from printipy.api import PrintiPy
+            >>> api = PrintiPy(api_token='...', shop_id='...')
+            >>> order_number = api.orders.create_order_with_sku(...)
+            >>> order = api.orders.send_order_to_production(order_number)
+
+        Args:
+            order_id: Order ID
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+        Returns:
+            Order `printipy.data_objects.Order` information
+
+        Raises:
+            ParseException: If unable to parse Printify's response
+            InvalidScopeException: If the API keys isn't permitted to perform this operation
+            InvalidRequestException: If either the Shop ID or Order Number does not exist in Printify
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed input
         """
         # POST / v1 / shops / {shop_id} / orders / {order_id} / send_to_production.json
         send_order_to_production_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/send_to_production.json'
