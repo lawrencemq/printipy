@@ -9,8 +9,8 @@ from printipy.api import PrintiPy
 from printipy.exceptions import PrintiPyException
 from printipy.data_objects import Shop, Blueprint, PrintProvider, PrintProviderVariants, ShippingInfo, ShippingCost, \
     CreateShippingEstimate, Product, Publish, PublishingSucceeded, Order, CreateOrderByExistingProduct, \
-    CreateOrderBySimpleImageProcessing, CreateOrderByAdvancedImageProcessing, CreateOrderByPrintDetails, CreateOrderBySku, \
-    Artwork, Webhook, CreateWebhook, UpdateWebhook, CreateProduct, UpdateProduct
+    CreateOrderBySimpleImageProcessing, CreateOrderByAdvancedImageProcessing, CreateOrderByPrintDetails, \
+    CreateOrderBySku, Artwork, Webhook, CreateWebhook, UpdateWebhook, CreateProduct, UpdateProduct
 
 
 class TestPrintiPyApiV1(TestCase):

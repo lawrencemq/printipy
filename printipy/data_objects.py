@@ -348,7 +348,8 @@ class CreateShippingEstimate:
     Stores and validate data between Python and Printify.
 
     Args:
-        line_items: List of items. This can be a list of products, a list of items by their SKU, or a list of new products given their variant details.
+        line_items: List of items. This can be a list of products, a list of items by their SKU, or a list of new
+        products given their variant details.
         address_to: Address of the recipient
     """
     line_items: List[
@@ -792,7 +793,9 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
         quantity (int): the number of copies to include int he line item for a specific product
         print_provider_id: ID of the print provider
         blueprint_id: ID of the blueprint for the product
-        print_areas: information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
+        print_areas: information on print areas for a variant. Warning!
+        This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException`
+        when used to created orders.
     """
     print_provider_id: int
     blueprint_id: int
@@ -904,8 +907,12 @@ class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
         quantity (int): the number of copies to include int he line item for a specific product
         print_provider_id (int): ID of the print provider
         blueprint_id (int): ID of the blueprint for the product
-        print_areas (Dict[str, Any]): information on print areas for a variant. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
-        print_details (Dict[str, Any): information on print details. Warning! This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException` when used to created orders.
+        print_areas (Dict[str, Any]): information on print areas for a variant. Warning!
+        This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException`
+        when used to created orders.
+        print_details (Dict[str, Any): information on print details. Warning!
+        This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException`
+        when used to created orders.
     """
     print_details: Dict[str, Any]
 
@@ -1179,7 +1186,6 @@ class UpdateProduct:
     Args:
         title: New product title
         description: New product description
-        images: New product images or parameters for visibility or default image
         blueprint_id: New ID of a blueprint from the print provider
         print_provider_id: New ID of the print provider
         variants: New product variants - prices and eligibility - for the product
@@ -1190,9 +1196,6 @@ class UpdateProduct:
         default=None, metadata=config(exclude=_exclude_if_none)
     )
     description: Optional[str] = field(
-        default=None, metadata=config(exclude=_exclude_if_none)
-    )
-    images: Optional[List[ProductImage]] = field( #TODO ADD TO TESTS
         default=None, metadata=config(exclude=_exclude_if_none)
     )
     blueprint_id: Optional[int] = field(

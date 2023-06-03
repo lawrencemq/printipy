@@ -13,8 +13,8 @@ from printipy.data_objects import Shop, Blueprint, PrintProvider, PrintProviderV
     CreateOrderByExistingProduct, CreateOrderByAdvancedImageProcessing, \
     CreateOrderByPrintDetails, CreateOrderBySku, Artwork, Webhook, CreateWebhook, UpdateWebhook, \
     CreateProduct, UpdateProduct
-from printipy.exceptions import PrintiPyException, PrintiPyParseException, InvalidScopeException, InvalidRequestException, \
-    PrintifyException
+from printipy.exceptions import PrintiPyException, PrintiPyParseException, InvalidScopeException, \
+    InvalidRequestException, PrintifyException
 
 
 class _ApiHandlingMixin:
@@ -368,7 +368,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
             >>> products = api.products.get_products()
 
         Args:
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
             max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
         Returns:
             List of products `printipy.data_objects.Product` object
@@ -410,7 +411,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             product_id: The ID of the specific product to pull
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull products.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Product `printipy.data_objects.Product` object
 
@@ -443,7 +445,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
             >>>     "variants": [...],
             >>>     "print_areas": [...],
             >>> }
-            >>> product = api.products.create_product(create_product=CreateProduct.from_dict(product_info), shop_id='...')
+            >>> product = api.products.create_product(
+            >>>                create_product=CreateProduct.from_dict(product_info), shop_id='...')
 
             Or, with specifying the shop_id at PrintiPy-creation time and using a CreateProduct object
             >>> from printipy.api import PrintiPy
@@ -461,7 +464,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_product: Product metadata to pass to Printify
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Product `printipy.data_objects.Product` object
@@ -494,7 +498,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
             >>>     "variants": [...],
             >>>     "print_areas": [...],
             >>> }
-            >>> product = api.products.update_product(product_id='...', update_product=UpdateProduct.from_dict(product_info), shop_id='...')
+            >>> product = api.products.update_product(product_id='...',
+            >>>             update_product=UpdateProduct.from_dict(product_info), shop_id='...')
 
             Or, with specifying the shop_id at PrintiPy-creation time and using a UpdateProduct object
             >>> from printipy.api import PrintiPy
@@ -513,7 +518,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         Args:
             product_id: ID of the product to update
             update_product: Product metadata to pass to Printify
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Product `printipy.data_objects.Product` object
@@ -546,7 +552,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             product_id: ID of the product to publish
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Raises:
             InvalidScopeException: If the API keys isn't permitted to perform this operation
@@ -572,7 +579,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         Args:
             product_id: ID of the product to publish
             publish: Publish settings for the product
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             True when a product has been marked for publishing
@@ -590,7 +598,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     def set_product_published_success(self, product_id: str, publishing_succeeded: PublishingSucceeded,
                                       shop_id: Union[str, int]) -> True:
         """
-        Marks a product as published for a given store in Printify. Useful when managing a custom site, not a linked store supportd by Printify.
+        Marks a product as published for a given store in Printify. Useful when managing a custom site,
+        not a linked store supportd by Printify.
 
         Examples:
             >>> from printipy.api import PrintiPy
@@ -603,7 +612,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         Args:
             product_id: ID of the product
             publishing_succeeded: Publishing details for the external store
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             True when a product has been marked as published
@@ -621,7 +631,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
     @_ShopIdMixin._require_shop_id
     def set_product_published_failed(self, product_id: str, reason: str, shop_id: Union[str, int]) -> True:
         """
-        Marks a product as not published for a given store in Printify. Useful when managing a custom site, not a linked store supportd by Printify.
+        Marks a product as not published for a given store in Printify. Useful when managing a custom site,
+        not a linked store supportd by Printify.
 
         Examples:
             >>> from printipy.api import PrintiPy
@@ -634,7 +645,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
         Args:
             product_id: ID of the product
             reason: Explination of a publishing failure - useful for tacking
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             True when a product has been marked as not published
@@ -662,7 +674,8 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             product_id: ID of the product to unpublish
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             True when a product has been marked as unpublished
@@ -708,7 +721,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
             >>> orders = api.orders.get_orders()
 
         Args:
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
             max_pages: Printify's API is paginated for requests. This will set the maximum number of pages to ingest.
         Returns:
             List of orders `printipy.data_objects.Order` object
@@ -751,7 +765,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             order_id: ID of the order to pull for a specific shop in Printify.
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Orders `printipy.data_objects.Order` object
 
@@ -814,7 +829,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_order: Order information
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order reference number
 
@@ -870,7 +886,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_order: Order information
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order reference number
 
@@ -940,7 +957,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_order: Order information
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order reference number
 
@@ -997,7 +1015,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_order: Order information
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order reference number
 
@@ -1046,7 +1065,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_order: Order information
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order reference number
 
@@ -1072,7 +1092,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             order_id: Order ID
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to create orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             Order `printipy.data_objects.Order` information
 
@@ -1102,7 +1123,9 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
             >>>     "line_items": [...],
             >>>     "address_to": {...},
             >>> }
-            >>> shipping_cost = api.orders.calc_shipping_for_order(create_shipping_cost_estimate=CreateShippingEstimate.from_dict(estimate_info), shop_id='...')
+            >>> shipping_cost = api.orders.calc_shipping_for_order(
+            >>>                   create_shipping_cost_estimate=CreateShippingEstimate.from_dict(estimate_info),
+            >>>                   shop_id='...')
 
             Or, with specifying the shop_id at PrintiPy-creation time and using a CreateShippingEstimate object
             >>> from printipy.api import PrintiPy
@@ -1116,7 +1139,8 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_shipping_cost_estimate: Order adn shipping information to pass to Printify
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Shipping cost `printipy.data_objects.ShippingCost` object
@@ -1148,14 +1172,16 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             order_id: ID of the order to cancel
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Order `printipy.data_objects.Order` object
 
         Raises:
             InvalidScopeException: If the API keys isn't permitted to perform this operation
-            PrintifyException: If Printify returned an error - usually contains information regarding malformed input or why the order cannot be canceled
+            PrintifyException: If Printify returned an error - usually contains information regarding malformed
+             input or why the order cannot be canceled
         """
         # POST / v1 / shops / {shop_id} / orders / {order_id} / cancel.json
         cancel_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders/{order_id}/cancel.json'
@@ -1328,7 +1354,8 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
             >>> webhooks = api.webhooks.get_webhooks()
 
         Args:
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
         Returns:
             List of webhooks `printipy.data_objects.Webhook` object
 
@@ -1357,7 +1384,8 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
             >>>    "topic": "order:created",
             >>>    "url": "https://example.com/webhooks/order/created"
             >>> }
-            >>> webhook = api.webhooks.create_webhook(create_webhook=CreateWebhook.from_dict(webhook_info), shop_id='...')
+            >>> webhook = api.webhooks.create_webhook(
+            >>>               create_webhook=CreateWebhook.from_dict(webhook_info), shop_id='...')
 
             Or, with specifying the shop_id at PrintiPy-creation time and using a CreateWebhook object
             >>> from printipy.api import PrintiPy
@@ -1371,7 +1399,8 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
         Args:
             create_webhook: Webhook metadata to pass to Printify
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Webhooks `printipy.data_objects.Webhook` object
@@ -1396,10 +1425,13 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
             >>> from printipy.data_objects import UpdateWebhook
             >>> api = PrintiPy(api_token='...')
             >>> webhook_info = {
-            >>>    "topic": "order:created",
-            >>>    "url": "https://example.com/webhooks/order/created"
+            >>>     "topic": "order:created",
+            >>>     "url": "https://example.com/webhooks/order/created"
             >>> }
-            >>> webhook = api.webhooks.update_webhook(webhook_id='...', update_webhook=UpdateWebhook.from_dict(webhook_info), shop_id='...')
+            >>> webhook = api.webhooks.update_webhook(
+            >>>     webhook_id='...',
+            >>>     update_webhook=UpdateWebhook.from_dict(webhook_info), shop_id='...'
+            >>> )
 
             Or, with specifying the shop_id at PrintiPy-creation time and using a CreateWebhook object
             >>> from printipy.api import PrintiPy
@@ -1414,7 +1446,8 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
         Args:
             webhook_id: ID of the webhook to update in Printify
             update_webhook: Webhook metadata to pass to Printify
-            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders. This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
+            shop_id (Optional[Union[str, int]]): Specific shop ID in Printify from which to pull orders.
+            This may be set at every call to speicy different shops, or this may be set when initiating PrintiPy.
 
         Returns:
             Webhooks `printipy.data_objects.Webhook` object
@@ -1480,8 +1513,11 @@ class PrintiPy:
         Entrypoint needed to access all [Printify APIs](https://developers.printify.com/)
 
         Args:
-            api_token (str): Every instance of PrintiPy requires an API Token. Follow [these steps](https://help.printify.com/hc/en-us/articles/4483626447249-How-can-I-generate-an-API-token-) to generate a token
-            shop_id (Optional[str]): The ID of a specific Printify shop. If none is given, some APIs will still work (as they do not require a Shop) while others will require a Shop ID to be passed upon a function call
+            api_token (str): Every instance of PrintiPy requires an API Token. Follow
+            [these steps](https://help.printify.com/hc/en-us/articles/4483626447249-How-can-I-generate-an-API-token-)
+            to generate a token
+            shop_id (Optional[str]): The ID of a specific Printify shop. If none is given, some APIs will still
+            work (as they do not require a Shop) while others will require a Shop ID to be passed upon a function call
         """
         self.shops = PrintiPyShop(api_token=api_token)
         self.catalog = PrintiPyCatalog(api_token=api_token)
