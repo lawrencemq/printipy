@@ -166,21 +166,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to-guides/" class="md-nav__link">
-        Common PrintiPy Patterns
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../reference/" class="md-nav__link">
         PrintiPy Reference
       </a>
@@ -262,15 +247,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#printipy.exceptions.ParseException" class="md-nav__link">
-    ParseException
+  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
+    PrintiPyException
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
-    PrintiPyException
+  <a href="#printipy.exceptions.PrintiPyParseException" class="md-nav__link">
+    PrintiPyParseException
   </a>
   
 </li>
@@ -351,15 +336,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#printipy.exceptions.ParseException" class="md-nav__link">
-    ParseException
+  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
+    PrintiPyException
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
-    PrintiPyException
+  <a href="#printipy.exceptions.PrintiPyParseException" class="md-nav__link">
+    PrintiPyParseException
   </a>
   
 </li>
@@ -424,18 +409,49 @@
         Bases: <code>Exception</code></p>
 
   
-      <p>TODO</p>
+      <p>When Printify raised a 500 Server Error. Typically happens when the request contains incorrect data.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">InvalidRequestException</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
 
 
         <details class="quote">
           <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidRequestException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidRequestException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
+<span class="sd">    When Printify raised a 500 Server Error. Typically happens when the request contains incorrect data.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
+<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
+<span class="sd">        &gt;&gt;&gt; except InvalidRequestException e:</span>
+<span class="sd">        &gt;&gt;&gt;   print(e)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
@@ -461,55 +477,52 @@
         Bases: <code>Exception</code></p>
 
   
-      <p>TODO</p>
+      <p>When the given API key isn't permitted to perform the operation.
+Use a different API key from Printify or update the permissions of the given key.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">InvalidScopeException</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
 
 
         <details class="quote">
           <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidScopeException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidScopeException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
+<span class="sd">    When the given API key isn&#39;t permitted to perform the operation.</span>
+<span class="sd">    Use a different API key from Printify or update the permissions of the given key.</span>
 
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.ParseException" class="doc doc-heading">
-        <code>ParseException</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="printipy.exceptions.PrintiPyException" href="#printipy.exceptions.PrintiPyException">PrintiPyException</a></code></p>
-
-  
-      <p>TODO</p>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ParseException</span><span class="p">(</span><span class="n">PrintiPyException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
+<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
+<span class="sd">        &gt;&gt;&gt; except InvalidScopeException e:</span>
+<span class="sd">        &gt;&gt;&gt;   print(e)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
@@ -535,18 +548,105 @@
         Bases: <code>Exception</code></p>
 
   
-      <p>TODO</p>
+      <p>When a request doesn't meet the minimum needs to send/receive information with Printify. AKA, user error.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">api</span><span class="o">.</span><span class="n">artwork</span><span class="o">.</span><span class="n">upload_artwork</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintiPyException</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
 
 
         <details class="quote">
           <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintiPyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintiPyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
+<span class="sd">    When a request doesn&#39;t meet the minimum needs to send/receive information with Printify. AKA, user error.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
+<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        &gt;&gt;&gt;   api.artwork.upload_artwork(...)</span>
+<span class="sd">        &gt;&gt;&gt; except PrintiPyException e:</span>
+<span class="sd">        &gt;&gt;&gt;   print(e)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="printipy.exceptions.PrintiPyParseException" class="doc doc-heading">
+        <code>PrintiPyParseException</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="printipy.exceptions.PrintiPyException" href="#printipy.exceptions.PrintiPyException">PrintiPyException</a></code></p>
+
+  
+      <p>When unable to parse Printify's response into a PrintiPy. Please report these errors to the developer.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">get_products</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintiPyParseException</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+
+
+        <details class="quote">
+          <summary>Source code in <code>printipy/exceptions.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintiPyParseException</span><span class="p">(</span><span class="n">PrintiPyException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    When unable to parse Printify&#39;s response into a PrintiPy. Please report these errors to the developer.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
+<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        &gt;&gt;&gt;   api.products.get_products()</span>
+<span class="sd">        &gt;&gt;&gt; except PrintiPyParseException e:</span>
+<span class="sd">        &gt;&gt;&gt;   print(e)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
@@ -572,18 +672,49 @@
         Bases: <code>Exception</code></p>
 
   
-      <p>TODO</p>
+      <p>When Printify returns an error - usually contains information regarding malformed input</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintifyException</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
 
 
         <details class="quote">
           <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintifyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintifyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
+<span class="sd">    When Printify returns an error - usually contains information regarding malformed input</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
+<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
+<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
+<span class="sd">        &gt;&gt;&gt; except PrintifyException e:</span>
+<span class="sd">        &gt;&gt;&gt;   print(e)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
