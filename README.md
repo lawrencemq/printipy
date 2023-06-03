@@ -1,6 +1,8 @@
 # PrintiPy
 The Printify API for Python
 
+Printify's REST API gives your scripts or applications power to manage Printify shops. Create and update products, submit orders, build custom integrations, and so much more!
+
 Tested with Python 3.8 - 3.11.
 
 ## Install
