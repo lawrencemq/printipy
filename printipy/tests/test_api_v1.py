@@ -5,11 +5,12 @@ from unittest import TestCase
 import responses
 from responses import matchers
 
-from printipy.api import PrintiPy, Shop, Blueprint, PrintProvider, PrintProviderVariants, ShippingInfo, Product, \
-    UpdateProduct, CreateProduct, Publish, PublishingSucceeded, Order, CreateOrderExistingProduct, \
-    CreateShippingEstimate, \
-    ShippingCost, Artwork, PrintiPyException, Webhook, CreateWebhook, UpdateWebhook, CreateOrderPrintDetails, \
-    CreateOrderAdvancedImageProcessing, CreateOrderSimpleImageProcessing, CreateOrderSku
+from printipy.api import PrintiPy
+from printipy.exceptions import PrintiPyException
+from printipy.data_objects import Shop, Blueprint, PrintProvider, PrintProviderVariants, ShippingInfo, ShippingCost, \
+    CreateShippingEstimate, Product, Publish, PublishingSucceeded, Order, CreateOrderByExistingProduct, \
+    CreateOrderBySimpleImageProcessing, CreateOrderByAdvancedImageProcessing, CreateOrderByPrintDetails, \
+    CreateOrderBySku, Artwork, Webhook, CreateWebhook, UpdateWebhook, CreateProduct, UpdateProduct
 
 
 class TestPrintiPyApiV1(TestCase):
@@ -2244,10 +2245,10 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
         )
 
         self.assertEqual(
-            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url)),
+            self.api.orders.create_order_for_existing_product(CreateOrderByExistingProduct.from_dict(data_for_url)),
             data_returned_from_url['id'])
         self.assertEqual(
-            self.api.orders.create_order_for_existing_product(CreateOrderExistingProduct.from_dict(data_for_url),
+            self.api.orders.create_order_for_existing_product(CreateOrderByExistingProduct.from_dict(data_for_url),
                                                               shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
@@ -2292,9 +2293,9 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
         )
 
         self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
-            CreateOrderSimpleImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+            CreateOrderBySimpleImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
         self.assertEqual(self.api.orders.create_order_with_simple_image_positioning(
-            CreateOrderSimpleImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            CreateOrderBySimpleImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
             data_returned_from_url['id'])
 
     @responses.activate
@@ -2354,9 +2355,9 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
         )
 
         self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
-            CreateOrderAdvancedImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
+            CreateOrderByAdvancedImageProcessing.from_dict(data_for_url)), data_returned_from_url['id'])
         self.assertEqual(self.api.orders.create_order_with_advanced_image_positioning(
-            CreateOrderAdvancedImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
+            CreateOrderByAdvancedImageProcessing.from_dict(data_for_url), shop_id=self.shop_id),
             data_returned_from_url['id'])
 
     @responses.activate
@@ -2404,10 +2405,10 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
         )
 
         self.assertEqual(
-            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url)),
+            self.api.orders.create_order_with_print_details(CreateOrderByPrintDetails.from_dict(data_for_url)),
             data_returned_from_url['id'])
         self.assertEqual(
-            self.api.orders.create_order_with_print_details(CreateOrderPrintDetails.from_dict(data_for_url),
+            self.api.orders.create_order_with_print_details(CreateOrderByPrintDetails.from_dict(data_for_url),
                                                             shop_id=self.shop_id), data_returned_from_url['id'])
 
     @responses.activate
@@ -2446,10 +2447,10 @@ class TestPrintiPyOrdersApiV1(TestPrintiPyApiV1):
             data=data_returned_from_url
         )
 
-        self.assertEqual(self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url)),
+        self.assertEqual(self.api.orders.create_order_with_sku(CreateOrderBySku.from_dict(data_for_url)),
                          data_returned_from_url['id'])
         self.assertEqual(
-            self.api.orders.create_order_with_sku(CreateOrderSku.from_dict(data_for_url), shop_id=self.shop_id),
+            self.api.orders.create_order_with_sku(CreateOrderBySku.from_dict(data_for_url), shop_id=self.shop_id),
             data_returned_from_url['id'])
 
     @responses.activate

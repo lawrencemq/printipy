@@ -1,17 +1,15 @@
-site_name: Basic MkDocs Example Project
+site_name: PrintiPy
+
 theme:
-  name: readthedocs
-  highlightjs: true
+  name: "material"
+
 plugins:
-  - search
-  - mkdocstrings:
-      handlers:
-        # See: https://mkdocstrings.github.io/python/usage/
-        python:
-          paths: [printipy]
-          options:
-            docstring_style: sphinx
-markdown_extensions:
-  - markdown_include.include:
-      base_path: .
-  - admonition
+  - mkdocstrings
+
+nav:
+  - index.md
+#  - how-to-guides.md
+  - PrintiPy Reference: reference.md
+  - PrintiPy Data Objects: data-objects.md
+  - PrintiPy Exceptions: exceptions.md
+  - explanation.md

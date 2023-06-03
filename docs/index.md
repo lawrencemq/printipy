@@ -1,14 +1,41 @@
-{!README.md!}
+PrintiPy: The Printify API for Python
 
-# Welcome to Lumache's documentation!
+This site contains the project documentation for the
+`PrintiPy` project.
 
-**Lumache** (/lu\'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients. It pulls data from the
-[Open Food Facts database](https://world.openfoodfacts.org/) and offers
-a *simple* and *intuitive* API.
+Its aim is to give you easy, Pythonic, programmatic access to Printify's API.
 
-Check out the [usage](usage) section for further information, including how to [install](usage#installation) the project.
+If you would like to contribute, please see the [GitHub page](https://github.com/lawrencemq/printipy).
 
-!!! note
+## Table Of Contents
 
-    This project is under active development.
+[//]: # (1. [How-To Guides]&#40;how-to-guides.md&#41;)
+1. [API Reference](reference.md)
+1. [Explanation](explanation.md)
+
+## Project Overview
+
+### Install
+
+```shell
+pipenv install printipy
+```
+
+### Quickstart Example
+
+Quickly connect to the Printify API via PrintiPy. Pass an API token for the Printify account and an optional Shop ID and start automating!
+
+```python
+from printipy.api import PrintiPy
+
+api = PrintiPy(api_token='...', shop_id='...')
+
+for product in api.products.get_products():
+    print(product)
+```
+
+### References
+
+- [Printipy API Documentation](./reference.md)
+- [Printipy Data Object Documentation](./data-objects.md)
+- [Printipy Exception Documentation](./exceptions.md)
