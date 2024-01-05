@@ -458,7 +458,7 @@ class PrintAreaInfo:
     x: float
     y: float
     scale: float
-    angle: float
+    angle: int
 
 
 @dataclass_json
@@ -477,7 +477,7 @@ class PlaceholderImage(PrintAreaInfo):
         x (float): Coordinate across the X axis for an image to start
         y (float): Coordinate across the Y axis for an image to start
         scale (float): The scaling factor for an image to be resized
-        angle (float): The angle at which an image will be rotated
+        angle (int): The angle at which an image will be rotated
     """
     id: str
     name: Optional[str] = None
@@ -835,7 +835,7 @@ class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
         x (float): Coordinate across the X axis for an image to start
         y (float): Coordinate across the Y axis for an image to start
         scale (float): The scaling factor for an image to be resized
-        angle (float): The angle at which an image will be rotated
+        angle (int): The angle at which an image will be rotated
         src: the filename of the image to use
     """
     src: str
@@ -1065,7 +1065,7 @@ class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
         x (float): Coordinate across the X axis for an image to start
         y (float): Coordinate across the Y axis for an image to start
         scale (float): The scaling factor for an image to be resized
-        angle (float): The angle at which an image will be rotated
+        angle (int): The angle at which an image will be rotated
     """
     id: str
 
