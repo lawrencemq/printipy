@@ -280,7 +280,7 @@ class ShippingCost:
         express: cost of shipping given express shipping
     """
     standard: int
-    express: int
+    express: Optional[int] = None
 
 
 @dataclass_json
