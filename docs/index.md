@@ -9,9 +9,8 @@ If you would like to contribute, please see the [GitHub page](https://github.com
 
 ## Table Of Contents
 
-[//]: # (1. [How-To Guides]&#40;how-to-guides.md&#41;)
 1. [API Reference](reference.md)
-1. [Explanation](explanation.md)
+2. [Explanation](explanation.md)
 
 ## Project Overview
 

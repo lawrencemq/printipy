@@ -1,5 +1,5 @@
 site_name: PrintiPy
-
+site_url: https://lawrencemq.github.io/printipy/
 theme:
   name: "material"
 
