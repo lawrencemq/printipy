@@ -1,779 +1,308 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      
-        <link rel="prev" href="../data-objects/">
-      
-      
-        <link rel="next" href="../explanation/">
-      
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
-    
-    
-      
-        <title>PrintiPy Exceptions - PrintiPy</title>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/stylesheets/main.ded33207.min.css">
-      
-      
+<!DOCTYPE html>
 
-    
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
-    
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#printipy.exceptions" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="https://lawrencemq.github.io/printipy/exceptions/" rel="canonical"/>
+<link href="../data-objects/" rel="prev"/>
+<link href="../explanation/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.4.3, mkdocs-material-9.1.19" name="generator"/>
+<title>PrintiPy Exceptions - PrintiPy</title>
+<link href="../assets/stylesheets/main.eebd395e.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#printipy.exceptions">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="PrintiPy" class="md-header__button md-logo" aria-label="PrintiPy" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="PrintiPy" class="md-header__button md-logo" data-md-component="logo" href=".." title="PrintiPy">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             PrintiPy
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               PrintiPy Exceptions
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-    
-  </nav>
-  
+</div>
+</div>
+</div>
+</nav>
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href=".." title="PrintiPy" class="md-nav__button md-logo" aria-label="PrintiPy" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="PrintiPy" class="md-nav__button md-logo" data-md-component="logo" href=".." title="PrintiPy">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
     PrintiPy
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
         Home
       </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../reference/">
         PrintiPy Reference
       </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../data-objects/" class="md-nav__link">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-objects/">
         PrintiPy Data Objects
       </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
           PrintiPy Exceptions
           <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
         PrintiPy Exceptions
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions" class="md-nav__link">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions">
     printipy.exceptions
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.InvalidRequestException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.InvalidRequestException">
     InvalidRequestException
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.InvalidScopeException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.InvalidScopeException">
     InvalidScopeException
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
-    PrintiPyException
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyParseException" class="md-nav__link">
-    PrintiPyParseException
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintifyException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintifyException">
     PrintifyException
   </a>
-  
 </li>
-      
-    </ul>
-  
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintiPyException">
+    PrintiPyException
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintiPyParseException">
+    PrintiPyParseException
+  </a>
+</li>
+</ul>
 </nav>
-      
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explanation/" class="md-nav__link">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explanation/">
         Explanation
       </a>
-    </li>
-  
-
-    
-  </ul>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions" class="md-nav__link">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions">
     printipy.exceptions
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.InvalidRequestException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.InvalidRequestException">
     InvalidRequestException
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.InvalidScopeException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.InvalidScopeException">
     InvalidScopeException
   </a>
-  
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyException" class="md-nav__link">
-    PrintiPyException
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintiPyParseException" class="md-nav__link">
-    PrintiPyParseException
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#printipy.exceptions.PrintifyException" class="md-nav__link">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintifyException">
     PrintifyException
   </a>
-  
 </li>
-      
-    </ul>
-  
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintiPyException">
+    PrintiPyException
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#printipy.exceptions.PrintiPyParseException">
+    PrintiPyParseException
+  </a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-  <h1>PrintiPy Exceptions</h1>
-
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1>PrintiPy Exceptions</h1>
 <p>Technical documentation on the possible exception that could be raised in the Python interface for PrintiPy.</p>
-
-
 <div class="doc doc-object doc-module">
-
-
-<a id="printipy.exceptions"></a>
-  <div class="doc doc-contents first">
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
+<h6 class="hidden-toc" href="#printipy.exceptions" id="printipy.exceptions" style="visibility: hidden; width: 0; height: 0;">
+</h6>
+<div class="doc doc-contents first">
+<div class="doc doc-children">
 <div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.InvalidRequestException" class="doc doc-heading">
-        <code>InvalidRequestException</code>
-
-
+<h2 class="doc doc-heading" id="printipy.exceptions.InvalidRequestException">
+<code>InvalidRequestException</code>
 </h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code>Exception</code></p>
-
-  
-      <p>When Printify raised a 500 Server Error. Typically happens when the request contains incorrect data.</p>
-
-<p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">InvalidRequestException</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidRequestException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    When Printify raised a 500 Server Error. Typically happens when the request contains incorrect data.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
-<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
-<span class="sd">        &gt;&gt;&gt; try:</span>
-<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
-<span class="sd">        &gt;&gt;&gt; except InvalidRequestException e:</span>
-<span class="sd">        &gt;&gt;&gt;   print(e)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  </div>
-
+<div class="doc doc-contents">
+<p>When Printify raised a 500 Server Error. Typically happens when the request contains incorrect data.</p>
+<p>!!! examples
+    &gt;&gt;&gt; from printipy.api import PrintiPy
+    &gt;&gt;&gt; from printipy.data_objects import CreateProduct
+    &gt;&gt;&gt; api = PrintiPy(api_token='...', shop_id='...')
+    &gt;&gt;&gt; new_product = CreateProduct(...)
+    &gt;&gt;&gt; try:
+    &gt;&gt;&gt;   created_product = api.products.create_product()
+    &gt;&gt;&gt; except InvalidRequestException e:
+    &gt;&gt;&gt;   print(e)</p>
 </div>
-
+</div>
 <div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.InvalidScopeException" class="doc doc-heading">
-        <code>InvalidScopeException</code>
-
-
+<h2 class="doc doc-heading" id="printipy.exceptions.InvalidScopeException">
+<code>InvalidScopeException</code>
 </h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code>Exception</code></p>
-
-  
-      <p>When the given API key isn't permitted to perform the operation.
+<div class="doc doc-contents">
+<p>When the given API key isn't permitted to perform the operation.
 Use a different API key from Printify or update the permissions of the given key.</p>
-
-<p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">InvalidScopeException</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidScopeException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    When the given API key isn&#39;t permitted to perform the operation.</span>
-<span class="sd">    Use a different API key from Printify or update the permissions of the given key.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
-<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
-<span class="sd">        &gt;&gt;&gt; try:</span>
-<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
-<span class="sd">        &gt;&gt;&gt; except InvalidScopeException e:</span>
-<span class="sd">        &gt;&gt;&gt;   print(e)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  </div>
-
+<p>!!! examples
+    &gt;&gt;&gt; from printipy.api import PrintiPy
+    &gt;&gt;&gt; from printipy.data_objects import CreateProduct
+    &gt;&gt;&gt; api = PrintiPy(api_token='...', shop_id='...')
+    &gt;&gt;&gt; new_product = CreateProduct(...)
+    &gt;&gt;&gt; try:
+    &gt;&gt;&gt;   created_product = api.products.create_product()
+    &gt;&gt;&gt; except InvalidScopeException e:
+    &gt;&gt;&gt;   print(e)</p>
 </div>
-
+</div>
 <div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.PrintiPyException" class="doc doc-heading">
-        <code>PrintiPyException</code>
-
-
+<h2 class="doc doc-heading" id="printipy.exceptions.PrintifyException">
+<code>PrintifyException</code>
 </h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code>Exception</code></p>
-
-  
-      <p>When a request doesn't meet the minimum needs to send/receive information with Printify. AKA, user error.</p>
-
-<p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="n">api</span><span class="o">.</span><span class="n">artwork</span><span class="o">.</span><span class="n">upload_artwork</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintiPyException</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintiPyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    When a request doesn&#39;t meet the minimum needs to send/receive information with Printify. AKA, user error.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
-<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; try:</span>
-<span class="sd">        &gt;&gt;&gt;   api.artwork.upload_artwork(...)</span>
-<span class="sd">        &gt;&gt;&gt; except PrintiPyException e:</span>
-<span class="sd">        &gt;&gt;&gt;   print(e)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  </div>
-
+<div class="doc doc-contents">
+<p>When Printify returns an error - usually contains information regarding malformed input</p>
+<p>!!! examples
+    &gt;&gt;&gt; from printipy.api import PrintiPy
+    &gt;&gt;&gt; from printipy.data_objects import CreateProduct
+    &gt;&gt;&gt; api = PrintiPy(api_token='...', shop_id='...')
+    &gt;&gt;&gt; new_product = CreateProduct(...)
+    &gt;&gt;&gt; try:
+    &gt;&gt;&gt;   created_product = api.products.create_product()
+    &gt;&gt;&gt; except PrintifyException e:
+    &gt;&gt;&gt;   print(e)</p>
 </div>
-
+</div>
 <div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.PrintiPyParseException" class="doc doc-heading">
-        <code>PrintiPyParseException</code>
-
-
+<h2 class="doc doc-heading" id="printipy.exceptions.PrintiPyException">
+<code>PrintiPyException</code>
 </h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="printipy.exceptions.PrintiPyException" href="#printipy.exceptions.PrintiPyException">PrintiPyException</a></code></p>
-
-  
-      <p>When unable to parse Printify's response into a PrintiPy. Please report these errors to the developer.</p>
-
-<p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">get_products</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintiPyParseException</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintiPyParseException</span><span class="p">(</span><span class="n">PrintiPyException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    When unable to parse Printify&#39;s response into a PrintiPy. Please report these errors to the developer.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
-<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; try:</span>
-<span class="sd">        &gt;&gt;&gt;   api.products.get_products()</span>
-<span class="sd">        &gt;&gt;&gt; except PrintiPyParseException e:</span>
-<span class="sd">        &gt;&gt;&gt;   print(e)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  </div>
-
+<div class="doc doc-contents">
+<p>When a request doesn't meet the minimum needs to send/receive information with Printify. AKA, user error.</p>
+<p>!!! examples
+    &gt;&gt;&gt; from printipy.api import PrintiPy
+    &gt;&gt;&gt; api = PrintiPy(api_token='...', shop_id='...')
+    &gt;&gt;&gt; try:
+    &gt;&gt;&gt;   api.artwork.upload_artwork(...)
+    &gt;&gt;&gt; except PrintiPyException e:
+    &gt;&gt;&gt;   print(e)</p>
 </div>
-
+</div>
 <div class="doc doc-object doc-class">
-
-
-
-<h2 id="printipy.exceptions.PrintifyException" class="doc doc-heading">
-        <code>PrintifyException</code>
-
-
+<h2 class="doc doc-heading" id="printipy.exceptions.PrintiPyParseException">
+<code>PrintiPyParseException</code>
 </h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code>Exception</code></p>
-
-  
-      <p>When Printify returns an error - usually contains information regarding malformed input</p>
-
-<p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.api</span> <span class="kn">import</span> <span class="n">PrintiPy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">printipy.data_objects</span> <span class="kn">import</span> <span class="n">CreateProduct</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">PrintiPy</span><span class="p">(</span><span class="n">api_token</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">shop_id</span><span class="o">=</span><span class="s1">&#39;...&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">new_product</span> <span class="o">=</span> <span class="n">CreateProduct</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="n">created_product</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">create_product</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">except</span> <span class="n">PrintifyException</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
-
-
-        <details class="quote">
-          <summary>Source code in <code>printipy/exceptions.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PrintifyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    When Printify returns an error - usually contains information regarding malformed input</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.api import PrintiPy</span>
-<span class="sd">        &gt;&gt;&gt; from printipy.data_objects import CreateProduct</span>
-<span class="sd">        &gt;&gt;&gt; api = PrintiPy(api_token=&#39;...&#39;, shop_id=&#39;...&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; new_product = CreateProduct(...)</span>
-<span class="sd">        &gt;&gt;&gt; try:</span>
-<span class="sd">        &gt;&gt;&gt;   created_product = api.products.create_product()</span>
-<span class="sd">        &gt;&gt;&gt; except PrintifyException e:</span>
-<span class="sd">        &gt;&gt;&gt;   print(e)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  </div>
-
+<div class="doc doc-contents">
+<p>When unable to parse Printify's response into a PrintiPy. Please report these errors to the developer.</p>
+<p>!!! examples
+    &gt;&gt;&gt; from printipy.api import PrintiPy
+    &gt;&gt;&gt; api = PrintiPy(api_token='...', shop_id='...')
+    &gt;&gt;&gt; try:
+    &gt;&gt;&gt;   api.products.get_products()
+    &gt;&gt;&gt; except PrintiPyParseException e:
+    &gt;&gt;&gt;   print(e)</p>
 </div>
-
-
-
-
-  </div>
-
-  </div>
-
 </div>
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
-    
-    
-      <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+<script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+</body>
 </html>
