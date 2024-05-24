@@ -98,12 +98,12 @@ class _ApiHandlingMixin:
 
     @staticmethod
     def _parse(clazz, data: Union[List, Dict]):
-        if type(data) == list:
+        if isinstance(data, list):
             all_elements = []
             for item in data:
                 all_elements.append(clazz.from_dict(item))
             return all_elements
-        elif type(data) == dict:
+        elif isinstance(data, dict):
             return clazz.from_dict(data)
         else:
             raise PrintiPyParseException(
