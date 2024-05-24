@@ -19,6 +19,7 @@ class Shop:
         title: Shop Name
         sales_channel: Sales Channel, e.g., Etsy, Walmart, etc.
     """
+
     id: str
     title: str
     sales_channel: str
@@ -38,6 +39,7 @@ class Blueprint:
         model: Model given by the provider
         images: List of image URLs given by the provider
     """
+
     id: int
     title: str
     description: str
@@ -60,6 +62,7 @@ class Location:
         zip: Zipcode
         address2: Second address line. Defaults to None.
     """
+
     address1: str
     city: str
     country: str
@@ -88,6 +91,7 @@ class Address:
         phone: Phone of the recipient. Defaults to None.
         company: Company name of the recipient. Defaults to None.
     """
+
     first_name: str
     last_name: str
     address1: str
@@ -114,6 +118,7 @@ class PrintProvider:
         title: Name of the provider.
         location: Location of the provider. Defaults to None.
     """
+
     id: int
     title: str
     location: Optional[Location] = field(
@@ -134,12 +139,11 @@ class VariantOption:
         paper: Paper of item. Defaults to None.
         quantity: Quantity of item. Defaults to None.
     """
+
     color: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
-    size: Optional[str] = field(
-        default=None, metadata=config(exclude=_exclude_if_none)
-    )
+    size: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
     paper: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
@@ -159,6 +163,7 @@ class VariantPlaceholder:
         height: Height of artwork
         width: Width of artwork
     """
+
     position: str
     height: int
     width: int
@@ -176,6 +181,7 @@ class Variant:
         options: Options given to the variant
         placeholders: List of placeholders for the artwork
     """
+
     id: int
     title: str
     options: VariantOption
@@ -193,6 +199,7 @@ class PrintProviderVariants:
         title: Name of provider
         variants: List of variants provider offers
     """
+
     id: int
     title: str
     variants: List[Variant]
@@ -215,6 +222,7 @@ class ShippingInfoHandlingTime:
         value: The amount of time
         unit: The unit of time
     """
+
     value: int
     unit: str
 
@@ -230,6 +238,7 @@ class ShippingInfoProfileCost:
         cost: shipping cost in whole values. E.g., $12.98 would be 1298
         currency: currency of the shipping cost, e.g., USD
     """
+
     cost: int
     currency: str
 
@@ -247,6 +256,7 @@ class ShippingInfoProfile:
         additional_items: cost to ship any additional items to the first item
         countries: a list of country codes this shipping profile applies to
     """
+
     variant_ids: List[int]
     first_item: ShippingInfoProfileCost
     additional_items: ShippingInfoProfileCost
@@ -264,6 +274,7 @@ class ShippingInfo:
         handling_time: Handling time information before an item is shipped
         profiles: List of shipping information. Includes various prices to different countries.
     """
+
     handling_time: ShippingInfoHandlingTime
     profiles: List[ShippingInfoProfile]
 
@@ -279,6 +290,7 @@ class ShippingCost:
         standard: cost of shipping given standard shipping
         express: cost of shipping given express shipping
     """
+
     standard: int
     express: Optional[int] = None
 
@@ -297,6 +309,7 @@ class ShippingEstimateLineItemByProduct:
         variant_id: Variant ID of that product
         quantity: Number of items to send
     """
+
     product_id: str
     variant_id: int
     quantity: int
@@ -317,6 +330,7 @@ class ShippingEstimateLineItemByVariant:
         variant_id: ID of the variant from the blueprint given from the producer
         quantity: Positive integer of items
     """
+
     print_provider_id: int
     blueprint_id: int
     variant_id: int
@@ -336,6 +350,7 @@ class ShippingEstimateLineItemBySku:
         sku: SKU number of item
         quantity: Number of items to send
     """
+
     sku: str
     quantity: int
 
@@ -352,8 +367,14 @@ class CreateShippingEstimate:
         products given their variant details.
         address_to: Address of the recipient
     """
+
     line_items: List[
-        Union[ShippingEstimateLineItemByProduct, ShippingEstimateLineItemByVariant, ShippingEstimateLineItemBySku]]
+        Union[
+            ShippingEstimateLineItemByProduct,
+            ShippingEstimateLineItemByVariant,
+            ShippingEstimateLineItemBySku,
+        ]
+    ]
     address_to: Address
 
 
@@ -368,6 +389,7 @@ class ProductOptionValue:
         id: ID of the option
         title: Display name for the option
     """
+
     id: str
     title: str
 
@@ -384,6 +406,7 @@ class ProductOption:
         type: Type of option
         values: List of values to include as options
     """
+
     name: str
     type: str
     values: List[ProductOptionValue]
@@ -409,6 +432,7 @@ class ProductVariant:
         options: Additional options for the variant
         quantity: The number of variants left
     """
+
     id: int
     price: int
     is_enabled: bool
@@ -436,6 +460,7 @@ class ProductImage:
         is_default: Flag if the image is the first image in the storefront
         is_selected_for_publishing: Flag if the image should be published
     """
+
     src: str
     variant_ids: List[int]
     position: str
@@ -455,6 +480,7 @@ class PrintAreaInfo:
         scale: The scaling factor for an image to be resized
         angle: The angle at which an image will be rotated
     """
+
     x: float
     y: float
     scale: float
@@ -479,6 +505,7 @@ class PlaceholderImage(PrintAreaInfo):
         scale (float): The scaling factor for an image to be resized
         angle (int): The angle at which an image will be rotated
     """
+
     id: str
     name: Optional[str] = None
     type: Optional[str] = None
@@ -497,6 +524,7 @@ class ProductPlaceholder:
         position: Position of the image across the blueprint on its variant
         images: List of image information - dimensions and alterations - across the blueprint on its variant
     """
+
     position: str
     images: List[PlaceholderImage]
 
@@ -513,6 +541,7 @@ class ProductPrintArea:
         placeholders: List of placeholders against the variants for the product
         background: Color for the background - useful if a placeholder is transparent
     """
+
     variant_ids: List[int]
     placeholders: List[ProductPlaceholder]
     background: Optional[str] = None
@@ -531,6 +560,7 @@ class ProductExternal:
         shipping_template_id: shipping profile associated with the product in the storefront
         channel: type of storefront
     """
+
     id: str
     handle: str
     shipping_template_id: Optional[str] = None
@@ -564,6 +594,7 @@ class Product:
         twodaydelivery_enabled: flag if two-day delivery is allowed as an option
         external: storefront information for published products
     """
+
     id: str
     title: str
     description: str
@@ -602,6 +633,7 @@ class Publish:
         keyFeatures: True if the keyFeatures in the storefront should be updated to that in Printify
         shipping_template: True if the shipping_template in the storefront should be updated to that in Printify
     """
+
     title: bool = True
     description: bool = True
     images: bool = True
@@ -622,6 +654,7 @@ class PublishingSucceededExternal:
         id: the storefront id
         handle: the type of storefront
     """
+
     id: str
     handle: str
 
@@ -636,6 +669,7 @@ class PublishingSucceeded:
     Args:
         external: Storefront information
     """
+
     external: PublishingSucceededExternal
 
 
@@ -658,6 +692,7 @@ class LineItem:
         sent_to_production_at: ISO timestamp of when the products were sent to production
         fulfilled_at: ISO timestamp of when the products were fulfilled for the order
     """
+
     product_id: str
     quantity: int
     variant_id: int
@@ -683,6 +718,7 @@ class Shipment:
         url: URL for tracking
         delivered_at: ISO timestamp of when the item was delivered
     """
+
     carrier: str
     number: str
     url: str
@@ -712,6 +748,7 @@ class Order:
         fulfilled_at: ISO timestamp of when the order was fulfilled
         fulfilment_type: How the order was fulfilled
     """
+
     id: str
     address_to: Address
     line_items: List[LineItem]
@@ -747,6 +784,7 @@ class CreateOrderLineItem(__CreateOrderLineItemBase):
         variant_id (int): the variant of the product to use in an order
         quantity (int): the number of copies to include int he line item for a specific product
     """
+
     product_id: str
 
 
@@ -770,6 +808,7 @@ class CreateOrderByExistingProduct(__CreateOrder):
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
+
     external_id: str
     label: str
     line_items: List[CreateOrderLineItem]
@@ -797,6 +836,7 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
         This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException`
         when used to created orders.
     """
+
     print_provider_id: int
     blueprint_id: int
     print_areas: Dict[str, Any]
@@ -817,6 +857,7 @@ class CreateOrderBySimpleImageProcessing(CreateOrderByExistingProduct):
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
+
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemSimpleProcessing]
@@ -838,6 +879,7 @@ class CreateOrderLineItemAdvancedProcessingPrintAreaInfo(PrintAreaInfo):
         angle (int): The angle at which an image will be rotated
         src: the filename of the image to use
     """
+
     src: str
 
 
@@ -884,6 +926,7 @@ class CreateOrderByAdvancedImageProcessing(__CreateOrder):
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
+
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemAdvancedProcessing]
@@ -914,6 +957,7 @@ class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
         This is unchecked and it is likely to raise a `PrintifyException` or `PrintiPyException`
         when used to created orders.
     """
+
     print_details: Dict[str, Any]
 
 
@@ -933,6 +977,7 @@ class CreateOrderByPrintDetails(__CreateOrder):
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
+
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemPrintDetails]
@@ -951,6 +996,7 @@ class CreateOrderLineItemSku:
         sku: the SKU of an item to include in the order
         quantity: the number of items to include
     """
+
     sku: str
     quantity: int
 
@@ -969,6 +1015,7 @@ class CreateOrderBySku(__CreateOrder):
         send_shipping_notification: flag to send or silence shipping notifications
         address_to: address for the recipient
     """
+
     external_id: str
     label: str
     line_items: List[CreateOrderLineItemSku]
@@ -993,6 +1040,7 @@ class Artwork:
         preview_url: URL to preview the image
         upload_time: ISO date format of the time the image was uploaded
     """
+
     id: str
     file_name: str
     height: int
@@ -1015,6 +1063,7 @@ class Webhook:
         url: External webhook URL
         topic: type of event to push data to
     """
+
     id: str
     shop_id: str
     url: str
@@ -1031,6 +1080,7 @@ class CreateWebhook:
         url: External webhook URL
         topic: type of event to push data to
     """
+
     url: str
     topic: str
 
@@ -1045,9 +1095,8 @@ class UpdateWebhook:
         url: External webhook URL
         topic: type of event to push data to
     """
-    url: Optional[str] = field(
-        default=None, metadata=config(exclude=_exclude_if_none)
-    )
+
+    url: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
     topic: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
@@ -1067,6 +1116,7 @@ class CreateProductPrintAreaPlaceholderImage(PrintAreaInfo):
         scale (float): The scaling factor for an image to be resized
         angle (int): The angle at which an image will be rotated
     """
+
     id: str
 
 
@@ -1080,6 +1130,7 @@ class CreateProductPrintAreaPlaceholder:
         position: The position of the print area
         images: List of images, their size, and dimensions for the placeholder
     """
+
     position: str
     images: List[CreateProductPrintAreaPlaceholderImage]
 
@@ -1094,6 +1145,7 @@ class CreateProductPrintArea:
         variant_ids: List of variants of the product to include from the print provider.
         placeholders: List of product placeholders - their dimensions and sizes
     """
+
     variant_ids: List[int]
     placeholders: List[CreateProductPrintAreaPlaceholder]
 
@@ -1109,6 +1161,7 @@ class CreateProductVariant:
         price: Price the product will sell at. All numbers are whole integers, e.g., $12.95 is `1295`
         is_enabled: Flag for enabling a variant in a store
     """
+
     id: int
     price: int
     is_enabled: bool
@@ -1128,6 +1181,7 @@ class CreateProduct:
         variants: List of product variants, their price, and if they are enabled
         print_areas: List of product dimensions and print areas
     """
+
     title: str
     description: str
     blueprint_id: int
@@ -1165,9 +1219,8 @@ class UpdateProductExternal:
         handle: The type of storefront
         shipping_template_id: Shipping methods in the store the product will use
     """
-    id: Optional[str] = field(
-        default=None, metadata=config(exclude=_exclude_if_none)
-    )
+
+    id: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
     handle: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )
@@ -1192,6 +1245,7 @@ class UpdateProduct:
         print_areas: New print areas - placeholders and printing specifications - for the product
         external: New external information - storefront and shipping - for the product
     """
+
     title: Optional[str] = field(
         default=None, metadata=config(exclude=_exclude_if_none)
     )

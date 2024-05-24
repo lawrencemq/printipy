@@ -10,6 +10,7 @@ class PrintiPyException(Exception):
         >>> except PrintiPyException e:
         >>>   print(e)
     """
+
     pass
 
 
@@ -25,6 +26,7 @@ class PrintiPyParseException(PrintiPyException):
         >>> except PrintiPyParseException e:
         >>>   print(e)
     """
+
     pass
 
 
@@ -43,6 +45,7 @@ class InvalidScopeException(Exception):
         >>> except InvalidScopeException e:
         >>>   print(e)
     """
+
     pass
 
 
@@ -60,6 +63,7 @@ class InvalidRequestException(Exception):
         >>> except InvalidRequestException e:
         >>>   print(e)
     """
+
     pass
 
 
@@ -77,4 +81,5 @@ class PrintifyException(Exception):
         >>> except PrintifyException e:
         >>>   print(e)
     """
+
     pass
