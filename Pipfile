@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "==2.32.2"
+requests = "==2.33.0"
 dataclasses-json = "==0.6.6"
 
 [dev-packages]
