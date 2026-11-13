@@ -676,7 +676,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		"""
 		# POST / v1 / shops / {shop_id} / products / {product_id} / publishing_succeeded.json
 		publishing_succeeded_url = (
-			f'{self.api_url}/v1/shops/{shop_id}/products/' f'{product_id}/publishing_succeeded.json'
+			f'{self.api_url}/v1/shops/{shop_id}/products/{product_id}/publishing_succeeded.json'
 		)
 		self._post(publishing_succeeded_url, data=publishing_succeeded.to_dict())
 		return True
