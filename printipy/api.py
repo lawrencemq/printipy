@@ -3,7 +3,7 @@ import json
 import os
 from copy import deepcopy
 from json import JSONDecodeError
-from typing import List, Optional, Dict, Union, Any
+from typing import Any
 
 import requests
 from requests import Response
@@ -70,7 +70,7 @@ class _ApiHandlingMixin:
 		data = self.__check_status(resp, url)
 		return data
 
-	def _post(self, url: str, data: Optional[Dict[str, Any]] = None):
+	def _post(self, url: str, data: dict[str, Any] | None = None):
 		headers = {
 			'Authorization': f'Bearer {self.api_token}',
 			'content-type': 'application/json',
@@ -95,7 +95,7 @@ class _ApiHandlingMixin:
 		return data
 
 	@staticmethod
-	def _parse(clazz, data: Union[List, Dict]):
+	def _parse(clazz, data: list | dict):
 		if isinstance(data, list):
 			all_elements = []
 			for item in data:
@@ -107,7 +107,7 @@ class _ApiHandlingMixin:
 			raise PrintiPyParseException('Unable to parse response: was not a list or object')
 
 	@staticmethod
-	def _get_next_page_url(initial_url: str, info: Dict) -> Optional[str]:
+	def _get_next_page_url(initial_url: str, info: dict) -> str | None:
 		next_page = info.get('next_page_url', None)
 		if not next_page:
 			return None
@@ -124,7 +124,7 @@ class PrintiPyShop(_ApiHandlingMixin):
 	    >>> shops = api.shops.get_shops()
 	"""
 
-	def get_shops(self) -> List[Shop]:
+	def get_shops(self) -> list[Shop]:
 		"""
 		Pulls a list of shops for a Printify account. Returns empty list if no shops exist for account.
 
@@ -183,7 +183,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 	    >>> print_providers = api.catalog.get_print_providers()
 	"""
 
-	def get_blueprints(self) -> List[Blueprint]:
+	def get_blueprints(self) -> list[Blueprint]:
 		"""
 		Pulls a list of all blueprints available from Printify.
 
@@ -203,7 +203,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		blueprint_information = self._get(blueprint_url)
 		return self._parse(Blueprint, blueprint_information)
 
-	def get_blueprint(self, blueprint_id: Union[str, int]) -> Blueprint:
+	def get_blueprint(self, blueprint_id: str | int) -> Blueprint:
 		"""
 		Pulls a specific blueprint from Printify.
 
@@ -225,9 +225,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		blueprint_information = self._get(blueprint_url)
 		return self._parse(Blueprint, blueprint_information)
 
-	def get_print_providers_for_blueprint(
-		self, blueprint_id: Union[str, int]
-	) -> List[PrintProvider]:
+	def get_print_providers_for_blueprint(self, blueprint_id: str | int) -> list[PrintProvider]:
 		"""
 		Pulls a list of print providers for a given blueprint from Printify.
 
@@ -254,7 +252,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		return self._parse(PrintProvider, print_provider_information)
 
 	def get_variants(
-		self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]
+		self, blueprint_id: str | int, print_provider_id: str | int
 	) -> PrintProviderVariants:
 		"""
 		Pulls a list of variants for a given blueprint and print provider from Printify.
@@ -284,7 +282,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		return self._parse(PrintProviderVariants, variant_information)
 
 	def get_shipping_info(
-		self, blueprint_id: Union[str, int], print_provider_id: Union[str, int]
+		self, blueprint_id: str | int, print_provider_id: str | int
 	) -> ShippingInfo:
 		"""
 		Pulls a shipping information a given blueprint and print provider from Printify.
@@ -313,7 +311,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		shipping_information = self._get(shipping_url)
 		return self._parse(ShippingInfo, shipping_information)
 
-	def get_print_providers(self) -> List[PrintProvider]:
+	def get_print_providers(self) -> list[PrintProvider]:
 		"""
 		Pulls a list of all print providers from Printify.
 
@@ -335,7 +333,7 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 		print_provider_information = self._get(print_providers_url)
 		return self._parse(PrintProvider, print_provider_information)
 
-	def get_print_provider(self, print_provider_id: Union[str, int]) -> PrintProvider:
+	def get_print_provider(self, print_provider_id: str | int) -> PrintProvider:
 		"""
 		Pulls a specific print provider from Printify.
 
@@ -360,10 +358,10 @@ class PrintiPyCatalog(_ApiHandlingMixin):
 
 
 class _ShopIdMixin:
-	def __init__(self, shop_id: Optional[Union[str, int]]):
+	def __init__(self, shop_id: str | int | None):
 		self.__shop_id = shop_id
 
-	def _get_shop_id(self, shop_id: Optional[Union[str, int]]):
+	def _get_shop_id(self, shop_id: str | int | None):
 		shop_id_to_use = shop_id or self.__shop_id
 		if not shop_id_to_use:
 			raise PrintiPyException(
@@ -390,12 +388,12 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 	    >>> shop_products = api.products.get_products()
 	"""
 
-	def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+	def __init__(self, api_token: str, shop_id: str | int | None):
 		_ApiHandlingMixin.__init__(self, api_token=api_token)
 		_ShopIdMixin.__init__(self, shop_id=shop_id)
 
 	@_ShopIdMixin._require_shop_id
-	def get_products(self, shop_id: Union[str, int], max_pages: int = 1) -> List[Product]:
+	def get_products(self, shop_id: str | int, max_pages: int = 1) -> list[Product]:
 		"""
 		Pulls products for specific shop in Printify.
 
@@ -437,7 +435,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		return all_products
 
 	@_ShopIdMixin._require_shop_id
-	def get_product(self, product_id: str, shop_id: Union[str, int]) -> Product:
+	def get_product(self, product_id: str, shop_id: str | int) -> Product:
 		"""
 		Pull a specific product for specific shop in Printify.
 
@@ -472,7 +470,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		return self._parse(Product, product_information)
 
 	@_ShopIdMixin._require_shop_id
-	def create_product(self, create_product: CreateProduct, shop_id: Union[str, int]) -> Product:
+	def create_product(self, create_product: CreateProduct, shop_id: str | int) -> Product:
 		"""
 		Create a product for a given shop in Printify
 
@@ -526,7 +524,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def update_product(
-		self, product_id: str, update_product: UpdateProduct, shop_id: Union[str, int]
+		self, product_id: str, update_product: UpdateProduct, shop_id: str | int
 	) -> Product:
 		"""
 		Updates a specific product for a given shop in Printify
@@ -580,7 +578,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		return self._parse(Product, product_information)
 
 	@_ShopIdMixin._require_shop_id
-	def delete_product(self, product_id: str, shop_id: Union[str, int]) -> True:
+	def delete_product(self, product_id: str, shop_id: str | int) -> True:
 		"""
 		Examples:
 		    By passing in data pulled from `printipy.api.PrintiPyShop.get_products`
@@ -611,7 +609,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		return True
 
 	@_ShopIdMixin._require_shop_id
-	def publish_product(self, product_id: str, publish: Publish, shop_id: Union[str, int]) -> True:
+	def publish_product(self, product_id: str, publish: Publish, shop_id: str | int) -> True:
 		"""
 		Publishes changes for a specific product for a given store in Printify
 
@@ -647,7 +645,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		self,
 		product_id: str,
 		publishing_succeeded: PublishingSucceeded,
-		shop_id: Union[str, int],
+		shop_id: str | int,
 	) -> True:
 		"""
 		Marks a product as published for a given store in Printify. Useful when managing a custom site,
@@ -683,7 +681,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def set_product_published_failed(
-		self, product_id: str, reason: str, shop_id: Union[str, int]
+		self, product_id: str, reason: str, shop_id: str | int
 	) -> True:
 		"""
 		Marks a product as not published for a given store in Printify. Useful when managing a custom site,
@@ -718,7 +716,7 @@ class PrintiPyProducts(_ApiHandlingMixin, _ShopIdMixin):
 		return True
 
 	@_ShopIdMixin._require_shop_id
-	def unpublish_product(self, product_id: str, shop_id: Union[str, int]) -> True:
+	def unpublish_product(self, product_id: str, shop_id: str | int) -> True:
 		"""
 		Removes a published product from the storefront a given store in Printify
 
@@ -759,14 +757,12 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 	    >>> shop_orders = api.orders.get_orders()
 	"""
 
-	def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+	def __init__(self, api_token: str, shop_id: str | int | None):
 		_ApiHandlingMixin.__init__(self, api_token=api_token)
 		_ShopIdMixin.__init__(self, shop_id=shop_id)
 
 	@_ShopIdMixin._require_shop_id
-	def get_orders(
-		self, max_pages: int = 1, shop_id: Optional[Union[str, int]] = None
-	) -> List[Order]:
+	def get_orders(self, max_pages: int = 1, shop_id: str | int | None = None) -> list[Order]:
 		"""
 		Pulls orders for specific shop in Printify.
 
@@ -809,7 +805,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 		return all_orders
 
 	@_ShopIdMixin._require_shop_id
-	def get_order(self, order_id: str, shop_id: Optional[Union[str, int]] = None) -> Order:
+	def get_order(self, order_id: str, shop_id: str | int | None = None) -> Order:
 		"""
 		Pulls a specific order for specific shop in Printify.
 
@@ -846,13 +842,11 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
 	def __create_order(
 		self,
-		create_order: Union[
-			CreateOrderByPrintDetails,
-			CreateOrderBySku,
-			CreateOrderByExistingProduct,
-			CreateOrderByAdvancedImageProcessing,
-		],
-		shop_id: Union[str, int],
+		create_order: CreateOrderByPrintDetails
+		| CreateOrderBySku
+		| CreateOrderByExistingProduct
+		| CreateOrderByAdvancedImageProcessing,
+		shop_id: str | int,
 	) -> str:
 		# POST / v1 / shops / {shop_id} / orders.json
 		create_order_url = f'{self.api_url}/v1/shops/{shop_id}/orders.json'
@@ -861,7 +855,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def create_order_for_existing_product(
-		self, create_order: CreateOrderByExistingProduct, shop_id: Union[str, int]
+		self, create_order: CreateOrderByExistingProduct, shop_id: str | int
 	) -> str:
 		"""
 		Create an order for an existing project for specific shop in Printify.
@@ -914,7 +908,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def create_order_with_simple_image_positioning(
-		self, create_order: CreateOrderByExistingProduct, shop_id: Union[str, int]
+		self, create_order: CreateOrderByExistingProduct, shop_id: str | int
 	) -> str:
 		"""
 		Create an order for a new product using simple image positioning.
@@ -974,7 +968,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 	def create_order_with_advanced_image_positioning(
 		self,
 		create_order: CreateOrderByAdvancedImageProcessing,
-		shop_id: Union[str, int],
+		shop_id: str | int,
 	) -> str:
 		"""
 		Create an order for a new product using advanced image positioning.
@@ -1046,7 +1040,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def create_order_with_print_details(
-		self, create_order: CreateOrderByPrintDetails, shop_id: Union[str, int]
+		self, create_order: CreateOrderByPrintDetails, shop_id: str | int
 	) -> str:
 		"""
 		Create an order for a new product using print deatils.
@@ -1105,9 +1099,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 		return self.__create_order(create_order, shop_id=shop_id)
 
 	@_ShopIdMixin._require_shop_id
-	def create_order_with_sku(
-		self, create_order: CreateOrderBySku, shop_id: Union[str, int]
-	) -> str:
+	def create_order_with_sku(self, create_order: CreateOrderBySku, shop_id: str | int) -> str:
 		"""
 		Create an order for a product based on its SKU.
 
@@ -1157,7 +1149,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 		return self.__create_order(create_order, shop_id=shop_id)
 
 	@_ShopIdMixin._require_shop_id
-	def send_order_to_production(self, order_id: str, shop_id: Union[str, int]) -> Order:
+	def send_order_to_production(self, order_id: str, shop_id: str | int) -> Order:
 		"""
 		Sends an open order to production in Printify.
 
@@ -1192,7 +1184,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 	def calc_shipping_for_order(
 		self,
 		create_shipping_cost_estimate: CreateShippingEstimate,
-		shop_id: Union[str, int],
+		shop_id: str | int,
 	) -> ShippingCost:
 		"""
 		Calculate shipping cost for an order for a given shop in Printify
@@ -1240,7 +1232,7 @@ class PrintiPyOrders(_ApiHandlingMixin, _ShopIdMixin):
 		return self._parse(ShippingCost, shipping_information)
 
 	@_ShopIdMixin._require_shop_id
-	def cancel_order(self, order_id: str, shop_id: Union[str, int]) -> Order:
+	def cancel_order(self, order_id: str, shop_id: str | int) -> Order:
 		"""
 		Canceles a specific order for a given shop in Printify
 
@@ -1284,7 +1276,7 @@ class PrintiPyArtwork(_ApiHandlingMixin):
 	    >>> artwork = api.artwork.upload_artwork(filename='...')
 	"""
 
-	def get_artwork_uploads(self, max_pages: int = 1) -> List[Artwork]:
+	def get_artwork_uploads(self, max_pages: int = 1) -> list[Artwork]:
 		"""
 		Pulls artwork/image information for an account in Printify.
 
@@ -1339,7 +1331,7 @@ class PrintiPyArtwork(_ApiHandlingMixin):
 		artwork_information = self._get(artwork_url)
 		return self._parse(Artwork, artwork_information)
 
-	def upload_artwork(self, filename: Optional[str] = None, url: Optional[str] = None) -> Artwork:
+	def upload_artwork(self, filename: str | None = None, url: str | None = None) -> Artwork:
 		"""
 		Uploads a new image/artwork to an account in Printify
 
@@ -1419,12 +1411,12 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 	    >>> webhooks = api.webhooks.get_webhooks()
 	"""
 
-	def __init__(self, api_token: str, shop_id: Optional[Union[str, int]]):
+	def __init__(self, api_token: str, shop_id: str | int | None):
 		_ApiHandlingMixin.__init__(self, api_token=api_token)
 		_ShopIdMixin.__init__(self, shop_id=shop_id)
 
 	@_ShopIdMixin._require_shop_id
-	def get_webhooks(self, shop_id: Union[str, int]) -> List[Webhook]:
+	def get_webhooks(self, shop_id: str | int) -> list[Webhook]:
 		"""
 		Pulls webhooks for specific shop in Printify.
 
@@ -1458,7 +1450,7 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 		return self._parse(Webhook, webhooks_information)
 
 	@_ShopIdMixin._require_shop_id
-	def create_webhook(self, create_webhook: CreateWebhook, shop_id: Union[str, int]) -> Webhook:
+	def create_webhook(self, create_webhook: CreateWebhook, shop_id: str | int) -> Webhook:
 		"""
 		Create a webhook for a given shop in Printify
 
@@ -1503,7 +1495,7 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 
 	@_ShopIdMixin._require_shop_id
 	def update_webhook(
-		self, webhook_id: str, update_webhook: UpdateWebhook, shop_id: Union[str, int]
+		self, webhook_id: str, update_webhook: UpdateWebhook, shop_id: str | int
 	) -> Webhook:
 		"""
 		Updates a specific webhook for a given shop in Printify
@@ -1551,7 +1543,7 @@ class PrintiPyWebhooks(_ApiHandlingMixin, _ShopIdMixin):
 		return self._parse(Webhook, webhook_information)
 
 	@_ShopIdMixin._require_shop_id
-	def delete_webhook(self, webhook_id: str, shop_id: Union[str, int]) -> True:
+	def delete_webhook(self, webhook_id: str, shop_id: str | int) -> True:
 		"""
 		Deletes a specific webhook for a specific shop in Printify
 
@@ -1597,7 +1589,7 @@ class PrintiPy:
 	    >>> shop456_products = api.products.get_products(shop_id='shop456')
 	"""
 
-	def __init__(self, api_token: str, shop_id: Optional[Union[str, int]] = None):
+	def __init__(self, api_token: str, shop_id: str | int | None = None):
 		"""
 		Entrypoint needed to access all [Printify APIs](https://developers.printify.com/)
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Union, Dict, Any
+from typing import Any
 
 from dataclasses_json import dataclass_json, config
 
@@ -45,7 +45,7 @@ class Blueprint:
 	description: str
 	brand: str
 	model: str
-	images: List[str]
+	images: list[str]
 
 
 @dataclass_json
@@ -68,7 +68,7 @@ class Location:
 	country: str
 	region: str
 	zip: str
-	address2: Optional[str] = field(default=None)
+	address2: str | None = field(default=None)
 
 
 @dataclass_json
@@ -99,10 +99,10 @@ class Address:
 	country: str
 	region: str
 	zip: str
-	address2: Optional[str] = field(default=None)
-	email: Optional[str] = field(default=None)
-	phone: Optional[str] = field(default=None)
-	company: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
+	address2: str | None = field(default=None)
+	email: str | None = field(default=None)
+	phone: str | None = field(default=None)
+	company: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
 
 
 @dataclass_json
@@ -119,7 +119,7 @@ class PrintProvider:
 
 	id: int
 	title: str
-	location: Optional[Location] = field(default=None, metadata=config(exclude=_exclude_if_none))
+	location: Location | None = field(default=None, metadata=config(exclude=_exclude_if_none))
 
 
 @dataclass_json
@@ -136,10 +136,10 @@ class VariantOption:
 	    quantity: Quantity of item. Defaults to None.
 	"""
 
-	color: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	size: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	paper: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	quantity: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
+	color: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	size: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	paper: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	quantity: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
 
 
 @dataclass_json
@@ -175,7 +175,7 @@ class Variant:
 	id: int
 	title: str
 	options: VariantOption
-	placeholders: List[VariantPlaceholder]
+	placeholders: list[VariantPlaceholder]
 
 
 @dataclass_json
@@ -192,9 +192,9 @@ class PrintProviderVariants:
 
 	id: int
 	title: str
-	variants: List[Variant]
+	variants: list[Variant]
 
-	def get_variant_ids(self) -> List[int]:
+	def get_variant_ids(self) -> list[int]:
 		"""
 		Returns a list of all IDs from the associated variants
 		"""
@@ -247,10 +247,10 @@ class ShippingInfoProfile:
 	    countries: a list of country codes this shipping profile applies to
 	"""
 
-	variant_ids: List[int]
+	variant_ids: list[int]
 	first_item: ShippingInfoProfileCost
 	additional_items: ShippingInfoProfileCost
-	countries: List[str]
+	countries: list[str]
 
 
 @dataclass_json
@@ -266,7 +266,7 @@ class ShippingInfo:
 	"""
 
 	handling_time: ShippingInfoHandlingTime
-	profiles: List[ShippingInfoProfile]
+	profiles: list[ShippingInfoProfile]
 
 
 @dataclass_json
@@ -282,7 +282,7 @@ class ShippingCost:
 	"""
 
 	standard: int
-	express: Optional[int] = None
+	express: int | None = None
 
 
 @dataclass_json
@@ -358,12 +358,10 @@ class CreateShippingEstimate:
 	    address_to: Address of the recipient
 	"""
 
-	line_items: List[
-		Union[
-			ShippingEstimateLineItemByProduct,
-			ShippingEstimateLineItemByVariant,
-			ShippingEstimateLineItemBySku,
-		]
+	line_items: list[
+		ShippingEstimateLineItemByProduct
+		| ShippingEstimateLineItemByVariant
+		| ShippingEstimateLineItemBySku
 	]
 	address_to: Address
 
@@ -399,7 +397,7 @@ class ProductOption:
 
 	name: str
 	type: str
-	values: List[ProductOptionValue]
+	values: list[ProductOptionValue]
 
 
 @dataclass_json
@@ -426,14 +424,14 @@ class ProductVariant:
 	id: int
 	price: int
 	is_enabled: bool
-	sku: Optional[str] = None
-	cost: Optional[int] = None
-	title: Optional[str] = None
-	grams: Optional[int] = None
-	is_default: Optional[bool] = None
-	is_available: Optional[bool] = None
-	options: Optional[List[int]] = None
-	quantity: Optional[int] = None
+	sku: str | None = None
+	cost: int | None = None
+	title: str | None = None
+	grams: int | None = None
+	is_default: bool | None = None
+	is_available: bool | None = None
+	options: list[int] | None = None
+	quantity: int | None = None
 
 
 @dataclass_json
@@ -452,10 +450,10 @@ class ProductImage:
 	"""
 
 	src: str
-	variant_ids: List[int]
+	variant_ids: list[int]
 	position: str
 	is_default: bool
-	is_selected_for_publishing: Optional[bool] = None
+	is_selected_for_publishing: bool | None = None
 
 
 @dataclass_json
@@ -497,10 +495,10 @@ class PlaceholderImage(PrintAreaInfo):
 	"""
 
 	id: str
-	name: Optional[str] = None
-	type: Optional[str] = None
-	height: Optional[int] = None
-	width: Optional[int] = None
+	name: str | None = None
+	type: str | None = None
+	height: int | None = None
+	width: int | None = None
 
 
 @dataclass_json
@@ -516,7 +514,7 @@ class ProductPlaceholder:
 	"""
 
 	position: str
-	images: List[PlaceholderImage]
+	images: list[PlaceholderImage]
 
 
 @dataclass_json
@@ -532,9 +530,9 @@ class ProductPrintArea:
 	    background: Color for the background - useful if a placeholder is transparent
 	"""
 
-	variant_ids: List[int]
-	placeholders: List[ProductPlaceholder]
-	background: Optional[str] = None
+	variant_ids: list[int]
+	placeholders: list[ProductPlaceholder]
+	background: str | None = None
 
 
 @dataclass_json
@@ -553,8 +551,8 @@ class ProductExternal:
 
 	id: str
 	handle: str
-	shipping_template_id: Optional[str] = None
-	channel: Optional[str] = None
+	shipping_template_id: str | None = None
+	channel: str | None = None
 
 
 @dataclass_json
@@ -588,10 +586,10 @@ class Product:
 	id: str
 	title: str
 	description: str
-	tags: List[str]
-	options: List[ProductOption]
-	variants: List[ProductVariant]
-	images: List[ProductImage]
+	tags: list[str]
+	options: list[ProductOption]
+	variants: list[ProductVariant]
+	images: list[ProductImage]
 	created_at: str
 	updated_at: str
 	visible: bool
@@ -600,11 +598,11 @@ class Product:
 	user_id: int
 	shop_id: int
 	print_provider_id: int
-	print_areas: List[ProductPrintArea]
+	print_areas: list[ProductPrintArea]
 	# sales_channel_properties: List
 	# print_details: List
-	twodaydelivery_enabled: Optional[bool] = None
-	external: Optional[ProductExternal] = None
+	twodaydelivery_enabled: bool | None = None
+	external: ProductExternal | None = None
 
 
 @dataclass_json
@@ -690,9 +688,9 @@ class LineItem:
 	cost: int
 	shipping_cost: int
 	status: str
-	metadata: Dict
-	sent_to_production_at: Optional[str] = None
-	fulfilled_at: Optional[str] = None
+	metadata: dict
+	sent_to_production_at: str | None = None
+	fulfilled_at: str | None = None
 
 
 @dataclass_json
@@ -741,18 +739,18 @@ class Order:
 
 	id: str
 	address_to: Address
-	line_items: List[LineItem]
-	metadata: Dict
+	line_items: list[LineItem]
+	metadata: dict
 	total_price: int
 	total_shipping: int
 	total_tax: int
 	status: str
 	shipping_method: int
 	created_at: str
-	sent_to_production_at: Optional[str] = None
-	shipments: Optional[List[Shipment]] = None
-	fulfilled_at: Optional[str] = None
-	fulfilment_type: Optional[str] = None
+	sent_to_production_at: str | None = None
+	shipments: list[Shipment] | None = None
+	fulfilled_at: str | None = None
+	fulfilment_type: str | None = None
 
 
 @dataclass_json
@@ -801,7 +799,7 @@ class CreateOrderByExistingProduct(__CreateOrder):
 
 	external_id: str
 	label: str
-	line_items: List[CreateOrderLineItem]
+	line_items: list[CreateOrderLineItem]
 	shipping_method: int
 	send_shipping_notification: bool
 	address_to: Address
@@ -829,7 +827,7 @@ class CreateOrderLineItemSimpleProcessing(__CreateOrderLineItemBase):
 
 	print_provider_id: int
 	blueprint_id: int
-	print_areas: Dict[str, Any]
+	print_areas: dict[str, Any]
 
 
 @dataclass_json
@@ -850,7 +848,7 @@ class CreateOrderBySimpleImageProcessing(CreateOrderByExistingProduct):
 
 	external_id: str
 	label: str
-	line_items: List[CreateOrderLineItemSimpleProcessing]
+	line_items: list[CreateOrderLineItemSimpleProcessing]
 	shipping_method: int
 	send_shipping_notification: bool
 	address_to: Address
@@ -893,7 +891,7 @@ class CreateOrderLineItemAdvancedProcessing(__CreateOrderLineItemBase):
 
 	blueprint_id: int
 	print_provider_id: int
-	print_areas: Dict[str, List[PrintAreaInfo]]
+	print_areas: dict[str, list[PrintAreaInfo]]
 
 
 @dataclass_json
@@ -919,7 +917,7 @@ class CreateOrderByAdvancedImageProcessing(__CreateOrder):
 
 	external_id: str
 	label: str
-	line_items: List[CreateOrderLineItemAdvancedProcessing]
+	line_items: list[CreateOrderLineItemAdvancedProcessing]
 	shipping_method: int
 	send_shipping_notification: bool
 	address_to: Address
@@ -948,7 +946,7 @@ class CreateOrderLineItemPrintDetails(CreateOrderLineItemSimpleProcessing):
 	    when used to created orders.
 	"""
 
-	print_details: Dict[str, Any]
+	print_details: dict[str, Any]
 
 
 @dataclass_json
@@ -970,7 +968,7 @@ class CreateOrderByPrintDetails(__CreateOrder):
 
 	external_id: str
 	label: str
-	line_items: List[CreateOrderLineItemPrintDetails]
+	line_items: list[CreateOrderLineItemPrintDetails]
 	shipping_method: int
 	send_shipping_notification: bool
 	address_to: Address
@@ -1008,7 +1006,7 @@ class CreateOrderBySku(__CreateOrder):
 
 	external_id: str
 	label: str
-	line_items: List[CreateOrderLineItemSku]
+	line_items: list[CreateOrderLineItemSku]
 	shipping_method: int
 	send_shipping_notification: bool
 	address_to: Address
@@ -1086,8 +1084,8 @@ class UpdateWebhook:
 	    topic: type of event to push data to
 	"""
 
-	url: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	topic: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
+	url: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	topic: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
 
 
 @dataclass_json
@@ -1120,7 +1118,7 @@ class CreateProductPrintAreaPlaceholder:
 	"""
 
 	position: str
-	images: List[CreateProductPrintAreaPlaceholderImage]
+	images: list[CreateProductPrintAreaPlaceholderImage]
 
 
 @dataclass_json
@@ -1134,8 +1132,8 @@ class CreateProductPrintArea:
 	    placeholders: List of product placeholders - their dimensions and sizes
 	"""
 
-	variant_ids: List[int]
-	placeholders: List[CreateProductPrintAreaPlaceholder]
+	variant_ids: list[int]
+	placeholders: list[CreateProductPrintAreaPlaceholder]
 
 
 @dataclass_json
@@ -1174,8 +1172,8 @@ class CreateProduct:
 	description: str
 	blueprint_id: int
 	print_provider_id: int
-	variants: List[CreateProductVariant]
-	print_areas: List[CreateProductPrintArea]
+	variants: list[CreateProductVariant]
+	print_areas: list[CreateProductPrintArea]
 
 	def add_variant(self, variant: CreateProductVariant):
 		"""
@@ -1208,9 +1206,9 @@ class UpdateProductExternal:
 	    shipping_template_id: Shipping methods in the store the product will use
 	"""
 
-	id: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	handle: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	shipping_template_id: Optional[str] = field(
+	id: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	handle: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	shipping_template_id: str | None = field(
 		default=None, metadata=config(exclude=_exclude_if_none)
 	)
 
@@ -1232,18 +1230,16 @@ class UpdateProduct:
 	    external: New external information - storefront and shipping - for the product
 	"""
 
-	title: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	description: Optional[str] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	blueprint_id: Optional[int] = field(default=None, metadata=config(exclude=_exclude_if_none))
-	print_provider_id: Optional[int] = field(
+	title: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	description: str | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	blueprint_id: int | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	print_provider_id: int | None = field(default=None, metadata=config(exclude=_exclude_if_none))
+	variants: list[CreateProductVariant] | None = field(
 		default=None, metadata=config(exclude=_exclude_if_none)
 	)
-	variants: Optional[List[CreateProductVariant]] = field(
+	print_areas: list[CreateProductPrintArea] | None = field(
 		default=None, metadata=config(exclude=_exclude_if_none)
 	)
-	print_areas: Optional[List[CreateProductPrintArea]] = field(
-		default=None, metadata=config(exclude=_exclude_if_none)
-	)
-	external: Optional[UpdateProductExternal] = field(
+	external: UpdateProductExternal | None = field(
 		default=None, metadata=config(exclude=_exclude_if_none)
 	)
