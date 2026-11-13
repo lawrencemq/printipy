@@ -1,5 +1,4 @@
 import os
-from typing import Union, Optional, Dict, List
 from unittest import TestCase
 
 import responses
@@ -41,9 +40,9 @@ class TestPrintiPyApiV1(TestCase):
 
 	def prepare_response(
 		self,
-		http_type: Union[responses.GET, responses.POST, responses.DELETE, responses.PUT],
+		http_type: str,
 		url: str,
-		data: Optional[Union[Dict, List]] = None,
+		data: dict | list | None = None,
 	):
 		if data is None:
 			data = {}
